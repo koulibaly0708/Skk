@@ -57,7 +57,7 @@ export const FORMATIONS = {
     duree: "Sur-mesure", public: "Toute équipe souhaitant gagner du temps", prerequis: "Aisance informatique de base",
     modules: ["Comprendre les usages utiles vs les effets de mode", "Prompts pour la rédaction et le visuel", "Intégrer l'IA dans ses processus quotidiens", "Les meilleures IA et leur spécificité"],
     apercu: "Distinguer les usages utiles des effets de mode, écrire de bons prompts et intégrer l'IA dans son quotidien professionnel — formation en quatre modules, avec un exercice pratique à la fin de chacun…",
-    pdfUrl: "formations-pdf/formation-ia-generative-appliquee.pdf",
+    pdfUrl: "formation-ia-generative-appliquee.pdf",
     contenuComplet: `
       <p class="lede-cours">Distinguer les usages utiles des effets de mode, écrire de bons prompts et intégrer l'IA dans son quotidien professionnel — formation en quatre modules, avec un exercice pratique à la fin de chacun.</p>
 
