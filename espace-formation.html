@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace formation — Solo Koumana Koulibaly</title>
+<meta name="description" content="Contenu de votre formation, accessible avec votre code personnel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --clay:#D98E3D;
+    --paper:#F6F1E7;
+    --charcoal:#2B2622;
+    --sage:#4C6B54;
+    --white:#FFFFFF;
+    --line: rgba(27,42,74,0.16);
+    --max: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--paper); color:var(--charcoal);
+    font-family:'Work Sans', sans-serif; font-size:16px; line-height:1.6;
+  }
+  a{color:inherit;}
+  h1,h2,h3{font-family:'Roboto',sans-serif; color:var(--ink); margin:0 0 .4em;}
+  .topbar{
+    background:var(--ink); color:var(--paper); padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .topbar .brand{font-family:'JetBrains Mono',monospace; font-weight:700; letter-spacing:.02em;}
+  .topbar .brand span{color:var(--clay);}
+  .topbar .actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .topbar a.pill{
+    color:var(--paper); border:1px solid rgba(246,241,231,.35); border-radius:20px;
+    padding:7px 16px; font-size:.85rem; text-decoration:none; background:none; cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+  }
+  .topbar a.pill:hover, .topbar button.pill:hover{background:rgba(246,241,231,.14);}
+  .wrap{max-width:var(--max); margin:0 auto; padding:48px 28px 80px;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--paper); background:var(--clay); display:inline-flex; padding:6px 16px; border-radius:999px; margin-bottom:16px;
+  }
+  .meta{display:flex; gap:28px; flex-wrap:wrap; margin:20px 0 30px; font-size:.92rem;}
+  .meta dt{font-weight:600; color:var(--ink);}
+  .meta dd{margin:2px 0 0; color:#5a5349;}
+  .modules{
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:28px 30px; margin-bottom:24px;
+  }
+  .modules h3{margin-top:0;}
+  .modules ol{margin:0; padding-left:22px;}
+  .modules li{margin-bottom:10px;}
+  .placeholder-note{
+    background:rgba(76,107,84,0.08); border:1px solid rgba(76,107,84,0.25); border-radius:8px;
+    padding:14px 18px; font-size:.9rem; color:var(--sage);
+  }
+  .locked{
+    max-width:520px; margin:80px auto; background:var(--white); border:1px solid var(--line);
+    border-radius:10px; padding:36px 32px; text-align:center;
+  }
+  .locked a.btn{
+    display:inline-block; margin-top:18px; padding:12px 24px; border-radius:6px; background:var(--ink); color:var(--paper);
+    text-decoration:none; font-weight:600;
+  }
+  .loading{padding:80px 28px; text-align:center; color:#8a8378;}
+
+  .download-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin-bottom:28px;
+  }
+  .download-bar p{margin:0; font-size:.92rem; color:#5a5349;}
+  .download-bar a.btn-download{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:6px; background:var(--clay);
+    color:var(--white); text-decoration:none; font-weight:600; white-space:nowrap;
+  }
+  .lede-cours{font-size:1.05rem; color:#5a5349; margin-bottom:32px;}
+  .module-block{
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:30px 32px; margin-bottom:24px;
+  }
+  .module-block.synthese{background:rgba(27,42,74,0.04);}
+  .module-tag{
+    font-family:'JetBrains Mono', monospace; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--white); background:var(--ink); display:inline-flex; padding:5px 14px; border-radius:999px; margin-bottom:14px;
+  }
+  .module-block h3{margin-bottom:18px;}
+  .module-block h4{font-size:1rem; margin:26px 0 10px; color:var(--ink);}
+  .module-block h4:first-of-type{margin-top:0;}
+  .module-block ul, .module-block ol{margin:0 0 4px; padding-left:22px;}
+  .module-block li{margin-bottom:8px;}
+  .callout{
+    background:rgba(76,107,84,0.08); border:1px solid rgba(76,107,84,0.25); border-radius:8px;
+    padding:14px 18px; font-size:.92rem; color:var(--sage); margin:16px 0;
+  }
+  .table-cours{width:100%; border-collapse:collapse; margin:12px 0 20px; font-size:.9rem;}
+  .table-cours th, .table-cours td{border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top;}
+  .table-cours th{background:var(--paper); font-weight:600; color:var(--ink);}
+  .exercice{
+    border:1px dashed var(--clay); border-radius:8px; padding:18px 20px; margin-top:22px; background:rgba(217,142,61,0.05);
+  }
+  .exercice-tag{
+    font-family:'JetBrains Mono', monospace; font-size:.76rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--clay); font-weight:700;
+  }
+  .exercice h4{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">SK<span>K</span>. — Espace formation</span>
+  <div class="actions">
+    <a class="pill" href="index.html">Retour au site</a>
+    <button type="button" class="pill" id="logoutBtn">Se déconnecter</button>
+  </div>
+</div>
+
+<div id="gate" class="loading">Vérification de votre accès…</div>
+<div id="content" hidden></div>
+
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  import { FORMATIONS } from "./formations-data.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
+    authDomain: "mon-site-skkoulibaly.firebaseapp.com",
+    databaseURL: "https://mon-site-skkoulibaly-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mon-site-skkoulibaly",
+    storageBucket: "mon-site-skkoulibaly.firebasestorage.app",
+    messagingSenderId: "367698551446",
+    appId: "1:367698551446:web:15534cc2af8beda4ba58b7",
+    measurementId: "G-QYLJJP5XKY"
+  };
+
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig, "espaceFormationApp");
+  const rtdb = getDatabase(app);
+
+  const gate = document.getElementById('gate');
+  const content = document.getElementById('content');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('skk_formation_session');
+    window.location.href = 'login-formation.html';
+  });
+
+  function afficherVerrou(message) {
+    gate.innerHTML = '';
+    gate.hidden = true;
+    content.hidden = false;
+    content.innerHTML = ''
+      + '<div class="locked">'
+      + '<span class="eyebrow">Accès restreint</span>'
+      + '<h2>' + message + '</h2>'
+      + '<p>Utilisez votre code personnel pour accéder au contenu de votre formation.</p>'
+      + '<a class="btn" href="login-formation.html">Saisir mon code d\'accès</a>'
+      + '</div>';
+  }
+
+  function afficherFormation(nomFormation) {
+    const data = FORMATIONS[nomFormation];
+    gate.hidden = true;
+    content.hidden = false;
+
+    if (!data) {
+      content.innerHTML = ''
+        + '<div class="wrap"><div class="locked">'
+        + '<span class="eyebrow">Formation</span>'
+        + '<h2>' + nomFormation + '</h2>'
+        + '<p>Le contenu détaillé de cette formation sera bientôt disponible ici. Contactez-nous si vous avez besoin d\'un accès immédiat.</p>'
+        + '</div></div>';
+      return;
+    }
+
+    const modulesHtml = data.modules.map((m) => '<li>' + m + '</li>').join('');
+
+    const telechargementHtml = data.pdfUrl
+      ? '<div class="download-bar">'
+        + '<p>Support complet de la formation, à garder pour vous.</p>'
+        + '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>'
+        + '</div>'
+      : '';
+
+    const corpsHtml = data.contenuComplet
+      ? data.contenuComplet
+      : '<p class="placeholder-note">Les supports complets (documents, exercices) de cette formation seront ajoutés ici au fur et à mesure de votre progression.</p>';
+
+    content.innerHTML = ''
+      + '<div class="wrap">'
+      + '<span class="eyebrow">Votre formation</span>'
+      + '<h1>' + nomFormation + '</h1>'
+      + '<dl class="meta">'
+      + '<div><dt>Durée</dt><dd>' + data.duree + '</dd></div>'
+      + '<div><dt>Public</dt><dd>' + data.public + '</dd></div>'
+      + '<div><dt>Prérequis</dt><dd>' + data.prerequis + '</dd></div>'
+      + '</dl>'
+      + telechargementHtml
+      + '<div class="modules">'
+      + '<h3>Programme</h3>'
+      + '<ol>' + modulesHtml + '</ol>'
+      + '</div>'
+      + corpsHtml
+      + '</div>';
+  }
+
+  async function verifierAcces() {
+    const sessionBrute = localStorage.getItem('skk_formation_session');
+    if (!sessionBrute) {
+      afficherVerrou("Vous n'êtes pas encore connecté");
+      return;
+    }
+    let session;
+    try {
+      session = JSON.parse(sessionBrute);
+    } catch (err) {
+      localStorage.removeItem('skk_formation_session');
+      afficherVerrou("Votre session n'est plus valide");
+      return;
+    }
+    if (!session || !session.code) {
+      afficherVerrou("Votre session n'est plus valide");
+      return;
+    }
+    try {
+      const snap = await get(ref(rtdb, 'formationCodes/' + session.code));
+      if (!snap.exists() || snap.val().actif === false) {
+        localStorage.removeItem('skk_formation_session');
+        afficherVerrou("Ce code n'est plus actif");
+        return;
+      }
+      afficherFormation(snap.val().formation || session.formation);
+    } catch (err) {
+      afficherVerrou("Impossible de vérifier votre accès pour le moment");
+    }
+  }
+
+  verifierAcces();
+</script>
+
+</body>
+</html>

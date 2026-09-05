@@ -33,8 +33,23 @@
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth; overflow-x:hidden; overflow-y:scroll; scrollbar-gutter:stable;}
-  /* L'espace collaborateur/administrateur s'ouvre désormais sur une page dédiée (espace.html) */
-  #collabSpace, #adminCollabSpace{display:none !important;}
+  /* ---------- Page dédiée espace.html : masque le site public, ne garde que l'espace connecté ---------- */
+  body.espace-page > header.site,
+  body.espace-page > footer,
+  body.espace-page > #chatWidget,
+  body.espace-page > section:not(.collab-space){display:none !important;}
+  .espace-topbar{
+    background:var(--ink); color:var(--paper); padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    font-family:'Work Sans',sans-serif;
+  }
+  .espace-topbar .et-brand{font-weight:600; letter-spacing:.02em;}
+  .espace-topbar a.et-back{
+    color:var(--paper); border:1px solid rgba(246,241,231,.35); border-radius:20px;
+    padding:7px 16px; font-size:.85rem; display:inline-flex; align-items:center; gap:6px; transition:background .15s ease;
+  }
+  .espace-topbar a.et-back:hover{background:rgba(246,241,231,.14);}
+  .espace-loading{padding:60px 28px; text-align:center; font-family:'Work Sans',sans-serif; color:var(--charcoal);}
   body{max-width:100%;}
   body{
     margin:0;
@@ -755,7 +770,12 @@
   }
 </style>
 </head>
-<body>
+<body class="espace-page">
+<div class="espace-topbar">
+  <span class="et-brand">Solo Koumana Koulibaly — Espace connecté</span>
+  <a class="et-back" href="index.html">&larr; Retour au site</a>
+</div>
+<div id="espaceGate" class="espace-loading">Vérification de la connexion…</div>
 <div id="toastStack" aria-live="polite"></div>
 
 <!-- ---------- Chat en direct (visiteurs) ---------- -->
@@ -2941,6 +2961,13 @@
   onAuthStateChanged(auth, async (user) => {
     window.collabUser = user;
     window.isAdminStaff = false;
+    const espaceGate = document.getElementById('espaceGate');
+    if (!user) {
+      // Personne n'est connecté : cette page est réservée, on retourne au site public
+      window.location.href = 'index.html';
+      return;
+    }
+    if (espaceGate) espaceGate.remove();
     if (user) {
       collabSpace.hidden = false;
       collabUserLabel.textContent = displayNameFor(user);
@@ -3011,9 +3038,9 @@
       if (unsubVisitorList) { unsubVisitorList(); unsubVisitorList = null; }
       if (unsubVisitorMessages) { unsubVisitorMessages(); unsubVisitorMessages = null; }
       if (unsubAdminUsers) { unsubAdminUsers(); unsubAdminUsers = null; }
+      if (unsubAdminAdmins) { unsubAdminAdmins(); unsubAdminAdmins = null; }
       if (unsubNewsletterList) { unsubNewsletterList(); unsubNewsletterList = null; }
       if (unsubCodes) { unsubCodes(); unsubCodes = null; }
-      if (unsubAdminAdmins) { unsubAdminAdmins(); unsubAdminAdmins = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
