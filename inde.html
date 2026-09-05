@@ -33,23 +33,8 @@
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth; overflow-x:hidden; overflow-y:scroll; scrollbar-gutter:stable;}
-  /* ---------- Page dédiée espace.html : masque le site public, ne garde que l'espace connecté ---------- */
-  body.espace-page > header.site,
-  body.espace-page > footer,
-  body.espace-page > #chatWidget,
-  body.espace-page > section:not(.collab-space){display:none !important;}
-  .espace-topbar{
-    background:var(--ink); color:var(--paper); padding:14px 28px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    font-family:'Work Sans',sans-serif;
-  }
-  .espace-topbar .et-brand{font-weight:600; letter-spacing:.02em;}
-  .espace-topbar a.et-back{
-    color:var(--paper); border:1px solid rgba(246,241,231,.35); border-radius:20px;
-    padding:7px 16px; font-size:.85rem; display:inline-flex; align-items:center; gap:6px; transition:background .15s ease;
-  }
-  .espace-topbar a.et-back:hover{background:rgba(246,241,231,.14);}
-  .espace-loading{padding:60px 28px; text-align:center; font-family:'Work Sans',sans-serif; color:var(--charcoal);}
+  /* L'espace collaborateur/administrateur s'ouvre désormais sur une page dédiée (espace.html) */
+  #collabSpace, #adminCollabSpace{display:none !important;}
   body{max-width:100%;}
   body{
     margin:0;
@@ -158,6 +143,26 @@
     transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
   }
   .collab-cta svg{width:17px; height:17px; flex-shrink:0;}
+  .nav-extra{position:relative; flex-shrink:0;}
+  .nav-extra-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:50%;
+    border:1.5px solid rgba(246,241,231,0.35); background:transparent; color:var(--paper);
+    cursor:pointer; transition:background .18s ease, border-color .18s ease;
+  }
+  .nav-extra-btn:hover, .nav-extra-btn[aria-expanded="true"]{background:rgba(246,241,231,0.14); border-color:rgba(246,241,231,0.6);}
+  .nav-extra-btn svg{width:18px; height:18px;}
+  .nav-extra-menu{
+    position:absolute; top:calc(100% + 12px); right:0; min-width:230px; max-height:80vh; overflow-y:auto;
+    background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px;
+    box-shadow:0 14px 34px rgba(0,0,0,.22); display:flex; flex-direction:column; gap:2px;
+    opacity:0; visibility:hidden; transform:translateY(-8px);
+    transition:opacity .2s ease, transform .2s ease, visibility .2s ease; z-index:200;
+  }
+  .nav-extra-menu.open{opacity:1; visibility:visible; transform:translateY(0);}
+  .nav-extra-menu a{color:var(--charcoal); padding:11px 14px; border-radius:6px; font-size:.9rem;}
+  .nav-extra-menu a:hover{background:var(--line);}
+  .nav-extra-divider{height:1px; background:var(--line); margin:6px 4px;}
   .collab-cta:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(217,142,61,.6); background:linear-gradient(135deg,#e69a3f,#ffc061);}
   .search-highlight{outline:3px solid var(--clay); outline-offset:4px; border-radius:3px;}
   .burger{display:none; background:none; border:none; cursor:pointer; padding:6px;}
@@ -679,20 +684,21 @@
   footer nav{display:flex; gap:22px; flex-wrap:wrap; font-size:.88rem;}
   .foot-bottom{padding-top:22px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:.78rem; font-family:'JetBrains Mono',monospace;}
 
-  @media (max-width:1300px){
+  @media (max-width:900px){
     nav.wrap{flex-wrap:wrap; height:auto; min-height:84px; row-gap:12px; padding-top:16px; padding-bottom:16px;}
     .logo{order:1;}
     .burger{order:2; margin-left:auto;}
     .navlinks{position:absolute; top:100%; left:0; right:0; background:var(--paper); flex-direction:column; align-items:flex-start; padding:20px 28px 26px; border-bottom:1px solid var(--line); gap:16px; transform:translateY(-8px); opacity:0; visibility:hidden; pointer-events:none; transition:transform .25s ease, opacity .2s ease; }
     .navlinks.open{transform:translateY(0); opacity:1; visibility:visible; pointer-events:auto;}
     .navlinks a{color:var(--charcoal);}
-    .navlinks a.btn-primary{color:var(--paper);}
+    .navlinks a.btn-primary{background:none; border:none; color:var(--charcoal); padding:4px 0; border-radius:0; font-weight:500;}
     .burger{display:block;}
     .nav-tools{order:3; width:100%; margin-left:0; flex-wrap:nowrap;}
     .search-form{flex:1; min-width:0; padding:8px 12px;}
     .search-form input{width:100%; min-width:0;}
     .collab-cta span{display:none;}
     .collab-cta{padding:10px; flex-shrink:0;}
+    .nav-extra{display:none;}
     .hero .wrap{grid-template-columns:minmax(0,1fr);}
     .hero-art{order:-1; max-width:280px;}
     .hero-book-badge{width:88px; padding:8px 9px 10px; bottom:-10px; left:-10px;}
@@ -770,12 +776,7 @@
   }
 </style>
 </head>
-<body class="espace-page">
-<div class="espace-topbar">
-  <span class="et-brand">Solo Koumana Koulibaly — Espace connecté</span>
-  <a class="et-back" href="index.html">&larr; Retour au site</a>
-</div>
-<div id="espaceGate" class="espace-loading">Vérification de la connexion…</div>
+<body>
 <div id="toastStack" aria-live="polite"></div>
 
 <!-- ---------- Chat en direct (visiteurs) ---------- -->
@@ -824,8 +825,6 @@
       <a href="#livres">Livres</a>
       <a href="#apropos">À propos</a>
       <a href="#faq">FAQ</a>
-      <a href="#" id="navCollabLink">Espace Collaborateur</a>
-      <a href="#" id="navAdminSpaceLink">Espace Administrateur</a>
       <a href="#contact" class="btn btn-primary navcta">Contact</a>
     </div>
     <div class="nav-tools">
@@ -837,6 +836,25 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         <span>Rejoindre votre espace</span>
       </a>
+      <div class="nav-extra" id="navExtra">
+        <button type="button" class="nav-extra-btn" id="navExtraBtn" aria-label="Autres espaces" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+        </button>
+        <div class="nav-extra-menu" id="navExtraMenu">
+          <a href="#accueil">Accueil</a>
+          <a href="#formations">Formations & Coaching</a>
+          <a href="catalogue-formations.html">Catalogue formations</a>
+          <a href="#prestations">Offre & Prestations</a>
+          <a href="#studio">Studio Design</a>
+          <a href="#livres">Livres</a>
+          <a href="#apropos">À propos</a>
+          <a href="#faq">FAQ</a>
+          <div class="nav-extra-divider"></div>
+          <a href="#" id="navCollabLink">Espace Collaborateur</a>
+          <a href="#" id="navAdminSpaceLink">Espace Administrateur</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
     </div>
     <button class="burger" id="burger" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
   </nav>
@@ -1884,8 +1902,6 @@
         <button type="button" class="collab-tab" id="spaceTabNewsletter">Abonnés newsletter</button>
         <button type="button" class="collab-tab" id="spaceTabAdmin">Administration</button>
         <button type="button" class="collab-tab" id="spaceTabCodes">Codes formation <span class="chat-badge" id="codesTabBadge" hidden>0</span></button>
-        <button type="button" class="collab-tab" id="spaceTabDemandes">Demandes de code <span class="chat-badge" id="demandesTabBadge" hidden>0</span></button>
-        <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -1942,7 +1958,6 @@
               <optgroup label="Compétences digitales">
                 <option value="Initiation aux outils du web">Initiation aux outils du web</option>
                 <option value="IA générative appliquée">IA générative appliquée</option>
-                <option value="Créer un site web avec l'IA">Créer un site web avec l'IA</option>
                 <option value="Gestion de projet en ligne">Gestion de projet en ligne</option>
                 <option value="Google Sheets">Google Sheets</option>
                 <option value="Outlook & Google Meet">Outlook & Google Meet</option>
@@ -1965,24 +1980,6 @@
 
           <div class="thread-list" id="codesList">
             <p class="forum-empty" id="codesListEmpty">Aucun code généré pour le moment.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="forum-layout" id="spacePanelDemandes" hidden>
-        <div class="forum-panel" style="width:100%;">
-          <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue par des personnes intéressées par une formation. Une fois le paiement reçu (Orange Money ou autre), cliquez sur <strong>Générer le code</strong> pour préremplir le formulaire de génération avec la bonne formation et le nom du client, puis marquez la demande comme traitée.</p>
-          <div class="thread-list" id="demandesList">
-            <p class="forum-empty" id="demandesListEmpty">Aucune demande de code pour le moment.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="forum-layout" id="spacePanelUtilisateurs" hidden>
-        <div class="forum-panel" style="width:100%;">
-          <p class="section-lede" style="margin:0 0 10px;">Toutes les personnes ayant déjà reçu un code d'accès, avec leur formation et leur code. Désactivez un code pour bloquer l'accès (ex. impayé), ou réactivez-le à tout moment — le code reste le même.</p>
-          <div class="thread-list" id="utilisateursList">
-            <p class="forum-empty" id="utilisateursListEmpty">Aucun utilisateur pour le moment.</p>
           </div>
         </div>
       </div>
@@ -2652,6 +2649,55 @@
   const burger = document.getElementById('burger');
   const navlinks = document.getElementById('navlinks');
   burger.addEventListener('click', () => navlinks.classList.toggle('open'));
+
+  const navExtraBtn = document.getElementById('navExtraBtn');
+  const navExtraMenu = document.getElementById('navExtraMenu');
+  if (navExtraBtn && navExtraMenu) {
+    navExtraBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const estOuvert = navExtraMenu.classList.toggle('open');
+      navExtraBtn.setAttribute('aria-expanded', estOuvert ? 'true' : 'false');
+    });
+    navExtraMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      navExtraMenu.classList.remove('open');
+      navExtraBtn.setAttribute('aria-expanded', 'false');
+    }));
+    document.addEventListener('click', (e) => {
+      if (!navExtraMenu.contains(e.target) && e.target !== navExtraBtn) {
+        navExtraMenu.classList.remove('open');
+        navExtraBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // ---- Sur mobile : un seul menu (☰ du haut) regroupant tous les liens, y compris Espace Collaborateur/Administrateur ----
+  const navCollabLinkEl = document.getElementById('navCollabLink');
+  const navAdminSpaceLinkEl = document.getElementById('navAdminSpaceLink');
+  if (navCollabLinkEl && navAdminSpaceLinkEl && navExtraMenu && navlinks) {
+    const mqMobileNav = window.matchMedia('(max-width:900px)');
+    const placerLiensEspaces = () => {
+      const cible = mqMobileNav.matches ? navlinks : navExtraMenu;
+      if (navCollabLinkEl.parentElement !== cible) {
+        const contactRef = cible.querySelector('a[href="#contact"]');
+        if (contactRef) {
+          cible.insertBefore(navCollabLinkEl, contactRef);
+          cible.insertBefore(navAdminSpaceLinkEl, contactRef);
+        } else {
+          cible.appendChild(navCollabLinkEl);
+          cible.appendChild(navAdminSpaceLinkEl);
+        }
+      }
+    };
+    placerLiensEspaces();
+    mqMobileNav.addEventListener('change', placerLiensEspaces);
+    [navCollabLinkEl, navAdminSpaceLinkEl].forEach((el) => {
+      el.addEventListener('click', () => {
+        navlinks.classList.remove('open');
+        navExtraMenu.classList.remove('open');
+        navExtraBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
   navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
 
   // Onglets Formations
@@ -2800,13 +2846,6 @@
   const spacePanelNewsletter = document.getElementById('spacePanelNewsletter');
   const spacePanelAdmin = document.getElementById('spacePanelAdmin');
   const spacePanelCodes = document.getElementById('spacePanelCodes');
-  const spaceTabDemandes = document.getElementById('spaceTabDemandes');
-  const spacePanelDemandes = document.getElementById('spacePanelDemandes');
-  const demandesList = document.getElementById('demandesList');
-  const demandesTabBadge = document.getElementById('demandesTabBadge');
-  const spaceTabUtilisateurs = document.getElementById('spaceTabUtilisateurs');
-  const spacePanelUtilisateurs = document.getElementById('spacePanelUtilisateurs');
-  const utilisateursList = document.getElementById('utilisateursList');
   const newsletterList = document.getElementById('newsletterList');
   const newsletterListEmpty = document.getElementById('newsletterListEmpty');
   let unsubNewsletterList = null;
@@ -2823,8 +2862,6 @@
   const codesListEmpty = document.getElementById('codesListEmpty');
   let unsubCodes = null;
   let codesCache = {};
-  let unsubDemandes = null;
-  let demandesCache = {};
 
   // ---- Messages visiteurs (staff) ----
   const visitorList = document.getElementById('visitorList');
@@ -2991,13 +3028,6 @@
   onAuthStateChanged(auth, async (user) => {
     window.collabUser = user;
     window.isAdminStaff = false;
-    const espaceGate = document.getElementById('espaceGate');
-    if (!user) {
-      // Personne n'est connecté : cette page est réservée, on retourne au site public
-      window.location.href = 'index.html';
-      return;
-    }
-    if (espaceGate) espaceGate.remove();
     if (user) {
       collabSpace.hidden = false;
       collabUserLabel.textContent = displayNameFor(user);
@@ -3042,7 +3072,6 @@
         demarrerEcouteCollabChats();
         demarrerEcouteBroadcastsAdmin();
         demarrerEcouteCodes();
-        demarrerEcouteDemandes();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3069,10 +3098,9 @@
       if (unsubVisitorList) { unsubVisitorList(); unsubVisitorList = null; }
       if (unsubVisitorMessages) { unsubVisitorMessages(); unsubVisitorMessages = null; }
       if (unsubAdminUsers) { unsubAdminUsers(); unsubAdminUsers = null; }
-      if (unsubAdminAdmins) { unsubAdminAdmins(); unsubAdminAdmins = null; }
       if (unsubNewsletterList) { unsubNewsletterList(); unsubNewsletterList = null; }
       if (unsubCodes) { unsubCodes(); unsubCodes = null; }
-      if (unsubDemandes) { unsubDemandes(); unsubDemandes = null; }
+      if (unsubAdminAdmins) { unsubAdminAdmins(); unsubAdminAdmins = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
@@ -3091,14 +3119,10 @@
     spaceTabNewsletter.classList.toggle('active', nom === 'newsletter');
     spaceTabAdmin.classList.toggle('active', nom === 'admin');
     if (spaceTabCodes) spaceTabCodes.classList.toggle('active', nom === 'codes');
-    if (spaceTabDemandes) spaceTabDemandes.classList.toggle('active', nom === 'demandes');
-    if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
     if (spacePanelCodes) spacePanelCodes.hidden = nom !== 'codes';
-    if (spacePanelDemandes) spacePanelDemandes.hidden = nom !== 'demandes';
-    if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3107,12 +3131,6 @@
   }
   if (spaceTabCodes) {
     spaceTabCodes.addEventListener('click', () => activerOngletEspaceAdmin('codes'));
-  }
-  if (spaceTabDemandes) {
-    spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
-  }
-  if (spaceTabUtilisateurs) {
-    spaceTabUtilisateurs.addEventListener('click', () => activerOngletEspaceAdmin('utilisateurs'));
   }
 
   // ---- Onglets Espace Administrateur (communication collaborateurs) ----
@@ -3557,163 +3575,11 @@
     }
   }
 
-  function renderUtilisateursList() {
-    if (!utilisateursList) return;
-    utilisateursList.innerHTML = '';
-    const codes = Object.keys(codesCache);
-    if (codes.length === 0) {
-      const p = document.createElement('p');
-      p.className = 'forum-empty';
-      p.textContent = 'Aucun utilisateur pour le moment.';
-      utilisateursList.appendChild(p);
-      return;
-    }
-    // Tri alphabétique par nom de client (les codes sans nom à la fin), puis par date
-    codes.sort((a, b) => {
-      const ca = codesCache[a] || {}, cb = codesCache[b] || {};
-      const na = (ca.client || '').trim(), nb = (cb.client || '').trim();
-      if (!!na !== !!nb) return na ? -1 : 1;
-      if (na && nb && na !== nb) return na.localeCompare(nb);
-      return (cb.creeLe || 0) - (ca.creeLe || 0);
-    });
-
-    codes.forEach((code) => {
-      const c = codesCache[code] || {};
-      const estActif = c.actif !== false;
-
-      const row = document.createElement('div');
-      row.className = 'admin-row';
-
-      const infos = document.createElement('div');
-      infos.className = 'a-infos';
-
-      const texte = document.createElement('span');
-      const nameLine = document.createElement('span');
-      nameLine.className = 'a-name';
-      nameLine.textContent = c.client || 'Nom non renseigné';
-      if (!estActif) {
-        const badge = document.createElement('span');
-        badge.className = 'admin-badge';
-        badge.style.background = '#8a8378';
-        badge.textContent = 'DÉSACTIVÉ';
-        nameLine.appendChild(badge);
-      }
-      const detailLine = document.createElement('span');
-      detailLine.className = 'a-email';
-      detailLine.innerHTML = (c.formation || '—') + ' · code <span style="font-family:\'JetBrains Mono\',monospace;">' + code + '</span>';
-      texte.appendChild(nameLine);
-      texte.appendChild(document.createElement('br'));
-      texte.appendChild(detailLine);
-      infos.appendChild(texte);
-      row.appendChild(infos);
-
-      const toggleBtn = document.createElement('button');
-      toggleBtn.type = 'button';
-      toggleBtn.className = 'admin-toggle-btn' + (estActif ? ' is-admin' : '');
-      toggleBtn.textContent = estActif ? 'Désactiver' : 'Réactiver';
-      toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
-      row.appendChild(toggleBtn);
-
-      utilisateursList.appendChild(row);
-    });
-  }
-
   function demarrerEcouteCodes() {
     if (unsubCodes) unsubCodes();
     unsubCodes = onValue(ref(rtdb, 'formationCodes'), (snap) => {
       codesCache = snap.val() || {};
       renderCodesList();
-      renderUtilisateursList();
-    });
-  }
-
-  // ==================== DEMANDES DE CODE (depuis le catalogue public) ====================
-  function renderDemandesList() {
-    if (!demandesList) return;
-    demandesList.innerHTML = '';
-    const ids = Object.keys(demandesCache).filter((id) => (demandesCache[id] || {}).statut !== 'traite');
-
-    if (demandesTabBadge) {
-      demandesTabBadge.hidden = ids.length === 0;
-      demandesTabBadge.textContent = String(ids.length);
-    }
-
-    if (ids.length === 0) {
-      const p = document.createElement('p');
-      p.className = 'forum-empty';
-      p.textContent = 'Aucune demande de code pour le moment.';
-      demandesList.appendChild(p);
-      return;
-    }
-    // Tri du plus récent au plus ancien
-    ids.sort((a, b) => (demandesCache[b].dateCreation || 0) - (demandesCache[a].dateCreation || 0));
-
-    ids.forEach((id) => {
-      const d = demandesCache[id] || {};
-
-      const row = document.createElement('div');
-      row.className = 'admin-row';
-
-      const infos = document.createElement('div');
-      infos.className = 'a-infos';
-
-      const texte = document.createElement('span');
-      const nameLine = document.createElement('span');
-      nameLine.className = 'a-name';
-      nameLine.textContent = d.nom || 'Nom non renseigné';
-      const detailLine = document.createElement('span');
-      detailLine.className = 'a-email';
-      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
-      detailLine.textContent = (d.formation || '—') + (d.telephone ? ' · ' + d.telephone : '') + (dateTxt ? ' · ' + dateTxt : '');
-      texte.appendChild(nameLine);
-      texte.appendChild(document.createElement('br'));
-      texte.appendChild(detailLine);
-      infos.appendChild(texte);
-      row.appendChild(infos);
-
-      const btnGroup = document.createElement('div');
-      btnGroup.style.display = 'flex';
-      btnGroup.style.gap = '8px';
-
-      const genererBtn = document.createElement('button');
-      genererBtn.type = 'button';
-      genererBtn.className = 'admin-toggle-btn is-admin';
-      genererBtn.textContent = 'Générer le code';
-      genererBtn.addEventListener('click', () => preremplirGenerationDepuisDemande(d));
-      btnGroup.appendChild(genererBtn);
-
-      const traiteBtn = document.createElement('button');
-      traiteBtn.type = 'button';
-      traiteBtn.className = 'admin-toggle-btn';
-      traiteBtn.textContent = 'Marquer traitée';
-      traiteBtn.addEventListener('click', () => marquerDemandeTraitee(id));
-      btnGroup.appendChild(traiteBtn);
-
-      row.appendChild(btnGroup);
-      demandesList.appendChild(row);
-    });
-  }
-
-  function preremplirGenerationDepuisDemande(demande) {
-    activerOngletEspaceAdmin('codes');
-    if (codeGenFormation && demande.formation) codeGenFormation.value = demande.formation;
-    if (codeGenClient) codeGenClient.value = demande.nom || '';
-    if (codeGenFormation) codeGenFormation.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  async function marquerDemandeTraitee(id) {
-    try {
-      await update(ref(rtdb, 'demandesCodes/' + id), { statut: 'traite' });
-    } catch (err) {
-      notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
-    }
-  }
-
-  function demarrerEcouteDemandes() {
-    if (unsubDemandes) unsubDemandes();
-    unsubDemandes = onValue(ref(rtdb, 'demandesCodes'), (snap) => {
-      demandesCache = snap.val() || {};
-      renderDemandesList();
     });
   }
 
