@@ -143,6 +143,26 @@
     transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
   }
   .collab-cta svg{width:17px; height:17px; flex-shrink:0;}
+  .nav-extra{position:relative; flex-shrink:0;}
+  .nav-extra-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:50%;
+    border:1.5px solid rgba(246,241,231,0.35); background:transparent; color:var(--paper);
+    cursor:pointer; transition:background .18s ease, border-color .18s ease;
+  }
+  .nav-extra-btn:hover, .nav-extra-btn[aria-expanded="true"]{background:rgba(246,241,231,0.14); border-color:rgba(246,241,231,0.6);}
+  .nav-extra-btn svg{width:18px; height:18px;}
+  .nav-extra-menu{
+    position:absolute; top:calc(100% + 12px); right:0; min-width:230px; max-height:80vh; overflow-y:auto;
+    background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px;
+    box-shadow:0 14px 34px rgba(0,0,0,.22); display:flex; flex-direction:column; gap:2px;
+    opacity:0; visibility:hidden; transform:translateY(-8px);
+    transition:opacity .2s ease, transform .2s ease, visibility .2s ease; z-index:200;
+  }
+  .nav-extra-menu.open{opacity:1; visibility:visible; transform:translateY(0);}
+  .nav-extra-menu a{color:var(--charcoal); padding:11px 14px; border-radius:6px; font-size:.9rem;}
+  .nav-extra-menu a:hover{background:var(--line);}
+  .nav-extra-divider{height:1px; background:var(--line); margin:6px 4px;}
   .collab-cta:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(217,142,61,.6); background:linear-gradient(135deg,#e69a3f,#ffc061);}
   .search-highlight{outline:3px solid var(--clay); outline-offset:4px; border-radius:3px;}
   .burger{display:none; background:none; border:none; cursor:pointer; padding:6px;}
@@ -671,13 +691,14 @@
     .navlinks{position:absolute; top:100%; left:0; right:0; background:var(--paper); flex-direction:column; align-items:flex-start; padding:20px 28px 26px; border-bottom:1px solid var(--line); gap:16px; transform:translateY(-8px); opacity:0; visibility:hidden; pointer-events:none; transition:transform .25s ease, opacity .2s ease; }
     .navlinks.open{transform:translateY(0); opacity:1; visibility:visible; pointer-events:auto;}
     .navlinks a{color:var(--charcoal);}
-    .navlinks a.btn-primary{color:var(--paper);}
+    .navlinks a.btn-primary{background:none; border:none; color:var(--charcoal); padding:4px 0; border-radius:0; font-weight:500;}
     .burger{display:block;}
     .nav-tools{order:3; width:100%; margin-left:0; flex-wrap:nowrap;}
     .search-form{flex:1; min-width:0; padding:8px 12px;}
     .search-form input{width:100%; min-width:0;}
     .collab-cta span{display:none;}
     .collab-cta{padding:10px; flex-shrink:0;}
+    .nav-extra{display:none;}
     .hero .wrap{grid-template-columns:minmax(0,1fr);}
     .hero-art{order:-1; max-width:280px;}
     .hero-book-badge{width:88px; padding:8px 9px 10px; bottom:-10px; left:-10px;}
@@ -804,8 +825,6 @@
       <a href="#livres">Livres</a>
       <a href="#apropos">À propos</a>
       <a href="#faq">FAQ</a>
-      <a href="#" id="navCollabLink">Espace Collaborateur</a>
-      <a href="#" id="navAdminSpaceLink">Espace Administrateur</a>
       <a href="#contact" class="btn btn-primary navcta">Contact</a>
     </div>
     <div class="nav-tools">
@@ -817,6 +836,25 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         <span>Rejoindre votre espace</span>
       </a>
+      <div class="nav-extra" id="navExtra">
+        <button type="button" class="nav-extra-btn" id="navExtraBtn" aria-label="Autres espaces" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+        </button>
+        <div class="nav-extra-menu" id="navExtraMenu">
+          <a href="#accueil">Accueil</a>
+          <a href="#formations">Formations & Coaching</a>
+          <a href="catalogue-formations.html">Catalogue formations</a>
+          <a href="#prestations">Offre & Prestations</a>
+          <a href="#studio">Studio Design</a>
+          <a href="#livres">Livres</a>
+          <a href="#apropos">À propos</a>
+          <a href="#faq">FAQ</a>
+          <div class="nav-extra-divider"></div>
+          <a href="#" id="navCollabLink">Espace Collaborateur</a>
+          <a href="#" id="navAdminSpaceLink">Espace Administrateur</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
     </div>
     <button class="burger" id="burger" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
   </nav>
@@ -2611,6 +2649,55 @@
   const burger = document.getElementById('burger');
   const navlinks = document.getElementById('navlinks');
   burger.addEventListener('click', () => navlinks.classList.toggle('open'));
+
+  const navExtraBtn = document.getElementById('navExtraBtn');
+  const navExtraMenu = document.getElementById('navExtraMenu');
+  if (navExtraBtn && navExtraMenu) {
+    navExtraBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const estOuvert = navExtraMenu.classList.toggle('open');
+      navExtraBtn.setAttribute('aria-expanded', estOuvert ? 'true' : 'false');
+    });
+    navExtraMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      navExtraMenu.classList.remove('open');
+      navExtraBtn.setAttribute('aria-expanded', 'false');
+    }));
+    document.addEventListener('click', (e) => {
+      if (!navExtraMenu.contains(e.target) && e.target !== navExtraBtn) {
+        navExtraMenu.classList.remove('open');
+        navExtraBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // ---- Sur mobile : un seul menu (☰ du haut) regroupant tous les liens, y compris Espace Collaborateur/Administrateur ----
+  const navCollabLinkEl = document.getElementById('navCollabLink');
+  const navAdminSpaceLinkEl = document.getElementById('navAdminSpaceLink');
+  if (navCollabLinkEl && navAdminSpaceLinkEl && navExtraMenu && navlinks) {
+    const mqMobileNav = window.matchMedia('(max-width:900px)');
+    const placerLiensEspaces = () => {
+      const cible = mqMobileNav.matches ? navlinks : navExtraMenu;
+      if (navCollabLinkEl.parentElement !== cible) {
+        const contactRef = cible.querySelector('a[href="#contact"]');
+        if (contactRef) {
+          cible.insertBefore(navCollabLinkEl, contactRef);
+          cible.insertBefore(navAdminSpaceLinkEl, contactRef);
+        } else {
+          cible.appendChild(navCollabLinkEl);
+          cible.appendChild(navAdminSpaceLinkEl);
+        }
+      }
+    };
+    placerLiensEspaces();
+    mqMobileNav.addEventListener('change', placerLiensEspaces);
+    [navCollabLinkEl, navAdminSpaceLinkEl].forEach((el) => {
+      el.addEventListener('click', () => {
+        navlinks.classList.remove('open');
+        navExtraMenu.classList.remove('open');
+        navExtraBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
   navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
 
   // Onglets Formations
