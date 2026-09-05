@@ -1885,6 +1885,7 @@
         <button type="button" class="collab-tab" id="spaceTabAdmin">Administration</button>
         <button type="button" class="collab-tab" id="spaceTabCodes">Codes formation <span class="chat-badge" id="codesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabDemandes">Demandes de code <span class="chat-badge" id="demandesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -1973,6 +1974,15 @@
           <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue par des personnes intéressées par une formation. Une fois le paiement reçu (Orange Money ou autre), cliquez sur <strong>Générer le code</strong> pour préremplir le formulaire de génération avec la bonne formation et le nom du client, puis marquez la demande comme traitée.</p>
           <div class="thread-list" id="demandesList">
             <p class="forum-empty" id="demandesListEmpty">Aucune demande de code pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelUtilisateurs" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Toutes les personnes ayant déjà reçu un code d'accès, avec leur formation et leur code. Désactivez un code pour bloquer l'accès (ex. impayé), ou réactivez-le à tout moment — le code reste le même.</p>
+          <div class="thread-list" id="utilisateursList">
+            <p class="forum-empty" id="utilisateursListEmpty">Aucun utilisateur pour le moment.</p>
           </div>
         </div>
       </div>
@@ -2794,6 +2804,9 @@
   const spacePanelDemandes = document.getElementById('spacePanelDemandes');
   const demandesList = document.getElementById('demandesList');
   const demandesTabBadge = document.getElementById('demandesTabBadge');
+  const spaceTabUtilisateurs = document.getElementById('spaceTabUtilisateurs');
+  const spacePanelUtilisateurs = document.getElementById('spacePanelUtilisateurs');
+  const utilisateursList = document.getElementById('utilisateursList');
   const newsletterList = document.getElementById('newsletterList');
   const newsletterListEmpty = document.getElementById('newsletterListEmpty');
   let unsubNewsletterList = null;
@@ -3079,11 +3092,13 @@
     spaceTabAdmin.classList.toggle('active', nom === 'admin');
     if (spaceTabCodes) spaceTabCodes.classList.toggle('active', nom === 'codes');
     if (spaceTabDemandes) spaceTabDemandes.classList.toggle('active', nom === 'demandes');
+    if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
     if (spacePanelCodes) spacePanelCodes.hidden = nom !== 'codes';
     if (spacePanelDemandes) spacePanelDemandes.hidden = nom !== 'demandes';
+    if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3095,6 +3110,9 @@
   }
   if (spaceTabDemandes) {
     spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
+  }
+  if (spaceTabUtilisateurs) {
+    spaceTabUtilisateurs.addEventListener('click', () => activerOngletEspaceAdmin('utilisateurs'));
   }
 
   // ---- Onglets Espace Administrateur (communication collaborateurs) ----
@@ -3539,11 +3557,73 @@
     }
   }
 
+  function renderUtilisateursList() {
+    if (!utilisateursList) return;
+    utilisateursList.innerHTML = '';
+    const codes = Object.keys(codesCache);
+    if (codes.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucun utilisateur pour le moment.';
+      utilisateursList.appendChild(p);
+      return;
+    }
+    // Tri alphabétique par nom de client (les codes sans nom à la fin), puis par date
+    codes.sort((a, b) => {
+      const ca = codesCache[a] || {}, cb = codesCache[b] || {};
+      const na = (ca.client || '').trim(), nb = (cb.client || '').trim();
+      if (!!na !== !!nb) return na ? -1 : 1;
+      if (na && nb && na !== nb) return na.localeCompare(nb);
+      return (cb.creeLe || 0) - (ca.creeLe || 0);
+    });
+
+    codes.forEach((code) => {
+      const c = codesCache[code] || {};
+      const estActif = c.actif !== false;
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = c.client || 'Nom non renseigné';
+      if (!estActif) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = '#8a8378';
+        badge.textContent = 'DÉSACTIVÉ';
+        nameLine.appendChild(badge);
+      }
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      detailLine.innerHTML = (c.formation || '—') + ' · code <span style="font-family:\'JetBrains Mono\',monospace;">' + code + '</span>';
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.type = 'button';
+      toggleBtn.className = 'admin-toggle-btn' + (estActif ? ' is-admin' : '');
+      toggleBtn.textContent = estActif ? 'Désactiver' : 'Réactiver';
+      toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
+      row.appendChild(toggleBtn);
+
+      utilisateursList.appendChild(row);
+    });
+  }
+
   function demarrerEcouteCodes() {
     if (unsubCodes) unsubCodes();
     unsubCodes = onValue(ref(rtdb, 'formationCodes'), (snap) => {
       codesCache = snap.val() || {};
       renderCodesList();
+      renderUtilisateursList();
     });
   }
 
