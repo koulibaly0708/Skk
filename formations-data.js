@@ -295,6 +295,213 @@ export const FORMATIONS = {
     `
   },
 
+  "Créer un site web avec l'IA": {
+    titre: "Créer un site web avec l'IA",
+    duree: "4 séances d'1h30, une par semaine", public: "Débutants souhaitant créer leur site avec l'IA", prerequis: "Aucun",
+    modules: ["Séance 1 — Site vitrine avec Claude", "Séance 2 — Personnalisation & e-commerce", "Séance 3 — Mise en ligne gratuite (Vercel & Netlify)", "Séance 4 — Base de données Firebase"],
+    apercu: "Une séance d'1h30 par semaine pour apprendre à créer un site vitrine puis une boutique en ligne avec Claude IA, les publier gratuitement et les connecter à une vraie base de données…",
+    pdfUrl: "formation-creer-un-site-web-avec-ia.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Quatre séances d'1h30, une par semaine, pour passer d'une idée à un site vitrine ou une boutique en ligne publiée, en utilisant Claude IA pour écrire le code, puis Vercel/Netlify pour l'héberger et Firebase pour le rendre dynamique. Formation 100 % gratuite, aucun outil payant n'est nécessaire.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Séance 1</span>
+        <h3>Site vitrine avec Claude</h3>
+        <h4>Qu'est-ce que Claude IA ?</h4>
+        <ol>
+          <li>Aller sur claude.ai et créer un compte gratuit</li>
+          <li>Choisir la fonctionnalité « Artifacts » pour afficher un aperçu du site</li>
+          <li>Décrire le site souhaité en une ou plusieurs phrases</li>
+          <li>Demander des ajustements par des messages successifs</li>
+        </ol>
+        <div class="callout">
+          <strong>Exemple de prompt —</strong> « Crée-moi un site vitrine pour un salon de coiffure, avec une page d'accueil, nos services et un formulaire de contact. »
+        </div>
+
+        <h4>Les trois briques d'une page web</h4>
+        <ul>
+          <li><strong>HTML — le contenu —</strong> le texte, les images, les titres, les boutons : la structure de la page</li>
+          <li><strong>CSS — le style —</strong> les couleurs, les polices, les espacements : l'apparence de la page</li>
+          <li><strong>JavaScript — l'interactivité —</strong> le menu qui s'ouvre, le panier qui se met à jour, les animations</li>
+        </ul>
+
+        <h4>Bien écrire son prompt</h4>
+        <table class="table-cours">
+          <thead><tr><th>À éviter</th><th>À privilégier</th></tr></thead>
+          <tbody>
+            <tr><td>« Fais-moi un site » — trop vague : Claude devra deviner votre activité, vos couleurs et vos contenus.</td><td>« Crée un site vitrine pour ma boulangerie artisanale : accueil avec grande image, section « nos pains » avec 4 produits, horaires, plan d'accès et formulaire de contact. Palette chaleureuse marron/crème. »</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Anatomie d'un site vitrine</h4>
+        <ol>
+          <li><strong>En-tête (header) —</strong> logo, nom du site et menu de navigation vers les sections</li>
+          <li><strong>Section d'accueil (hero) —</strong> grand titre accrocheur, image et bouton d'action principal</li>
+          <li><strong>Services / produits —</strong> présentation de l'activité avec 3 à 6 blocs illustrés</li>
+          <li><strong>Contact —</strong> formulaire, adresse, téléphone, horaires ou carte</li>
+          <li><strong>Pied de page (footer) —</strong> liens utiles, réseaux sociaux, mentions légales</li>
+        </ol>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Créer son premier site vitrine</h4>
+          <p>Créer avec Claude un site vitrine complet pour une activité de votre choix (commerce, artisan, association) avec les cinq sections vues ci-dessus.</p>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Séance 2</span>
+        <h3>Personnaliser le design et créer une boutique</h3>
+        <h4>Personnaliser le design</h4>
+        <ul>
+          <li><strong>Couleurs —</strong> « Utilise une palette bleu marine et blanc, avec un accent doré pour les boutons. »</li>
+          <li><strong>Polices —</strong> « Utilise une police élégante pour les titres et une police simple pour le texte. »</li>
+          <li><strong>Images —</strong> « Ajoute des images illustrant [votre activité] dans la section d'accueil. »</li>
+        </ul>
+        <div class="callout">
+          <strong>À retenir —</strong> Faites une demande à la fois : il est plus facile de corriger un petit changement qu'une refonte complète.
+        </div>
+
+        <h4>Rendre son site responsive</h4>
+        <p>« Responsive » signifie que le site s'adapte automatiquement à toutes les tailles d'écran : ordinateur, tablette, téléphone.</p>
+        <div class="callout">
+          <strong>Le prompt à retenir —</strong> « Adapte automatiquement la mise en page pour qu'elle reste lisible et bien organisée sur mobile et tablette. »
+        </div>
+
+        <h4>Créer une boutique en ligne</h4>
+        <ul>
+          <li><strong>Catalogue produits —</strong> une grille de cartes : image, nom, prix, bouton « ajouter au panier »</li>
+          <li><strong>Fiche produit —</strong> une page dédiée par produit avec description détaillée et photos</li>
+          <li><strong>Panier —</strong> un résumé des articles choisis avec quantité et total, mis à jour en direct</li>
+        </ul>
+
+        <h4>Prompts pour générer produits et panier</h4>
+        <div class="callout">
+          <strong>Catalogue + fiche produit —</strong> « Ajoute une page « Boutique » avec une grille de 6 produits (image, nom, prix, bouton Ajouter au panier). Chaque produit doit ouvrir une fiche détaillée avec description. »
+        </div>
+        <div class="callout">
+          <strong>Panier —</strong> « Ajoute un panier accessible depuis un bouton en haut à droite, qui liste les produits ajoutés, leur quantité et le total. »
+        </div>
+        <p style="color:#5a5349; font-size:.92rem;">Le panier créé ainsi fonctionne sans paiement réel. Le paiement en ligne (Stripe, PayPal…) est une étape avancée, hors périmètre gratuit de cette formation.</p>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Personnaliser et ajouter une boutique</h4>
+          <p>Personnaliser les couleurs et polices de votre site, vérifier son affichage mobile, puis ajouter une page boutique avec 3 à 5 produits et un panier.</p>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Séance 3</span>
+        <h3>Publier son site avec Vercel et Netlify</h3>
+        <h4>Comprendre l'hébergement web</h4>
+        <p>Pour qu'un site soit visible sur Internet, son code doit être placé sur un serveur. GitHub stocke le code, Vercel ou Netlify le publient et le mettent à jour automatiquement à chaque modification.</p>
+
+        <h4>Déployer avec Netlify</h4>
+        <ol>
+          <li>Créer un compte gratuit sur netlify.com</li>
+          <li>Cliquer sur « Add new site » puis « Import an existing project »</li>
+          <li>Se connecter à GitHub et choisir le dépôt du site</li>
+          <li>Laisser les réglages par défaut et cliquer sur « Deploy »</li>
+          <li>Récupérer l'adresse fournie automatiquement (ex. moncafe.netlify.app)</li>
+        </ol>
+
+        <h4>Déployer avec Vercel</h4>
+        <ol>
+          <li>Créer un compte gratuit sur vercel.com</li>
+          <li>Cliquer sur « Add New… » puis « Project »</li>
+          <li>Se connecter à GitHub et importer le dépôt du site</li>
+          <li>Vérifier les réglages proposés et cliquer sur « Deploy »</li>
+          <li>Récupérer l'adresse fournie automatiquement (ex. moncafe.vercel.app)</li>
+        </ol>
+
+        <h4>Nom de domaine et comparatif</h4>
+        <table class="table-cours">
+          <thead><tr><th></th><th>Netlify</th><th>Vercel</th></tr></thead>
+          <tbody>
+            <tr><td>Prix de base</td><td>Gratuit</td><td>Gratuit</td></tr>
+            <tr><td>Connexion à GitHub</td><td>Oui</td><td>Oui</td></tr>
+            <tr><td>Mise à jour automatique</td><td>Oui</td><td>Oui</td></tr>
+            <tr><td>Adresse fournie</td><td>.netlify.app</td><td>.vercel.app</td></tr>
+            <tr><td>Idéal pour</td><td>Sites vitrine, HTML/CSS</td><td>Sites vitrine et applications</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>À savoir —</strong> Pour un vrai nom de domaine (ex. moncafe.fr), il faudra l'acheter séparément chez un registrar (quelques euros par an) — cette formation reste 100 % gratuite avec l'adresse fournie par Vercel ou Netlify.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Mettre son site en ligne</h4>
+          <p>Déposer votre code sur GitHub, puis déployer votre site avec Netlify ou Vercel et partager le lien obtenu.</p>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Séance 4</span>
+        <h3>Connecter son site à Firebase</h3>
+        <h4>Pourquoi une base de données ?</h4>
+        <ul>
+          <li><strong>Formulaire de contact —</strong> les messages envoyés sont enregistrés et consultables, au lieu de se perdre</li>
+          <li><strong>Produits dynamiques —</strong> ajouter, modifier ou retirer un produit sans toucher au code du site</li>
+          <li><strong>Suivi des demandes —</strong> garder une trace des commandes ou demandes reçues via le site</li>
+        </ul>
+
+        <h4>Créer un projet Firebase</h4>
+        <ol>
+          <li>Aller sur firebase.google.com et se connecter avec un compte Google</li>
+          <li>Cliquer sur « Ajouter un projet » et lui donner un nom</li>
+          <li>Dans le menu, ouvrir « Firestore Database » puis « Créer une base de données »</li>
+          <li>Choisir le mode « test » pour commencer (accès ouvert temporaire)</li>
+          <li>Copier la « configuration Firebase » (clés) fournie pour le site</li>
+        </ol>
+
+        <h4>Connecter Firebase à son site</h4>
+        <div class="callout">
+          <strong>Formulaire de contact —</strong> « Connecte le formulaire de contact à Firebase avec cette configuration [coller la configuration], pour que chaque message envoyé soit enregistré dans Firestore. »
+        </div>
+        <div class="callout">
+          <strong>Produits —</strong> « Fais en sorte que la liste des produits de la boutique soit chargée depuis Firestore au lieu d'être écrite dans le code. »
+        </div>
+
+        <h4>Sécuriser sa base de données</h4>
+        <table class="table-cours">
+          <thead><tr><th>Sans règles de sécurité</th><th>Avec des règles de sécurité</th></tr></thead>
+          <tbody>
+            <tr><td>N'importe qui sur Internet peut lire, modifier ou supprimer les données de votre base.</td><td>« Écris des règles Firestore qui autorisent tout le monde à lire les produits, mais interdisent l'écriture sauf pour le formulaire de contact. »</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Checklist avant la mise en ligne définitive</h4>
+        <ul>
+          <li>Le site s'affiche correctement sur ordinateur, tablette et mobile</li>
+          <li>Toutes les pages (accueil, boutique, contact) fonctionnent sans erreur</li>
+          <li>Le formulaire de contact enregistre bien les messages dans Firestore</li>
+          <li>Les règles de sécurité Firestore sont activées (plus de mode « test »)</li>
+          <li>Le site est déployé sur Vercel ou Netlify avec une adresse fonctionnelle</li>
+          <li>Le lien du site a été testé depuis un autre appareil</li>
+        </ul>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Connecter et sécuriser sa base</h4>
+          <p>Connecter le formulaire de contact et le catalogue produits à Firebase, puis sécuriser la base avant la mise en ligne définitive.</p>
+        </div>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Synthèse</span>
+        <h3>Ce qu'il faut retenir</h3>
+        <ul>
+          <li><strong>Séance 1 —</strong> Claude génère le code à partir d'une description en français ; un bon prompt précise l'activité, les sections et le style</li>
+          <li><strong>Séance 2 —</strong> personnaliser par petites demandes successives ; un site responsive s'adapte à tous les écrans ; une boutique simple, c'est un catalogue, des fiches produit et un panier</li>
+          <li><strong>Séance 3 —</strong> GitHub héberge le code, Vercel/Netlify publient le site, avec mise à jour automatique à chaque modification</li>
+          <li><strong>Séance 4 —</strong> Firebase rend le site dynamique (contact, produits) ; toujours sécuriser la base avant la mise en ligne définitive</li>
+        </ul>
+      </div>
+    `
+  },
+
   "Gestion de projet en ligne": {
     titre: "Gestion de projet en ligne",
     duree: "Sur-mesure", public: "Chefs de projet, managers", prerequis: "Aucun",
