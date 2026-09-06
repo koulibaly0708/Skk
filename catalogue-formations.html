@@ -237,7 +237,7 @@
     </div>
   </div>
 
-  <p class="note">Le prix concerne l'accès à la formation sur le site (format PDF), accompagné d'un webinaire. Les tarifs affichés sont indicatifs et peuvent varier selon le format (présentiel/distance), la durée et le nombre de participants. Chaque demande donne lieu à un devis personnalisé.</p>
+  <p class="note">Le prix concerne l'accès à la formation sur le site et  format PDF, accompagné d'un webinaire.</p>
 
 </div>
 
@@ -253,22 +253,24 @@
     <p class="modal-sub" id="demandeCodeSub">Laissez vos coordonnées : après réception de votre paiement, votre code vous sera envoyé.</p>
 
     <form class="modal-form" id="demandeCodeForm" novalidate>
-      <div id="demandeCodeFormationWrap">
-        <label for="demandeCodeFormation">Formation souhaitée</label>
-        <select id="demandeCodeFormation" required></select>
-        <span class="modal-error" id="errDemandeCodeFormation">Merci de choisir une formation.</span>
+      <div id="demandeCodeFields" style="display:flex; flex-direction:column; gap:12px;">
+        <div id="demandeCodeFormationWrap">
+          <label for="demandeCodeFormation">Formation souhaitée</label>
+          <select id="demandeCodeFormation" required></select>
+          <span class="modal-error" id="errDemandeCodeFormation">Merci de choisir une formation.</span>
+        </div>
+
+        <input type="text" id="demandeCodeNom" placeholder="Votre nom et prénom" required autocomplete="name" maxlength="120">
+        <span class="modal-error" id="errDemandeCodeNom">Merci d'indiquer votre nom.</span>
+
+        <input type="tel" id="demandeCodeTelephone" placeholder="Numéro de téléphone / WhatsApp" required autocomplete="tel" inputmode="tel" pattern="[0-9+ ]{6,20}" maxlength="20">
+        <span class="modal-error" id="errDemandeCodeTelephone">Merci d'indiquer un numéro valide.</span>
+
+        <input type="text" name="_gotcha" style="position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <button type="submit" class="btn btn-primary" id="demandeCodeSubmitBtn">Envoyer ma demande</button>
+        <p class="modal-error" id="demandeCodeSendError">Une erreur est survenue, merci de réessayer ou de m'écrire directement sur WhatsApp.</p>
       </div>
-
-      <input type="text" id="demandeCodeNom" placeholder="Votre nom et prénom" required autocomplete="name" maxlength="120">
-      <span class="modal-error" id="errDemandeCodeNom">Merci d'indiquer votre nom.</span>
-
-      <input type="tel" id="demandeCodeTelephone" placeholder="Numéro de téléphone / WhatsApp" required autocomplete="tel" inputmode="tel" pattern="[0-9+ ]{6,20}" maxlength="20">
-      <span class="modal-error" id="errDemandeCodeTelephone">Merci d'indiquer un numéro valide.</span>
-
-      <input type="text" name="_gotcha" style="position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-      <button type="submit" class="btn btn-primary" id="demandeCodeSubmitBtn">Envoyer ma demande</button>
-      <p class="modal-error" id="demandeCodeSendError">Une erreur est survenue, merci de réessayer ou de m'écrire directement sur WhatsApp.</p>
       <div class="modal-success" id="demandeCodeSuccess">Merci ! Votre demande a bien été transmise. Vous recevrez votre code d'accès dès validation du paiement.</div>
 
       <div class="payment-invite" id="demandeCodePaiement">
@@ -362,7 +364,7 @@
   function ouvrirModale(formation) {
     formationPreselectionnee = formation || null;
     form.reset();
-    form.style.display = 'flex';
+    document.getElementById('demandeCodeFields').style.display = 'flex';
     success.classList.remove('show');
     sendError.classList.remove('show');
     document.getElementById('demandeCodePaiement').classList.remove('show');
@@ -436,7 +438,7 @@
         dateCreation: Date.now(),
         statut: 'en_attente'
       });
-      form.style.display = 'none';
+      document.getElementById('demandeCodeFields').style.display = 'none';
       success.classList.add('show');
 
       const texteWhatsapp = "Bonjour, je viens d'effectuer le paiement pour la formation \"" + formation + "\". Voici ma preuve de paiement, mon nom et mon numéro pour la réception de mon code d'accès :";
