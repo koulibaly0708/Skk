@@ -87,6 +87,19 @@
   .modal-error.show{display:block;}
   .modal-success{display:none; background:rgba(76,107,84,0.1); border:1px solid rgba(76,107,84,0.3); border-radius:8px; padding:14px 16px; color:var(--sage); font-size:.9rem;}
   .modal-success.show{display:block;}
+
+  .payment-invite{display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--line);}
+  .payment-invite.show{display:block;}
+  .payment-invite h4{font-size:1rem; margin:0 0 6px;}
+  .payment-invite .pi-sub{color:#5a5349; font-size:.88rem; margin:0 0 14px;}
+  .pay-methods{display:flex; gap:16px; flex-wrap:wrap; margin:14px 0 18px;}
+  .pay-method{display:flex; align-items:center; gap:10px;}
+  .pay-logo{width:34px; height:34px; object-fit:contain; border-radius:6px; background:var(--white); border:1px solid var(--line); padding:4px;}
+  .pay-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+  .pay-method strong{display:block; font-size:.9rem; color:var(--ink);}
+  .pay-method span{display:block; font-family:'JetBrains Mono',monospace; font-size:.8rem; color:#5a544c;}
+  .pay-benefits{margin:0 0 18px; padding-left:20px; font-size:.88rem; color:#5a544c;}
+  .pay-benefits li{margin-bottom:6px;}
 </style>
 </head>
 <body>
@@ -257,6 +270,45 @@
       <button type="submit" class="btn btn-primary" id="demandeCodeSubmitBtn">Envoyer ma demande</button>
       <p class="modal-error" id="demandeCodeSendError">Une erreur est survenue, merci de réessayer ou de m'écrire directement sur WhatsApp.</p>
       <div class="modal-success" id="demandeCodeSuccess">Merci ! Votre demande a bien été transmise. Vous recevrez votre code d'accès dès validation du paiement.</div>
+
+      <div class="payment-invite" id="demandeCodePaiement">
+        <h4>Réglez votre formation pour recevoir votre code</h4>
+        <p class="pi-sub">Choisissez l'un des moyens de paiement mobile ci-dessous, puis envoyez-moi votre preuve de paiement par WhatsApp.</p>
+        <div class="pay-methods">
+          <div class="pay-method">
+            <img src="assets/logos/orange-money.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="pay-dot" style="background:#FF6600; display:none;"></span>
+            <div><strong>Orange Money</strong><span>621 10 98 47</span></div>
+          </div>
+          <div class="pay-method">
+            <img src="assets/logos/credit-money.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="pay-dot" style="background:var(--ink); display:none;"></span>
+            <div><strong>Crédit Money</strong><span>621 10 98 47</span></div>
+          </div>
+          <div class="pay-method">
+            <img src="assets/logos/paycard.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="pay-dot" style="background:var(--clay); display:none;"></span>
+            <div><strong>Paycard</strong><span>621 10 98 47</span></div>
+          </div>
+          <div class="pay-method">
+            <img src="assets/logos/kulu.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="pay-dot" style="background:var(--sage); display:none;"></span>
+            <div><strong>Kulu</strong><span>621 10 98 47</span></div>
+          </div>
+          <div class="pay-method">
+            <img src="assets/logos/wave.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="pay-dot" style="background:#1DA1F2; display:none;"></span>
+            <div><strong>Wave</strong><span>610 47 35 09</span></div>
+          </div>
+        </div>
+        <p class="pi-sub" style="margin-bottom:8px;">Après validation de votre paiement, vous recevrez :</p>
+        <ul class="pay-benefits">
+          <li>Un code d'accès unique donnant accès à la formation sur le site ;</li>
+          <li>La formation complète au format PDF ;</li>
+          <li>Le droit à un webinaire dont le programme vous sera communiqué — pour rester informé, connectez-vous à votre espace collaborateur.</li>
+        </ul>
+        <a href="https://wa.me/224621109847" target="_blank" rel="noopener" class="btn btn-primary" id="btnEnvoyerPreuvePaiementFormation">Envoyer ma preuve de paiement</a>
+      </div>
     </form>
   </div>
 </div>
@@ -313,6 +365,7 @@
     form.style.display = 'flex';
     success.classList.remove('show');
     sendError.classList.remove('show');
+    document.getElementById('demandeCodePaiement').classList.remove('show');
     document.querySelectorAll('#demandeCodeForm .modal-error').forEach((el) => el.classList.remove('show'));
 
     if (formation) {
@@ -385,6 +438,10 @@
       });
       form.style.display = 'none';
       success.classList.add('show');
+
+      const texteWhatsapp = "Bonjour, je viens d'effectuer le paiement pour la formation \"" + formation + "\". Voici ma preuve de paiement, mon nom et mon numéro pour la réception de mon code d'accès :";
+      document.getElementById('btnEnvoyerPreuvePaiementFormation').href = "https://wa.me/224621109847?text=" + encodeURIComponent(texteWhatsapp);
+      document.getElementById('demandeCodePaiement').classList.add('show');
     } catch (err) {
       sendError.classList.add('show');
     } finally {
