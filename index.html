@@ -1902,6 +1902,7 @@
         <button type="button" class="collab-tab" id="spaceTabNewsletter">Abonnés newsletter</button>
         <button type="button" class="collab-tab" id="spaceTabAdmin">Administration</button>
         <button type="button" class="collab-tab" id="spaceTabCodes">Codes formation <span class="chat-badge" id="codesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabDemandes">Demandes formations <span class="chat-badge" id="demandesTabBadge" hidden>0</span></button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -1980,6 +1981,15 @@
 
           <div class="thread-list" id="codesList">
             <p class="forum-empty" id="codesListEmpty">Aucun code généré pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelDemandes" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Demandes de code d'accès envoyées depuis le catalogue des formations, en attente de paiement puis de génération du code. Une fois le paiement reçu sur WhatsApp, générez le code dans l'onglet « Codes formation », puis marquez la demande comme traitée.</p>
+          <div class="thread-list" id="demandesList">
+            <p class="forum-empty" id="demandesListEmpty">Aucune demande pour le moment.</p>
           </div>
         </div>
       </div>
@@ -2846,6 +2856,12 @@
   const spacePanelNewsletter = document.getElementById('spacePanelNewsletter');
   const spacePanelAdmin = document.getElementById('spacePanelAdmin');
   const spacePanelCodes = document.getElementById('spacePanelCodes');
+  const spaceTabDemandes = document.getElementById('spaceTabDemandes');
+  const spacePanelDemandes = document.getElementById('spacePanelDemandes');
+  const demandesList = document.getElementById('demandesList');
+  const demandesTabBadge = document.getElementById('demandesTabBadge');
+  let demandesCache = {};
+  let unsubDemandes = null;
   const newsletterList = document.getElementById('newsletterList');
   const newsletterListEmpty = document.getElementById('newsletterListEmpty');
   let unsubNewsletterList = null;
@@ -3072,6 +3088,7 @@
         demarrerEcouteCollabChats();
         demarrerEcouteBroadcastsAdmin();
         demarrerEcouteCodes();
+        demarrerEcouteDemandes();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3100,6 +3117,7 @@
       if (unsubAdminUsers) { unsubAdminUsers(); unsubAdminUsers = null; }
       if (unsubNewsletterList) { unsubNewsletterList(); unsubNewsletterList = null; }
       if (unsubCodes) { unsubCodes(); unsubCodes = null; }
+      if (unsubDemandes) { unsubDemandes(); unsubDemandes = null; }
       if (unsubAdminAdmins) { unsubAdminAdmins(); unsubAdminAdmins = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
@@ -3119,10 +3137,12 @@
     spaceTabNewsletter.classList.toggle('active', nom === 'newsletter');
     spaceTabAdmin.classList.toggle('active', nom === 'admin');
     if (spaceTabCodes) spaceTabCodes.classList.toggle('active', nom === 'codes');
+    if (spaceTabDemandes) spaceTabDemandes.classList.toggle('active', nom === 'demandes');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
     if (spacePanelCodes) spacePanelCodes.hidden = nom !== 'codes';
+    if (spacePanelDemandes) spacePanelDemandes.hidden = nom !== 'demandes';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3131,6 +3151,9 @@
   }
   if (spaceTabCodes) {
     spaceTabCodes.addEventListener('click', () => activerOngletEspaceAdmin('codes'));
+  }
+  if (spaceTabDemandes) {
+    spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
   }
 
   // ---- Onglets Espace Administrateur (communication collaborateurs) ----
@@ -3580,6 +3603,112 @@
     unsubCodes = onValue(ref(rtdb, 'formationCodes'), (snap) => {
       codesCache = snap.val() || {};
       renderCodesList();
+    });
+  }
+
+  // ==================== DEMANDES DE CODE D'ACCÈS FORMATION (admin) ====================
+  function renderDemandesList() {
+    if (!demandesList) return;
+    demandesList.innerHTML = '';
+    const ids = Object.keys(demandesCache);
+
+    const enAttente = ids.filter((id) => (demandesCache[id] || {}).statut !== 'traite');
+    if (demandesTabBadge) {
+      if (enAttente.length > 0) {
+        demandesTabBadge.textContent = enAttente.length;
+        demandesTabBadge.hidden = false;
+      } else {
+        demandesTabBadge.hidden = true;
+      }
+    }
+
+    if (ids.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucune demande pour le moment.';
+      demandesList.appendChild(p);
+      return;
+    }
+
+    // Tri du plus récent au plus ancien, demandes en attente en premier
+    ids.sort((a, b) => {
+      const da = demandesCache[a] || {}, db = demandesCache[b] || {};
+      const ea = da.statut === 'traite' ? 1 : 0, eb = db.statut === 'traite' ? 1 : 0;
+      if (ea !== eb) return ea - eb;
+      return (db.dateCreation || 0) - (da.dateCreation || 0);
+    });
+
+    ids.forEach((id) => {
+      const d = demandesCache[id] || {};
+      const estTraitee = d.statut === 'traite';
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = d.nom || 'Sans nom';
+      if (estTraitee) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = 'var(--sage)';
+        badge.textContent = 'TRAITÉE';
+        nameLine.appendChild(badge);
+      }
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
+      detailLine.textContent = (d.formation || '—') + ' · ' + (d.telephone || '—') + (dateTxt ? ' · ' + dateTxt : '');
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+
+      if (d.telephone) {
+        const waBtn = document.createElement('a');
+        waBtn.className = 'admin-toggle-btn';
+        waBtn.textContent = 'WhatsApp';
+        const telWa = String(d.telephone).replace(/[^0-9]/g, '');
+        waBtn.href = 'https://wa.me/' + telWa;
+        waBtn.target = '_blank';
+        waBtn.rel = 'noopener';
+        btnGroup.appendChild(waBtn);
+      }
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.type = 'button';
+      toggleBtn.className = 'admin-toggle-btn' + (estTraitee ? '' : ' is-admin');
+      toggleBtn.textContent = estTraitee ? 'Remettre en attente' : 'Marquer traitée';
+      toggleBtn.addEventListener('click', () => basculerDemandeTraitee(id, estTraitee));
+      btnGroup.appendChild(toggleBtn);
+
+      row.appendChild(btnGroup);
+      demandesList.appendChild(row);
+    });
+  }
+
+  async function basculerDemandeTraitee(id, estActuellementTraitee) {
+    try {
+      await update(ref(rtdb, 'demandesCodes/' + id), { statut: estActuellementTraitee ? 'en_attente' : 'traite' });
+    } catch (err) {
+      notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
+    }
+  }
+
+  function demarrerEcouteDemandes() {
+    if (unsubDemandes) unsubDemandes();
+    unsubDemandes = onValue(ref(rtdb, 'demandesCodes'), (snap) => {
+      demandesCache = snap.val() || {};
+      renderDemandesList();
     });
   }
 
