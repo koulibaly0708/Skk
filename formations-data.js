@@ -16,6 +16,220 @@
 
 export const FORMATIONS = {
 
+  "PowerPoint — Niveau débutant": {
+    titre: "PowerPoint — Niveau débutant",
+    duree: "Environ 1h30", public: "Grand public, première prise en main de PowerPoint", prerequis: "Aucun",
+    modules: ["Module 1 — Découvrir l'interface et créer sa présentation", "Module 2 — Construire et illustrer ses diapositives", "Module 3 — Habiller sa présentation", "Module 4 — Présenter et exporter", "Exercice final récapitulatif"],
+    apercu: "Un guide pratique, étape par étape, pour apprendre à construire une présentation professionnelle : interface, texte, images, formes, thèmes, animations, diaporama et export…",
+    pdfUrl: "formation-powerpoint-niveau-debutant.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Un guide pratique, étape par étape, pour apprendre à construire une présentation professionnelle avec PowerPoint : interface, texte, images, formes, thèmes, animations, diaporama et export — sans jargon, et sans aucun prérequis.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Module 1</span>
+        <h3>Découvrir l'interface et créer sa présentation</h3>
+        <h4>Découvrir l'interface</h4>
+        <p>À l'ouverture du logiciel, l'écran se divise toujours en quatre grandes zones :</p>
+        <ul>
+          <li><strong>Le ruban</strong> (en haut) — tous les outils, classés par onglets (Accueil, Insertion, Création…)</li>
+          <li><strong>Le volet des diapositives</strong> (à gauche) — la liste miniature de toutes vos diapositives</li>
+          <li><strong>La zone de travail</strong> (au centre) — la diapositive en cours d'édition, en grand</li>
+          <li><strong>Le volet des notes</strong> (en bas) — vos notes personnelles pour la présentation orale</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> si le ruban a disparu, il a probablement été réduit ; un clic sur une flèche en haut à droite de l'écran le fait réapparaître.
+        </div>
+
+        <h4>Créer sa première présentation</h4>
+        <ol>
+          <li>Ouvrez le logiciel : l'écran de démarrage propose des modèles et le choix « Présentation vide »</li>
+          <li>Cliquez sur « Présentation vide » pour partir d'une base simple à personnaliser</li>
+          <li>Une première diapositive de titre apparaît, avec deux zones : « Titre » et « Sous-titre »</li>
+          <li>Cliquez dans la zone de titre et tapez le nom de votre présentation</li>
+          <li>Enregistrez immédiatement le fichier pour ne rien perdre</li>
+        </ol>
+        <div class="callout">
+          <strong>Astuce —</strong> si vous démarrez souvent le même type de présentation (rapport mensuel, cours…), explorez les modèles proposés au démarrage : ils font gagner un temps précieux.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Prendre en main l'interface et créer un fichier</h4>
+          <ol>
+            <li>Passez la souris sur chaque onglet du ruban et notez 3 outils qui vous semblent utiles</li>
+            <li>Créez une présentation vide</li>
+            <li>Sur la diapositive de titre, écrivez un titre et un sous-titre (votre nom + la date)</li>
+            <li>Enregistrez le fichier sous le nom « formation-powerpoint.pptx »</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 2</span>
+        <h3>Construire et illustrer ses diapositives</h3>
+        <h4>Gérer les diapositives</h4>
+        <table class="table-cours">
+          <thead><tr><th>Action</th><th>Comment faire</th></tr></thead>
+          <tbody>
+            <tr><td>Ajouter une diapositive</td><td>Onglet Accueil → « Nouvelle diapositive », ou Ctrl + M</td></tr>
+            <tr><td>Choisir une disposition</td><td>« Nouvelle diapositive » → flèche du bas → choisir un modèle (Titre seul, Deux contenus…)</td></tr>
+            <tr><td>Dupliquer</td><td>Clic droit sur la diapositive dans le volet de gauche → « Dupliquer la diapositive »</td></tr>
+            <tr><td>Réorganiser</td><td>Glisser-déposer la diapositive dans le volet de gauche</td></tr>
+            <tr><td>Supprimer</td><td>Clic droit → « Supprimer la diapositive », ou touche Suppr</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Travailler le texte</h4>
+        <ol>
+          <li>Cliquez une fois dans une zone de texte pour la sélectionner, cliquez une deuxième fois pour écrire dedans</li>
+          <li>Sélectionnez le texte à modifier en le surlignant avec la souris</li>
+          <li>Dans l'onglet Accueil, utilisez : police, taille, gras (Ctrl + G), italique (Ctrl + I), couleur</li>
+          <li>Pour ajouter une zone de texte libre : onglet Insertion → « Zone de texte », puis dessinez-la sur la diapositive</li>
+          <li>Pour aligner ou centrer le texte, utilisez les icônes d'alignement dans l'onglet Accueil</li>
+        </ol>
+        <div class="callout">
+          <strong>Astuce —</strong> évitez plus de 6 lignes de texte par diapositive ; une diapositive n'est pas un document Word — elle doit soutenir votre parole, pas la remplacer.
+        </div>
+
+        <h4>Insérer des images</h4>
+        <ol>
+          <li>Onglet Insertion → « Images » → choisir une image sur votre ordinateur</li>
+          <li>Cliquez sur l'image insérée : des poignées apparaissent à ses coins</li>
+          <li>Tirez une poignée de coin pour redimensionner sans déformer l'image</li>
+          <li>Glissez l'image pour la positionner ; des repères d'alignement apparaissent automatiquement</li>
+          <li>Clic droit → « Format de l'image » pour ajuster la luminosité, le contraste ou ajouter un cadre</li>
+        </ol>
+        <div class="callout">
+          <strong>Astuce —</strong> pour redimensionner une photo sans jamais la déformer, utilisez toujours une poignée de coin — jamais celles du milieu des côtés.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Construire le squelette de sa présentation</h4>
+          <ol>
+            <li>Ajoutez 4 nouvelles diapositives : Titre et contenu, Deux contenus, Titre seul, Vide — réorganisez-les pour que « Titre seul » soit en dernier</li>
+            <li>Sur la diapositive « Titre et contenu », écrivez 3 phrases courtes et mettez le mot le plus important de chacune en gras et en couleur</li>
+            <li>Insérez une image sur la diapositive « Deux contenus », redimensionnez-la pour qu'elle occupe la moitié droite, puis centrez-la verticalement</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 3</span>
+        <h3>Habiller sa présentation</h3>
+        <h4>Formes & icônes</h4>
+        <ol>
+          <li>Onglet Insertion → « Formes » → choisir une forme, puis dessinez-la sur la diapositive</li>
+          <li>Pour écrire à l'intérieur d'une forme, double-cliquez dessus et tapez le texte</li>
+          <li>Sélectionnez la forme pour changer sa couleur de remplissage et de contour (onglet « Format »)</li>
+          <li>Pour des icônes prêtes à l'emploi : onglet Insertion → « Icônes »</li>
+          <li>Maintenez Maj en dessinant un cercle ou un carré pour garder des proportions parfaites</li>
+        </ol>
+
+        <h4>Thèmes & couleurs</h4>
+        <ol>
+          <li>Onglet Création : une galerie de thèmes prédéfinis s'affiche</li>
+          <li>Cliquez sur un thème pour l'appliquer instantanément à toute la présentation</li>
+          <li>À droite du même onglet, bouton « Variantes » : change la palette de couleurs sans changer la mise en page</li>
+          <li>Pour une couleur personnalisée : sélectionnez un élément → menu couleur → « Autres couleurs » → entrez un code</li>
+        </ol>
+        <div class="callout">
+          <strong>Astuce —</strong> choisissez un thème avant de remplir vos diapositives de contenu — cela évite d'avoir à tout réajuster ensuite.
+        </div>
+
+        <h4>Transitions & animations</h4>
+        <table class="table-cours">
+          <thead><tr><th>Type</th><th>Où</th><th>Ce que ça fait</th></tr></thead>
+          <tbody>
+            <tr><td>Transition</td><td>Onglet Transitions</td><td>Effet entre deux diapositives (fondu, balayage…)</td></tr>
+            <tr><td>Animation</td><td>Onglet Animations</td><td>Effet sur un élément d'une diapositive (apparition d'un texte…)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Astuce —</strong> une seule transition simple (fondu) sur toute la présentation est souvent plus élégante que dix effets différents.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Donner une identité visuelle à sa présentation</h4>
+          <ol>
+            <li>Créez un petit schéma avec 3 rectangles reliés par 2 flèches pour représenter « Avant → Pendant → Après »</li>
+            <li>Appliquez un thème à votre présentation et testez 3 variantes de couleurs</li>
+            <li>Appliquez la même transition « Fondu » à toutes vos diapositives et ajoutez une animation d'apparition sur le titre de la première</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Module 4</span>
+        <h3>Présenter et exporter</h3>
+        <h4>Mode diaporama</h4>
+        <ul>
+          <li><strong>F5 —</strong> lance le diaporama depuis la première diapositive</li>
+          <li><strong>Maj + F5 —</strong> lance depuis la diapositive actuelle</li>
+          <li><strong>Flèches du clavier ou clic gauche —</strong> diapositive suivante</li>
+          <li><strong>Échap —</strong> quitter le diaporama à tout moment</li>
+          <li><strong>B —</strong> écran noir temporaire (pour capter l'attention)</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> le « Mode présentateur » affiche vos notes sur votre écran, tandis que le public ne voit que la diapositive — pratique en réunion.
+        </div>
+
+        <h4>Enregistrer & exporter</h4>
+        <table class="table-cours">
+          <thead><tr><th>Format</th><th>Usage recommandé</th></tr></thead>
+          <tbody>
+            <tr><td>.pptx</td><td>Format de travail, pour continuer à modifier la présentation</td></tr>
+            <tr><td>.pdf</td><td>Pour envoyer un document figé, garanti identique chez tous les destinataires</td></tr>
+            <tr><td>Vidéo (.mp4)</td><td>Pour une présentation qui se lance automatiquement, sans logiciel</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Astuce —</strong> avant d'envoyer une présentation par e-mail, exportez-la aussi en PDF — c'est le format le plus sûr pour être vu correctement par le destinataire.
+        </div>
+
+        <h4>Raccourcis utiles</h4>
+        <table class="table-cours">
+          <thead><tr><th>Raccourci</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Ctrl + M</td><td>Nouvelle diapositive</td></tr>
+            <tr><td>Ctrl + D</td><td>Dupliquer l'élément sélectionné</td></tr>
+            <tr><td>Ctrl + S</td><td>Enregistrer</td></tr>
+            <tr><td>Ctrl + Z</td><td>Annuler la dernière action</td></tr>
+            <tr><td>Ctrl + G / I</td><td>Gras / Italique</td></tr>
+            <tr><td>F5</td><td>Lancer le diaporama depuis le début</td></tr>
+            <tr><td>Échap</td><td>Quitter le diaporama</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Erreurs de débutants à éviter</h4>
+        <ul>
+          <li><strong>Trop de texte —</strong> une diapositive saturée de phrases n'est pas lue par le public, elle est ignorée</li>
+          <li><strong>Trop de polices différentes —</strong> limitez-vous à 1 ou 2 polices maximum par présentation</li>
+          <li><strong>Trop d'animations —</strong> un effet différent à chaque élément distrait plus qu'il n'aide</li>
+          <li><strong>Images déformées —</strong> toujours redimensionner depuis un coin, jamais depuis un côté</li>
+          <li><strong>Contraste insuffisant —</strong> un texte clair sur fond clair (ou foncé sur foncé) devient illisible en salle</li>
+          <li><strong>Ne jamais enregistrer —</strong> prenez l'habitude de Ctrl + S toutes les 10 minutes</li>
+        </ul>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique final récapitulatif</span>
+          <h4>Créer une présentation complète de 5 diapositives</h4>
+          <ol>
+            <li>Diapositive 1 : titre du projet + votre nom (disposition « Titre »)</li>
+            <li>Diapositive 2 : « Sommaire » avec 3 points listés (disposition « Titre et contenu »)</li>
+            <li>Diapositive 3 : une idée illustrée d'une image (disposition « Deux contenus »)</li>
+            <li>Diapositive 4 : un petit schéma avec 3 formes reliées par des flèches</li>
+            <li>Diapositive 5 : « Merci » + vos coordonnées (disposition « Titre seul »)</li>
+            <li>Appliquez un thème unique et une transition « Fondu » sur toutes les diapositives</li>
+            <li>Testez le résultat en mode diaporama (F5), enregistrez en .pptx puis exportez en .pdf</li>
+          </ol>
+          <p><strong>Livrable attendu —</strong> une présentation .pptx de 5 diapositives, cohérente et exportée en .pdf.</p>
+        </div>
+      </div>
+    `
+  },
+
   "Excel — Tableaux de bord": {
     titre: "Excel — Tableaux de bord",
     duree: "4 séances d'1h30, une par semaine", public: "Assistants, gestionnaires, chargés de reporting", prerequis: "Bases d'Excel",
@@ -1804,6 +2018,141 @@ export const FORMATIONS = {
     `
   },
 
+  "Outils numériques du quotidien": {
+    titre: "Outils numériques du quotidien",
+    duree: "Sur-mesure", public: "Toute personne souhaitant gagner du temps au quotidien", prerequis: "Aisance informatique de base",
+    modules: ["Module 1 — Documents, PDF et visuels", "Module 2 — Notes, organisation et intelligence artificielle", "Module 3 — Communication, confidentialité et business en ligne", "Module 4 — Apprentissage, veille et bonnes pratiques"],
+    apercu: "27 outils numériques classés par catégorie, expliqués un par un : ce qu'ils font, à quoi ils servent concrètement et comment les utiliser — documents et PDF, visuels et design, notes, intelligence artificielle, communication, business en ligne et veille…",
+    pdfUrl: "guide-outils-productivite.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Un guide complet et détaillé présentant 27 outils numériques classés par catégorie : ce qu'ils font, à quoi ils servent concrètement, et comment les utiliser efficacement au quotidien — sans se disperser entre trop d'outils différents.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Module 1</span>
+        <h3>Documents, PDF et visuels</h3>
+        <h4>Documents &amp; PDF</h4>
+        <p>Créer, convertir, scanner et manipuler des documents sans logiciel installé.</p>
+        <ul>
+          <li><strong>iLovePDF —</strong> service en ligne gratuit regroupant une trentaine d'outils pour fusionner, diviser, compresser ou convertir des PDF (vers/depuis Word, Excel, image), ajouter un mot de passe ou signer électroniquement. Utile pour fusionner plusieurs devis avant envoi ou compresser un dossier trop lourd pour un email.</li>
+          <li><strong>PDF Scanner — Ace Scanner —</strong> application mobile qui transforme la caméra du téléphone en scanner : détection automatique des bords, redressement de la perspective et éclaircissement du texte pour produire un PDF net (facture papier, contrat signé, carte de visite).</li>
+          <li><strong>Convertio —</strong> convertisseur en ligne prenant en charge plus de 300 formats (documents, images, audio, vidéo). Pratique pour transformer un .heic en .jpg, une présentation .pptx en vidéo, ou un .wav en .mp3.</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> l'outil « Compresser PDF » d'iLovePDF est idéal quand une pièce jointe dépasse la limite de taille d'un email ; sur Ace Scanner, numériser plusieurs pages à la suite pour les regrouper automatiquement dans un seul PDF multi-pages.
+        </div>
+
+        <h4>Visuels, images &amp; design</h4>
+        <p>Trouver, créer et retoucher des visuels professionnels sans être graphiste.</p>
+        <ul>
+          <li><strong>PhotoRoom —</strong> détecte automatiquement le sujet d'une photo pour détourer et supprimer l'arrière-plan en un clic, puis propose des fonds unis ou des mises en scène (photo produit pour boutique en ligne, portrait pour CV).</li>
+          <li><strong>DaFont —</strong> bibliothèque de polices d'écriture gratuites et originales, classées par style, pour un logo, une affiche ou une miniature de vidéo.</li>
+          <li><strong>Pixabay —</strong> banque de photos, illustrations et vidéos libres de droits, utilisables même dans un cadre commercial.</li>
+          <li><strong>Pngtree —</strong> millions d'images PNG détourées, illustrations vectorielles et maquettes (mockups), en gratuit et en premium.</li>
+          <li><strong>Freepik —</strong> ressources graphiques (vecteurs, photos, PSD, icônes) dans le même esprit que Pixabay et Pngtree, avec une offre premium plus large.</li>
+        </ul>
+        <div class="callout">
+          <strong>Attention —</strong> vérifiez toujours la licence indiquée sous une police ou une ressource graphique avant un usage commercial — certaines sont réservées à un usage personnel. Gardez Pixabay, Pngtree et Freepik en favoris : ils se complètent bien selon le style recherché.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 2</span>
+        <h3>Notes, organisation et intelligence artificielle</h3>
+        <h4>Notes &amp; organisation</h4>
+        <p>Centraliser ses idées, tâches et informations importantes.</p>
+        <ul>
+          <li><strong>OneNote —</strong> application Microsoft organisée en classeurs, sections et pages, qui accepte texte, images, tableaux et écriture manuscrite, synchronisée sur tous les appareils. Utile pour centraliser les notes d'une réunion ou un classeur de suivi client par projet.</li>
+          <li><strong>Notes Keeper —</strong> prise de notes minimaliste, pensée pour capturer une idée en quelques secondes sans structure complexe — l'inverse d'OneNote, qui organise des dossiers entiers.</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> réservez Notes Keeper aux notes très courtes et ponctuelles ; pour un classeur structuré, préférez OneNote.
+        </div>
+
+        <h4>Intelligence artificielle</h4>
+        <p>Rédiger, corriger, générer de la voix et automatiser la réflexion grâce à l'IA.</p>
+        <ul>
+          <li><strong>ChatGPT (OpenAI) —</strong> assistant conversationnel capable de rédiger, résumer, coder, brainstormer ou répondre à des questions dans un dialogue naturel.</li>
+          <li><strong>Claude (Anthropic) —</strong> orienté vers des réponses détaillées et fiables, capable de traiter de longs documents, de générer des fichiers (Word, PDF, tableurs) et de raisonner pas à pas — utile pour analyser un long contrat ou produire un support de formation complet.</li>
+          <li><strong>Grok (xAI) —</strong> assistant intégré à la plateforme X, connu pour son accès à l'actualité en temps réel et un ton parfois plus direct.</li>
+          <li><strong>Grammarly —</strong> correcteur d'orthographe, de grammaire et de style qui s'intègre au navigateur, à Word ou aux emails pour corriger le texte en temps réel pendant la frappe.</li>
+          <li><strong>ElevenLabs —</strong> synthèse vocale par IA qui transforme un texte écrit en voix off réaliste, dans plusieurs langues et intonations — utile pour une vidéo de formation sans studio d'enregistrement.</li>
+          <li><strong>HyperWrite —</strong> assistant d'écriture IA avec suggestions de phrases, correcteur avancé et modèles de rédaction (email, article, résumé).</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> décrivez le résultat attendu avec le plus de détails possible (format, longueur, public visé) et affinez la réponse par des messages de suivi plutôt que de tout redemander depuis le début.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 3</span>
+        <h3>Communication, confidentialité et business en ligne</h3>
+        <h4>Communication &amp; collaboration</h4>
+        <ul>
+          <li><strong>Loom —</strong> enregistrement vidéo d'écran (et webcam) qui génère instantanément un lien à partager, sans montage. Une vidéo de 2 minutes remplace souvent un email de 10 lignes mal compris.</li>
+          <li><strong>Slack —</strong> messagerie professionnelle organisée en canaux thématiques, avec messages directs, partage de fichiers et fils de discussion pour ne pas noyer un canal.</li>
+          <li><strong>Superhuman —</strong> client email haut de gamme conçu pour traiter sa boîte de réception beaucoup plus vite, grâce à des raccourcis clavier pour chaque action (archiver, répondre plus tard, snoozer).</li>
+        </ul>
+
+        <h4>Emails temporaires &amp; confidentialité</h4>
+        <ul>
+          <li><strong>Temp Mail —</strong> génère instantanément une adresse email temporaire et aléatoire, avec une boîte de réception accessible directement dans le navigateur, sans inscription.</li>
+          <li><strong>Xemail —</strong> service similaire, utile en solution de secours si un site bloque déjà les domaines des services les plus connus.</li>
+        </ul>
+        <div class="callout">
+          <strong>Attention —</strong> n'utilisez jamais un email jetable pour un compte important (banque, administration) — la boîte de réception est temporaire et peut être consultée par d'autres.
+        </div>
+
+        <h4>Gestion &amp; business en ligne</h4>
+        <ul>
+          <li><strong>SpeedInvoice —</strong> application de facturation pour indépendants et petites entreprises : devis et factures depuis un téléphone, signature électronique, suivi des paiements, sauvegarde cloud.</li>
+          <li><strong>Systeme.io —</strong> plateforme française tout-en-un : tunnels de vente, emailing automatisé, hébergement de formations en ligne, blog et programme d'affiliation, sans compétences techniques.</li>
+          <li><strong>Form.app —</strong> créateur de formulaires en ligne (sondages, inscriptions, questionnaires de satisfaction) avec collecte des réponses en temps réel.</li>
+          <li><strong>Zapier —</strong> connecte entre elles des applications qui ne communiquent pas nativement, pour automatiser des tâches répétitives via des scénarios (« Zaps ») : un déclencheur, puis une action exécutée automatiquement.</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> commencez par automatiser une seule tâche répétitive et chronophage avec Zapier avant d'en enchaîner plusieurs.
+        </div>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Module 4</span>
+        <h3>Apprentissage, veille et bonnes pratiques</h3>
+        <h4>Apprentissage &amp; veille</h4>
+        <ul>
+          <li><strong>Photomath —</strong> résout un exercice de mathématiques photographié avec le téléphone, en détaillant chaque étape du raisonnement.</li>
+          <li><strong>OpenClassrooms —</strong> plateforme française de cours en ligne, du niveau débutant au niveau expert, avec des parcours certifiants.</li>
+          <li><strong>Clubic —</strong> site d'actualité et de tests dédié à la technologie, avec une logithèque pour télécharger des logiciels testés et vérifiés plutôt qu'une source inconnue.</li>
+        </ul>
+
+        <h4>Tableau récapitulatif — les 27 outils par catégorie</h4>
+        <table class="table-cours">
+          <thead><tr><th>Catégorie</th><th>Outils</th><th>Usage principal</th></tr></thead>
+          <tbody>
+            <tr><td>Documents &amp; PDF</td><td>iLovePDF, PDF Scanner, Convertio</td><td>Créer, convertir, numériser des documents</td></tr>
+            <tr><td>Visuels &amp; design</td><td>PhotoRoom, DaFont, Pixabay, Pngtree, Freepik</td><td>Trouver et retoucher des visuels</td></tr>
+            <tr><td>Notes &amp; organisation</td><td>OneNote, Notes Keeper</td><td>Centraliser idées et informations</td></tr>
+            <tr><td>Intelligence artificielle</td><td>ChatGPT, Claude, Grok, Grammarly, ElevenLabs, HyperWrite</td><td>Rédiger, corriger, générer voix et texte</td></tr>
+            <tr><td>Communication</td><td>Loom, Slack, Superhuman</td><td>Échanger vite et clairement</td></tr>
+            <tr><td>Emails temporaires</td><td>Temp Mail, Xemail</td><td>Protéger sa boîte mail principale</td></tr>
+            <tr><td>Business en ligne</td><td>SpeedInvoice, Systeme.io, Form.app, Zapier</td><td>Facturer, vendre, automatiser</td></tr>
+            <tr><td>Apprentissage &amp; veille</td><td>Photomath, OpenClassrooms, Clubic</td><td>Se former et s'informer</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Bonnes pratiques générales</h4>
+        <p>Pour éviter la dispersion entre 27 outils :</p>
+        <ol>
+          <li>Choisir un seul outil par besoin (ex. un seul outil de notes, une seule IA principale) et réserver les autres aux cas particuliers</li>
+          <li>Utiliser Zapier pour relier automatiquement ses outils clés plutôt que de copier-coller l'information à la main</li>
+          <li>Vérifier toujours la licence d'un visuel ou d'une police avant un usage commercial</li>
+          <li>Ne jamais confier un mot de passe important ou une donnée sensible à un email jetable (Temp Mail, Xemail)</li>
+          <li>Faire régulièrement un tri : désinstaller ou résilier les outils non utilisés depuis 2 mois</li>
+        </ol>
+      </div>
+    `
+  },
+
+
   "Adobe Photoshop — Retouche & création visuelle": {
     titre: "Adobe Photoshop — Retouche & création visuelle",
     duree: "Sur-mesure", public: "Community managers, graphistes débutants, entrepreneurs", prerequis: "Aisance informatique de base",
@@ -2843,7 +3192,406 @@ export const FORMATIONS = {
         </ul>
       </div>
     `
-  }
+  },
+
+  "Excel — Niveau débutant": {
+    titre: "Excel — Niveau débutant",
+    duree: "Sur-mesure", public: "Grand public, première prise en main d'Excel", prerequis: "Aucun",
+    modules: ["Chapitre 1 — Prendre en main votre fichier", "Chapitre 2 — Organiser et mettre en forme votre fichier", "Chapitre 3 — Analyser vos données"],
+    apercu: "Une formation pas à pas pour découvrir Excel sans jargon : ouvrir et enregistrer son premier classeur, saisir et mettre en forme des données, créer ses premières formules, puis analyser ses chiffres avec les fonctions de base, les tableaux croisés dynamiques et les graphiques…",
+    pdfUrl: "formation-excel-niveau-debutant.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Une formation conçue pour un vrai débutant : aucune connaissance préalable n'est nécessaire. En trois chapitres progressifs, vous apprendrez à ouvrir, enregistrer et organiser un classeur Excel, à saisir et mettre en forme vos données, à écrire vos premières formules de calcul, puis à analyser vos chiffres grâce aux fonctions courantes, à la mise en forme conditionnelle, aux tableaux croisés dynamiques et aux graphiques.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Chapitre 1</span>
+        <h3>Prendre en main votre fichier</h3>
+        <h4>Démarrer et découvrir Excel</h4>
+        <p>Deux méthodes simples permettent d'ouvrir le logiciel :</p>
+        <ul>
+          <li><strong>Depuis le bureau Windows —</strong> double-cliquer sur l'icône Excel si elle est présente</li>
+          <li><strong>Depuis le menu Démarrer —</strong> chercher « Excel » dans la liste des programmes ou dans la zone de recherche</li>
+        </ul>
+        <p>Une fois le logiciel ouvert, il est conseillé de partir d'un <strong>classeur vide</strong> plutôt que d'un modèle préformaté, afin de bien comprendre chaque étape.</p>
+
+        <h4>Créer et enregistrer son premier fichier (« classeur »)</h4>
+        <p>Un fichier Excel est appelé un <strong>classeur</strong>. Pour ne pas perdre son travail :</p>
+        <ul>
+          <li>Cliquer sur l'icône « Enregistrer » (ou <strong>Ctrl + S</strong>)</li>
+          <li>Choisir l'emplacement du fichier (par exemple « Documents ») via « Parcourir »</li>
+          <li>Donner un nom clair au fichier, plutôt que de garder « Classeur1 »</li>
+          <li>Cliquer sur « Enregistrer »</li>
+        </ul>
+        <div class="callout">
+          <strong>Réflexe à prendre —</strong> enregistrer régulièrement son travail (Ctrl + S) pour éviter de tout perdre en cas de coupure ou de fermeture accidentelle.
+        </div>
+
+        <h4>Comprendre l'environnement de travail</h4>
+        <ul>
+          <li><strong>La zone de nom —</strong> affiche la cellule actuellement sélectionnée (ex. A1)</li>
+          <li><strong>La barre de formule —</strong> affiche le contenu réel de la cellule sélectionnée (texte, nombre ou formule)</li>
+          <li><strong>Les rubans —</strong> regroupent tous les outils, classés par onglets (Accueil, Insertion, Formules, Données…)</li>
+          <li><strong>Les en-têtes de colonnes</strong> (A, B, C…) et <strong>les numéros de ligne</strong> (1, 2, 3…) permettent de repérer chaque cellule</li>
+          <li><strong>La cellule active —</strong> la case sélectionnée, entourée d'un cadre vert</li>
+        </ul>
+        <p>Une feuille de calcul contient 16 384 colonnes (de A à XFD) et 1 048 576 lignes. Une cellule est toujours désignée par sa colonne puis sa ligne (ex. A1).</p>
+
+        <h4>Sélectionner, saisir et corriger des données</h4>
+        <ul>
+          <li><strong>Sélectionner une seule cellule —</strong> cliquer dessus</li>
+          <li><strong>Sélectionner une plage adjacente —</strong> cliquer sur la première cellule puis glisser (ou Shift) jusqu'à la dernière</li>
+          <li><strong>Sélectionner plusieurs cellules non côte à côte —</strong> maintenir Ctrl en cliquant sur chacune</li>
+        </ul>
+        <p>Pour corriger une erreur, pas besoin de tout effacer : cliquer sur la cellule et modifier son contenu dans la barre de formule, puis valider avec Entrée.</p>
+
+        <h4>Recopier des données rapidement (la « poignée de recopie »)</h4>
+        <p>Un petit carré vert en bas à droite de la cellule sélectionnée, la <strong>poignée de recopie</strong>, permet de dupliquer une information sans la retaper :</p>
+        <ul>
+          <li><strong>Recopie simple —</strong> cliquer-glisser reproduit le même contenu</li>
+          <li><strong>Recopie incrémentée —</strong> en maintenant Ctrl (ou avec deux valeurs de départ), Excel ajoute un écart constant</li>
+          <li><strong>Recopie automatique —</strong> Excel reconnaît des listes toutes prêtes (mois, jours de la semaine)</li>
+        </ul>
+
+        <h4>Créer des formules de calcul</h4>
+        <p>Une formule commence toujours par le signe égal (=). Par exemple, pour multiplier une quantité (colonne C) par un tarif (colonne D) : <strong>=C3*D3</strong>.</p>
+        <p>Lorsqu'on recopie une formule, les références se décalent automatiquement : c'est une <strong>référence relative</strong>. Pour qu'une référence ne bouge pas lors de la recopie (ex. un tarif unique valable pour tout le tableau), on la transforme en <strong>référence absolue</strong> avec la touche <strong>F4</strong> : elle s'affiche alors avec des symboles dollar, par exemple <strong>$D$2</strong>.</p>
+        <div class="callout">
+          <strong>Réflexe utile —</strong> si un résultat recopié semble faux (erreur #VALEUR! ou 0 inattendu), vérifier si une référence aurait dû être rendue absolue avec F4.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Créer et enregistrer son premier classeur</h4>
+          <ol>
+            <li>Ouvrir Excel et créer un classeur vide</li>
+            <li>L'enregistrer sous un nom clair dans le dossier « Documents »</li>
+            <li>Saisir un petit tableau (nom, quantité, tarif) et écrire une formule de chiffre d'affaires</li>
+            <li>Recopier la formule avec la poignée de recopie et transformer le tarif en référence absolue avec F4</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Chapitre 2</span>
+        <h3>Organiser et mettre en forme votre fichier</h3>
+        <h4>Manipuler les lignes, les colonnes et les feuilles</h4>
+        <p>Un clic droit sur l'en-tête d'une colonne ou d'une ligne ouvre un menu contextuel permettant de :</p>
+        <ul>
+          <li><strong>Insérer</strong> une nouvelle ligne ou colonne vide</li>
+          <li><strong>Masquer</strong> une ligne ou une colonne sans supprimer les données</li>
+          <li><strong>Afficher</strong> à nouveau une ligne ou colonne masquée</li>
+          <li><strong>Ajuster la taille</strong> d'une colonne à son contenu en double-cliquant sur le trait de séparation</li>
+          <li><strong>Grouper</strong> plusieurs colonnes ou lignes pour les replier ou déplier en un clic</li>
+        </ul>
+
+        <h4>Gérer les onglets (les feuilles du classeur)</h4>
+        <p>Un classeur peut contenir plusieurs <strong>feuilles</strong>, visibles en bas de l'écran sous forme d'onglets, pour séparer par exemple les données de plusieurs mois ou équipes :</p>
+        <ul>
+          <li><strong>Créer</strong> un onglet : cliquer sur le « + » à droite du dernier onglet</li>
+          <li><strong>Renommer</strong> : double-cliquer sur son nom</li>
+          <li><strong>Supprimer</strong> : clic droit puis « Supprimer » (action définitive)</li>
+          <li><strong>Déplacer, masquer, colorer ou dupliquer</strong> : via un clic droit sur son nom</li>
+        </ul>
+
+        <h4>Mettre en page pour une meilleure lisibilité</h4>
+        <ul>
+          <li><strong>Bordures —</strong> à privilégier sur le quadrillage (qui ne s'imprime jamais) pour garder un tableau lisible à l'impression</li>
+          <li><strong>Figer les volets —</strong> onglet Affichage > Figer les volets > Figer la ligne supérieure, pour garder les titres de colonnes visibles en faisant défiler un long tableau</li>
+          <li><strong>Renvoyer à la ligne —</strong> affiche tout le texte d'une cellule sur plusieurs lignes plutôt que de le laisser déborder</li>
+          <li><strong>Imprimer —</strong> Fichier > Imprimer (ou Ctrl + P)</li>
+        </ul>
+
+        <h4>La mise en forme conditionnelle</h4>
+        <p>Elle applique automatiquement une couleur ou une icône à une cellule selon son contenu, et s'ajuste toute seule si la donnée change — contrairement à une couleur appliquée manuellement.</p>
+        <p>Pour l'appliquer : sélectionner les cellules concernées, puis onglet Accueil > Mise en forme conditionnelle, et choisir une règle (par exemple « Inférieur à… ») ou un jeu d'icônes.</p>
+
+        <h4>Filtrer et trier un tableau</h4>
+        <table class="table-cours">
+          <thead><tr><th>Outil</th><th>Ce qu'il fait</th></tr></thead>
+          <tbody>
+            <tr><td>Le filtre</td><td>Masque temporairement les lignes qui ne correspondent pas à un critère choisi, sans jamais supprimer les données</td></tr>
+            <tr><td>Le tri</td><td>Classe les lignes selon un ordre choisi (croissant, décroissant, alphabétique, chronologique…) sans en masquer aucune</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>À savoir —</strong> filtre et tri peuvent tout à fait être combinés sur plusieurs colonnes en même temps pour affiner l'affichage d'un grand tableau.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Organiser un tableau existant</h4>
+          <ol>
+            <li>Insérer une colonne et ajuster sa largeur au contenu</li>
+            <li>Renommer une feuille et en créer une seconde</li>
+            <li>Ajouter des bordures et figer la ligne d'en-tête</li>
+            <li>Appliquer une mise en forme conditionnelle, puis filtrer et trier le tableau</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Chapitre 3</span>
+        <h3>Analyser vos données</h3>
+        <h4>Utiliser les fonctions de calcul</h4>
+        <p>Une fonction est une formule toute prête fournie par Excel. Les plus utiles pour débuter :</p>
+        <ul>
+          <li><strong>SOMME —</strong> additionne un ensemble de cellules (icône Σ de l'onglet Accueil)</li>
+          <li><strong>MOYENNE —</strong> calcule la moyenne d'un ensemble de cellules</li>
+          <li><strong>SI —</strong> fonction conditionnelle en trois arguments : la condition à tester, le résultat si vraie, le résultat si fausse</li>
+        </ul>
+        <div class="callout">
+          <strong>Exemple —</strong> pour verser une prime de 5 000 GNF si le chiffre d'affaires dépasse 500 000 GNF, et 0 sinon : <strong>=SI(D2&gt;500000; 5000; 0)</strong>. En cas de doute sur une fonction, la touche F1 ouvre l'aide contextuelle.
+        </div>
+
+        <h4>Contrôler la saisie avec la validation des données</h4>
+        <p>Cette fonctionnalité (onglet Données > Validation des données) permet de définir à l'avance quel type de contenu peut être saisi dans une cellule, avec un message d'aide et un message d'erreur personnalisés, afin d'éviter les erreurs de saisie.</p>
+
+        <h4>Synthétiser avec les tableaux croisés dynamiques (TCD)</h4>
+        <p>Un TCD résume rapidement un grand tableau selon plusieurs critères, sans écrire de formule. Avant de le créer, il faut s'assurer que le tableau source ne contient ni ligne ni colonne vide. La création se fait via l'onglet Insertion > Tableau croisé dynamique, puis il suffit de glisser les colonnes dans les zones Filtres, Colonnes, Lignes et Valeurs.</p>
+        <div class="callout">
+          <strong>Point important pour un débutant —</strong> si les données sources changent, le TCD ne se met pas à jour tout seul : il faut cliquer sur « Actualiser » après chaque modification.
+        </div>
+
+        <h4>Créer des graphiques pour visualiser les données</h4>
+        <p>Pour créer un graphique, sélectionner les données (titres de colonnes compris) puis onglet Insertion :</p>
+        <ul>
+          <li><strong>Histogramme —</strong> idéal pour comparer des valeurs entre elles</li>
+          <li><strong>Courbe —</strong> adaptée pour montrer une évolution dans le temps</li>
+          <li><strong>Secteurs (« camembert ») —</strong> utile pour visualiser des proportions</li>
+          <li><strong>Nuage de points —</strong> pour observer une relation entre deux séries de valeurs</li>
+        </ul>
+        <p>Le graphique reste entièrement personnalisable ensuite : titre, titres d'axes, légende, affichage des valeurs, déplacement sur une autre feuille.</p>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique final</span>
+          <h4>Construire une petite analyse de ventes</h4>
+          <ol>
+            <li>Créer un tableau de ventes (vendeur, quantité, tarif) avec une formule de chiffre d'affaires en référence absolue</li>
+            <li>Ajouter une colonne « Prime » avec une fonction SI</li>
+            <li>Créer un tableau croisé dynamique du chiffre d'affaires par vendeur</li>
+            <li>Représenter les résultats avec un histogramme</li>
+          </ol>
+        </div>
+      </div>
+    `
+  },
+
+  "Word — Niveau débutant": {
+    titre: "Word — Niveau débutant",
+    duree: "Sur-mesure", public: "Grand public, première prise en main de Word", prerequis: "Aucun",
+    modules: ["Module 1 — Découvrir Word et gérer ses documents", "Module 2 — Mettre en forme le texte", "Module 3 — Mettre en page et illustrer", "Module 4 — Structurer, vérifier et exporter", "Exercice final récapitulatif"],
+    apercu: "Un guide pratique, détaillé et illustré pour apprendre Word de A à Z : créer et enregistrer un document, saisir et mettre en forme du texte, insérer images et tableaux, structurer avec des styles, corriger l'orthographe, puis imprimer ou exporter en PDF…",
+    pdfUrl: "formation-word-niveau-debutant.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Un guide pratique, détaillé et illustré pour apprendre à créer, mettre en forme et présenter des documents professionnels avec Word — étape par étape, sans jargon, et sans aucun prérequis.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Module 1</span>
+        <h3>Découvrir Word et gérer ses documents</h3>
+        <h4>Découvrir l'interface de Word</h4>
+        <p>Quand vous ouvrez Word, l'écran est organisé en plusieurs zones fixes :</p>
+        <ul>
+          <li><strong>La barre de titre</strong> (tout en haut) — affiche le nom du document</li>
+          <li><strong>Le ruban —</strong> contient des onglets (Accueil, Insertion, Mise en page…), chacun regroupant des outils par thème</li>
+          <li><strong>La zone de travail —</strong> la feuille blanche où vous tapez votre texte</li>
+          <li><strong>La barre d'état</strong> (tout en bas) — affiche le nombre de pages, de mots et la langue du document</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> l'onglet Accueil est celui que vous utiliserez le plus souvent : il contient la mise en forme du texte et des paragraphes.
+        </div>
+
+        <h4>Créer, enregistrer et ouvrir un document</h4>
+        <p>Un document Word n'existe réellement sur l'ordinateur qu'une fois enregistré ; avant cela, il n'existe qu'en mémoire et disparaît si le logiciel se ferme brutalement.</p>
+        <ul>
+          <li><strong>Créer —</strong> « Document vierge » à l'ouverture de Word (ou Ctrl + N)</li>
+          <li><strong>Enregistrer pour la première fois —</strong> Fichier > Enregistrer sous (ou Ctrl + S), choisir un emplacement, donner un nom clair, cliquer sur Enregistrer</li>
+          <li><strong>Enregistrer les modifications suivantes —</strong> Ctrl + S régulièrement</li>
+          <li><strong>Ouvrir un document existant —</strong> Fichier > Ouvrir (ou Ctrl + O)</li>
+        </ul>
+        <div class="callout">
+          <strong>Réflexe le plus utile de la formation —</strong> appuyer sur Ctrl + S toutes les 5 minutes.
+        </div>
+
+        <h4>Saisir, sélectionner et modifier du texte</h4>
+        <p>Avant de mettre en forme un mot ou une phrase, il faut d'abord la sélectionner : Word applique toujours ses réglages à la portion de texte sélectionnée (surlignée en bleu).</p>
+        <ul>
+          <li><strong>Un mot —</strong> double-cliquer dessus</li>
+          <li><strong>Une phrase —</strong> maintenir Ctrl et cliquer dans la phrase</li>
+          <li><strong>Un paragraphe —</strong> triple-cliquer dedans</li>
+          <li><strong>Une portion libre —</strong> cliquer avant le premier mot, glisser jusqu'à la fin, relâcher</li>
+          <li><strong>Tout le document —</strong> Ctrl + A</li>
+        </ul>
+        <p>Pour copier, couper et coller : sélectionner le texte, puis Ctrl + C / Ctrl + X / Ctrl + V. En cas d'erreur, Ctrl + Z annule la dernière action.</p>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Premiers pas dans Word</h4>
+          <ol>
+            <li>Créer un nouveau document et l'enregistrer sous un nom clair</li>
+            <li>Écrire trois phrases courtes</li>
+            <li>S'entraîner à sélectionner un mot, une phrase entière, puis tout le texte</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 2</span>
+        <h3>Mettre en forme le texte</h3>
+        <h4>Mettre en forme les caractères</h4>
+        <p>Ces réglages se trouvent dans le groupe Police de l'onglet Accueil :</p>
+        <ul>
+          <li><strong>Police et taille —</strong> sélectionner le texte, choisir une police (Calibri, Arial, Times New Roman…) et une taille (11-12 pour du texte courant, 16-28 pour un titre)</li>
+          <li><strong>Gras, italique, souligné —</strong> Ctrl + G, Ctrl + I, Ctrl + U</li>
+          <li><strong>Couleur du texte —</strong> flèche à côté du bouton A souligné de couleur, puis choisir dans la palette</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> évitez d'utiliser plus de deux polices différentes dans un même document — cela nuit à la lisibilité.
+        </div>
+
+        <h4>Mettre en forme les paragraphes</h4>
+        <p>Contrairement à la mise en forme des caractères, elle s'applique à tout le paragraphe même sans sélection : il suffit que le curseur soit positionné dedans.</p>
+        <ul>
+          <li><strong>Aligner —</strong> Ctrl + L (gauche), Ctrl + E (centré), Ctrl + R (droite), Ctrl + J (justifié)</li>
+          <li><strong>Interligne et espacement —</strong> icône d'interligne du groupe Paragraphe (1,0 pour un texte compact, 1,5 ou 2,0 pour aérer)</li>
+          <li><strong>Retrait de première ligne —</strong> touche Tab en début de ligne</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> le justifié aligne le texte à gauche et à droite à la fois — c'est le réglage utilisé dans la plupart des rapports professionnels.
+        </div>
+
+        <h4>Créer des listes à puces et numérotées</h4>
+        <ol>
+          <li>Sélectionner les lignes concernées (ou placer le curseur où la liste doit commencer)</li>
+          <li>Dans le groupe Paragraphe, cliquer sur l'icône Puces ou Numérotation</li>
+          <li>Taper le premier élément, puis Entrée pour passer au suivant</li>
+          <li>Pour arrêter la liste : deux fois Entrée, ou une fois Retour arrière</li>
+        </ol>
+        <p>Pour une sous-liste imbriquée : placer le curseur en début de ligne et appuyer sur Tab.</p>
+        <div class="callout">
+          <strong>Astuce —</strong> les puces pour des éléments sans ordre précis, la numérotation dès qu'un ordre ou des étapes comptent.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Mettre en forme un court texte</h4>
+          <ol>
+            <li>Taper un titre, le mettre en gras et en taille 20</li>
+            <li>Rédiger un paragraphe en dessous en italique, aligné en justifié, avec un interligne de 1,5</li>
+            <li>Créer une liste à puces de 3 éléments, puis une liste numérotée de 3 étapes</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 3</span>
+        <h3>Mettre en page et illustrer</h3>
+        <h4>Mettre en page le document</h4>
+        <p>Ces réglages se trouvent dans l'onglet Mise en page :</p>
+        <ul>
+          <li><strong>Marges —</strong> Mise en page > Marges, modèle prédéfini ou marges personnalisées</li>
+          <li><strong>Orientation et format —</strong> Mise en page > Orientation (Portrait/Paysage) et Taille (A4, Lettre US…)</li>
+          <li><strong>Saut de page —</strong> Insertion > Saut de page (ou Ctrl + Entrée)</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> n'utilisez jamais plusieurs touches Entrée pour passer à la page suivante — un saut de page garde la mise en page stable si le texte est modifié plus tard.
+        </div>
+
+        <h4>Insérer et redimensionner une image</h4>
+        <ul>
+          <li>Placer le curseur à l'endroit voulu, puis Insertion > Images > Cet appareil</li>
+          <li>Sélectionner le fichier puis Insérer</li>
+          <li>Pour redimensionner : cliquer sur l'image puis glisser un carré de coin (jamais du milieu d'un côté, pour ne pas la déformer)</li>
+          <li>Pour la disposition du texte autour : icône « Options de disposition » (Aligné sur le texte, Rapproché, Devant le texte…)</li>
+        </ul>
+
+        <h4>Insérer et mettre en forme un tableau</h4>
+        <ul>
+          <li>Placer le curseur, puis Insertion > Tableau, et glisser sur la grille pour choisir colonnes et lignes</li>
+          <li>Tab pour passer d'une cellule à la suivante ; Tab dans la dernière cellule crée une nouvelle ligne</li>
+          <li>Cliquer dans le tableau fait apparaître deux onglets : Création de tableau (styles prédéfinis) et Disposition (insérer/supprimer des lignes)</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> pour ajuster la largeur d'une colonne, placer le curseur sur la ligne de séparation jusqu'à voir une double flèche, puis glisser.
+        </div>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Mettre en page un document illustré</h4>
+          <ol>
+            <li>Passer le document en Paysage puis le remettre en Portrait avec des marges « Étroites »</li>
+            <li>Insérer une image, réduire sa taille de moitié et tester les dispositions de texte</li>
+            <li>Insérer un tableau de 3 colonnes sur 3 lignes et le remplir avec une petite liste de contacts</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Module 4</span>
+        <h3>Structurer, vérifier et exporter</h3>
+        <h4>En-têtes, pieds de page et numéros de page</h4>
+        <ul>
+          <li><strong>En-tête / pied de page —</strong> Insertion > En-tête (ou Pied de page), choisir un modèle ou taper son texte, puis « Fermer l'en-tête et le pied de page »</li>
+          <li><strong>Numéros de page —</strong> Insertion > Numéro de page, choisir l'emplacement et l'alignement</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> pour ne pas afficher de numéro sur la première page (page de titre), cocher « Première page différente ».
+        </div>
+
+        <h4>Utiliser les styles pour structurer un document</h4>
+        <p>Plutôt que de mettre un titre en gras et en grande taille manuellement, il est préférable d'utiliser les styles prédéfinis (onglet Accueil, groupe Styles) : Titre 1 pour un titre principal, Titre 2 pour un sous-titre — cela garantit une mise en forme cohérente dans tout le document.</p>
+        <p>Pour générer une table des matières automatique : Références > Table des matières > modèle automatique. Word la construit à partir des titres mis en forme avec les styles Titre 1/Titre 2.</p>
+
+        <h4>Vérifier l'orthographe et la grammaire</h4>
+        <ul>
+          <li><strong>Corriger un mot souligné —</strong> clic droit dessus (rouge = orthographe, bleu = grammaire) et choisir la correction proposée</li>
+          <li><strong>Vérification complète —</strong> onglet Révision > Grammaire et orthographe (ou touche F7)</li>
+        </ul>
+        <div class="callout">
+          <strong>Astuce —</strong> vérifier que la langue du document (en bas à gauche de l'écran) correspond bien à la langue d'écriture, sinon Word signale des fautes qui n'en sont pas.
+        </div>
+
+        <h4>Imprimer et exporter en PDF</h4>
+        <ul>
+          <li><strong>Imprimer —</strong> Fichier > Imprimer (ou Ctrl + P), vérifier l'aperçu, choisir l'imprimante</li>
+          <li><strong>Exporter en PDF —</strong> Fichier > Exporter > Créer un document PDF/XPS, choisir l'emplacement puis Publier</li>
+        </ul>
+        <div class="callout">
+          <strong>À savoir —</strong> un fichier PDF garantit que la mise en page reste identique quel que soit l'ordinateur qui l'ouvre — c'est le format à privilégier pour envoyer un document définitif.
+        </div>
+
+        <h4>Raccourcis clavier essentiels</h4>
+        <table class="table-cours">
+          <thead><tr><th>Raccourci</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Ctrl + S</td><td>Enregistrer</td></tr>
+            <tr><td>Ctrl + C / Ctrl + X / Ctrl + V</td><td>Copier / Couper / Coller</td></tr>
+            <tr><td>Ctrl + Z / Ctrl + Y</td><td>Annuler / Rétablir</td></tr>
+            <tr><td>Ctrl + G / Ctrl + I / Ctrl + U</td><td>Gras / Italique / Souligné</td></tr>
+            <tr><td>Ctrl + A</td><td>Sélectionner tout</td></tr>
+            <tr><td>Ctrl + L / Ctrl + E / Ctrl + R / Ctrl + J</td><td>Aligner à gauche / centrer / à droite / justifier</td></tr>
+            <tr><td>Ctrl + P</td><td>Imprimer</td></tr>
+            <tr><td>Ctrl + Entrée</td><td>Insérer un saut de page</td></tr>
+            <tr><td>F7</td><td>Vérifier l'orthographe</td></tr>
+          </tbody>
+        </table>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique final récapitulatif</span>
+          <h4>Rédiger « Ma première lettre professionnelle »</h4>
+          <ol>
+            <li>Créer un nouveau document et l'enregistrer sous le nom « Lettre_pratique »</li>
+            <li>Ajouter un titre en style Titre 1</li>
+            <li>Rédiger trois paragraphes (introduction, corps, conclusion) alignés en justifié, interligne 1,5</li>
+            <li>Mettre un mot important en gras et un autre en italique</li>
+            <li>Insérer une liste à puces de 3 points clés et un tableau de 2 colonnes sur 3 lignes</li>
+            <li>Ajouter un pied de page avec son nom et un numéro de page</li>
+            <li>Vérifier l'orthographe (F7) puis exporter le document final en PDF</li>
+          </ol>
+          <p><strong>Livrable attendu —</strong> un document PDF d'une page réunissant les neuf étapes ci-dessus.</p>
+        </div>
+      </div>
+    `
+  },
 
 };
 

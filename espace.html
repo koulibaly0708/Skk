@@ -1054,6 +1054,33 @@
     <div class="tab-panel active" id="bureautique">
       <div class="fiche-grid">
         <div class="fiche">
+          <h4>PowerPoint — Niveau débutant</h4>
+          <dl>
+            <dt>Durée</dt><dd>Environ 1h30</dd>
+            <dt>Public</dt><dd>Grand public, première prise en main de PowerPoint</dd>
+            <dt>Prérequis</dt><dd>Aucun</dd>
+          </dl>
+          <ol><li>Interface, création et gestion des diapositives</li><li>Texte, images, formes et thèmes</li><li>Animations, mode diaporama et export</li></ol>
+        </div>
+        <div class="fiche">
+          <h4>Excel — Niveau débutant</h4>
+          <dl>
+            <dt>Durée</dt><dd>Sur-mesure</dd>
+            <dt>Public</dt><dd>Grand public, première prise en main d'Excel</dd>
+            <dt>Prérequis</dt><dd>Aucun</dd>
+          </dl>
+          <ol><li>Prendre en main son premier classeur</li><li>Organiser et mettre en forme ses données</li><li>Fonctions de base, TCD et graphiques</li></ol>
+        </div>
+        <div class="fiche">
+          <h4>Word — Niveau débutant</h4>
+          <dl>
+            <dt>Durée</dt><dd>Sur-mesure</dd>
+            <dt>Public</dt><dd>Grand public, première prise en main de Word</dd>
+            <dt>Prérequis</dt><dd>Aucun</dd>
+          </dl>
+          <ol><li>Créer, saisir et mettre en forme un document</li><li>Mise en page, images et tableaux</li><li>Styles, orthographe et export en PDF</li></ol>
+        </div>
+        <div class="fiche">
           <h4>Excel — Tableaux de bord</h4>
           <dl>
             <dt>Durée</dt><dd>Sur-mesure</dd>
@@ -1109,6 +1136,11 @@
           <h4>Outlook & Google Meet</h4>
           <dl><dt>Durée</dt><dd>Sur-mesure</dd><dt>Public</dt><dd>Assistants, cadres, équipes en télétravail</dd><dt>Prérequis</dt><dd>Aucun</dd></dl>
           <ol><li>Gérer efficacement sa boîte mail et son agenda avec Outlook</li><li>Organiser et animer des réunions avec Google Meet</li><li>Bonnes pratiques de communication professionnelle à distance</li></ol>
+        </div>
+        <div class="fiche">
+          <h4>Outils numériques du quotidien</h4>
+          <dl><dt>Durée</dt><dd>Sur-mesure</dd><dt>Public</dt><dd>Toute personne souhaitant gagner du temps au quotidien</dd><dt>Prérequis</dt><dd>Aisance informatique de base</dd></dl>
+          <ol><li>Documents, PDF et visuels</li><li>Notes, organisation et intelligence artificielle</li><li>Communication, confidentialité et business en ligne</li></ol>
         </div>
       </div>
     </div>
@@ -1691,6 +1723,9 @@
         <div class="checklist-group">
           <div class="checklist-group-title">Bureautique Pro</div>
           <div class="checklist-grid">
+            <label class="checklist-item"><input type="checkbox" name="formations" value="PowerPoint — Niveau débutant"> PowerPoint — Niveau débutant</label>
+            <label class="checklist-item"><input type="checkbox" name="formations" value="Excel — Niveau débutant"> Excel — Niveau débutant</label>
+            <label class="checklist-item"><input type="checkbox" name="formations" value="Word — Niveau débutant"> Word — Niveau débutant</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Excel — Tableaux de bord"> Excel — Tableaux de bord</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Word — Documents officiels"> Word — Documents officiels</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="PowerPoint — Présentations d'impact"> PowerPoint — Présentations d'impact</label>
@@ -1705,6 +1740,7 @@
             <label class="checklist-item"><input type="checkbox" name="formations" value="Gestion de projet en ligne"> Gestion de projet en ligne</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Google Sheets"> Google Sheets</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Outlook & Google Meet"> Outlook & Google Meet</label>
+            <label class="checklist-item"><input type="checkbox" name="formations" value="Outils numériques du quotidien"> Outils numériques du quotidien</label>
           </div>
         </div>
 
@@ -1935,6 +1971,9 @@
             <select id="codeGenFormation" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.92rem; background:var(--white); color:var(--charcoal);">
               <option value="" disabled selected>Choisir une formation…</option>
               <optgroup label="Bureautique Pro">
+                <option value="PowerPoint — Niveau débutant">PowerPoint — Niveau débutant</option>
+                <option value="Excel — Niveau débutant">Excel — Niveau débutant</option>
+                <option value="Word — Niveau débutant">Word — Niveau débutant</option>
                 <option value="Excel — Tableaux de bord">Excel — Tableaux de bord</option>
                 <option value="Word — Documents officiels">Word — Documents officiels</option>
                 <option value="PowerPoint — Présentations d'impact">PowerPoint — Présentations d'impact</option>
@@ -1946,6 +1985,7 @@
                 <option value="Gestion de projet en ligne">Gestion de projet en ligne</option>
                 <option value="Google Sheets">Google Sheets</option>
                 <option value="Outlook & Google Meet">Outlook & Google Meet</option>
+                <option value="Outils numériques du quotidien">Outils numériques du quotidien</option>
               </optgroup>
               <optgroup label="Infographie et montage audiovisuel">
                 <option value="Adobe Photoshop — Retouche & création visuelle">Adobe Photoshop — Retouche & création visuelle</option>
