@@ -3593,6 +3593,300 @@ export const FORMATIONS = {
     `
   },
 
+  "Initiation à l'informatique": {
+    titre: "Initiation à l'informatique",
+    duree: "Environ 2h30", public: "Grand public, aucune connaissance informatique préalable requise", prerequis: "Aucun",
+    modules: ["Module 1 — Qu'est-ce qu'un ordinateur ?", "Module 2 — Allumer, éteindre, se repérer", "Module 3 — Maîtriser la souris et le clavier", "Module 4 — Gérer ses fichiers et dossiers", "Module 5 — Internet et le navigateur web", "Module 6 — La messagerie électronique (email)", "Module 7 — Rédiger un document (traitement de texte)", "Module 8 — Sécurité informatique de base", "Module 9 — Entretenir son ordinateur", "Module 10 — Glossaire des termes essentiels", "Module 11 — Tableau récapitulatif", "Module 12 — Bonnes pratiques générales"],
+    apercu: "Une formation complète et progressive pour comprendre son ordinateur, naviguer sur Internet, gérer ses fichiers, écrire ses premiers documents et se protéger des dangers numériques — sans jargon inutile.",
+    pdfUrl: "formation-initiation-informatique.pdf",
+    contenuComplet: `
+      <p class="lede-cours">Une formation complète et progressive pour comprendre son ordinateur, naviguer sur Internet, gérer ses fichiers, écrire ses premiers documents et se protéger des dangers numériques — sans jargon inutile. Chaque module se lit indépendamment : suivez l'ordre si vous débutez complètement, ou allez directement au sujet qui vous bloque aujourd'hui.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Module 1</span>
+        <h3>Qu'est-ce qu'un ordinateur ?</h3>
+        <p>Un ordinateur est une machine composée de plusieurs éléments qui travaillent ensemble. Comprendre à quoi sert chaque pièce aide à mieux l'utiliser et à dialoguer avec un technicien si besoin.</p>
+        <h4>Les éléments essentiels</h4>
+        <ul>
+          <li><strong>L'unité centrale —</strong> le « cerveau » de l'ordinateur (dans une tour, ou intégrée à l'écran/au clavier pour un ordinateur portable) ; elle contient le processeur, la mémoire et le disque dur</li>
+          <li><strong>L'écran (moniteur) —</strong> affiche ce que l'ordinateur produit</li>
+          <li><strong>Le clavier —</strong> permet d'écrire du texte et de donner des commandes</li>
+          <li><strong>La souris (ou pavé tactile) —</strong> permet de pointer, cliquer et déplacer des éléments à l'écran</li>
+          <li><strong>Le processeur (CPU) —</strong> effectue tous les calculs ; plus il est puissant, plus l'ordinateur est rapide</li>
+          <li><strong>La mémoire vive (RAM) —</strong> stocke temporairement ce que l'ordinateur utilise à l'instant présent (elle s'efface à l'extinction)</li>
+          <li><strong>Le disque dur ou SSD —</strong> stocke durablement vos fichiers, photos et logiciels, même une fois l'ordinateur éteint</li>
+        </ul>
+        <div class="callout">
+          <strong>À retenir —</strong> la RAM, c'est la table de travail (tout disparaît une fois rangé) ; le disque dur, c'est l'armoire (tout reste après fermeture).
+        </div>
+        <h4>Ordinateur fixe, portable, tablette ou smartphone ?</h4>
+        <p>Un ordinateur fixe est plus puissant et évolutif mais reste à un endroit ; un ordinateur portable offre la mobilité ; une tablette ou un smartphone simplifient certaines tâches (internet, email, photos) mais conviennent moins bien à la rédaction de longs documents.</p>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 2</span>
+        <h3>Allumer, éteindre, se repérer</h3>
+        <p>Bien démarrer et arrêter son ordinateur évite d'endommager les fichiers en cours d'utilisation.</p>
+        <h4>Allumer l'ordinateur</h4>
+        <ol>
+          <li>Appuyez une seule fois sur le bouton d'alimentation (généralement marqué d'un symbole ⏻)</li>
+          <li>Patientez pendant le démarrage du système (de quelques secondes à 1-2 minutes)</li>
+          <li>Le bureau s'affiche : c'est votre espace de travail principal, avec des icônes et une barre en bas (ou en haut) de l'écran</li>
+        </ol>
+        <h4>Se repérer sur le bureau</h4>
+        <ul>
+          <li><strong>Icônes —</strong> petits dessins représentant des fichiers, dossiers ou logiciels ; un double-clic les ouvre</li>
+          <li><strong>Barre des tâches (Windows) ou Dock (Mac) —</strong> liste les logiciels ouverts et les raccourcis fréquents</li>
+          <li><strong>Menu Démarrer (Windows) ou icône Pomme/Launchpad (Mac) —</strong> donne accès à tous les logiciels installés</li>
+        </ul>
+        <h4>Éteindre correctement l'ordinateur</h4>
+        <p>Ne coupez jamais l'alimentation directement. Utilisez toujours le menu du système : Démarrer → Éteindre sur Windows, ou Pomme → Éteindre sur Mac. Cela permet à l'ordinateur d'enregistrer les réglages et de fermer les logiciels proprement.</p>
+        <div class="callout warning">
+          <strong>Attention —</strong> éteindre en débranchant ou en maintenant le bouton d'alimentation peut corrompre des fichiers non enregistrés — à réserver aux cas de blocage total.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 3</span>
+        <h3>Maîtriser la souris et le clavier</h3>
+        <h4>Les actions de base à la souris</h4>
+        <ul>
+          <li><strong>Clic gauche (simple) —</strong> sélectionne un élément</li>
+          <li><strong>Double-clic gauche —</strong> ouvre un fichier, dossier ou logiciel</li>
+          <li><strong>Clic droit —</strong> ouvre un menu d'options contextuelles (renommer, copier, supprimer…)</li>
+          <li><strong>Glisser-déposer —</strong> maintenez le clic gauche enfoncé, déplacez la souris, puis relâchez pour déplacer un élément</li>
+          <li><strong>Molette —</strong> fait défiler une page vers le haut ou le bas</li>
+        </ul>
+        <h4>Le clavier : zones importantes</h4>
+        <ul>
+          <li><strong>Touches alphanumériques —</strong> lettres et chiffres, comme sur une machine à écrire</li>
+          <li><strong>Barre d'espace —</strong> insère un espace entre les mots</li>
+          <li><strong>Touche Maj (Shift) —</strong> maintenue, écrit en majuscule ou accède au second symbole d'une touche</li>
+          <li><strong>Touche Verr. Maj (Caps Lock) —</strong> verrouille les majuscules jusqu'à un nouvel appui</li>
+          <li><strong>Touche Entrée (Enter) —</strong> valide une action ou passe à la ligne suivante</li>
+          <li><strong>Touche Suppr / Retour arrière —</strong> efface le texte, respectivement après ou avant le curseur</li>
+          <li><strong>Touches flèches —</strong> déplacent le curseur dans un texte ou une page</li>
+        </ul>
+        <h4>Raccourcis clavier indispensables</h4>
+        <table class="table-cours">
+          <thead><tr><th>Raccourci</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Ctrl + C</td><td>Copier l'élément sélectionné</td></tr>
+            <tr><td>Ctrl + X</td><td>Couper (déplacer) l'élément sélectionné</td></tr>
+            <tr><td>Ctrl + V</td><td>Coller l'élément copié ou coupé</td></tr>
+            <tr><td>Ctrl + Z</td><td>Annuler la dernière action</td></tr>
+            <tr><td>Ctrl + A</td><td>Sélectionner tout le contenu</td></tr>
+            <tr><td>Ctrl + S</td><td>Enregistrer le document en cours</td></tr>
+            <tr><td>Ctrl + P</td><td>Imprimer le document</td></tr>
+            <tr><td>Alt + Tab</td><td>Basculer entre les fenêtres ouvertes</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Astuce —</strong> sur Mac, remplacez « Ctrl » par la touche « Cmd (⌘) » pour la plupart de ces raccourcis.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 4</span>
+        <h3>Gérer ses fichiers et dossiers</h3>
+        <p>Un fichier contient une information (texte, photo, musique…). Un dossier permet de ranger plusieurs fichiers ensemble, comme une chemise cartonnée.</p>
+        <h4>Créer et organiser</h4>
+        <ol>
+          <li>Ouvrez l'Explorateur de fichiers (Windows) ou le Finder (Mac)</li>
+          <li>Rendez-vous à l'endroit voulu (ex. « Documents »)</li>
+          <li>Clic droit → Nouveau → Dossier, puis donnez-lui un nom clair (ex. « Factures 2026 »)</li>
+          <li>Faites glisser vos fichiers dedans, ou copiez-collez-les (Ctrl+C puis Ctrl+V)</li>
+        </ol>
+        <h4>Reconnaître les extensions courantes</h4>
+        <table class="table-cours">
+          <thead><tr><th>Extension</th><th>Type de fichier</th></tr></thead>
+          <tbody>
+            <tr><td>.docx / .doc</td><td>Document texte (Word)</td></tr>
+            <tr><td>.pdf</td><td>Document figé, non modifiable directement</td></tr>
+            <tr><td>.jpg / .png</td><td>Image ou photo</td></tr>
+            <tr><td>.xlsx</td><td>Tableur (Excel)</td></tr>
+            <tr><td>.mp3 / .mp4</td><td>Fichier audio / vidéo</td></tr>
+            <tr><td>.zip</td><td>Dossier compressé (plusieurs fichiers regroupés)</td></tr>
+          </tbody>
+        </table>
+        <h4>La corbeille : une sécurité, pas une suppression finale</h4>
+        <p>Supprimer un fichier l'envoie dans la Corbeille — il reste récupérable tant qu'elle n'est pas vidée. Pour une suppression définitive, videz la corbeille depuis son icône sur le bureau.</p>
+        <div class="callout">
+          <strong>Astuce d'organisation —</strong> nommez vos fichiers de façon explicite et datée (ex. « Facture_EDF_2026-03 ») plutôt que « Document1 » — vous les retrouverez bien plus vite.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 5</span>
+        <h3>Internet et le navigateur web</h3>
+        <p>Le navigateur (Chrome, Firefox, Edge, Safari…) est le logiciel qui permet d'accéder à Internet et de consulter des sites web.</p>
+        <h4>Les éléments d'une page web</h4>
+        <ul>
+          <li><strong>Barre d'adresse —</strong> en haut, on y tape l'adresse d'un site (ex. www.exemple.fr) ou une recherche</li>
+          <li><strong>Moteur de recherche (Google, Bing…) —</strong> permet de trouver de l'information en tapant des mots-clés</li>
+          <li><strong>Onglets —</strong> permettent d'ouvrir plusieurs pages en même temps dans une seule fenêtre</li>
+          <li><strong>Favoris / Signets —</strong> enregistrent un site pour le retrouver rapidement plus tard</li>
+          <li><strong>Lien hypertexte —</strong> texte ou image souligné/coloré qui, en cliquant dessus, ouvre une autre page</li>
+        </ul>
+        <h4>Faire une recherche efficace</h4>
+        <ol>
+          <li>Ouvrez le navigateur et cliquez dans la barre de recherche</li>
+          <li>Tapez des mots-clés précis plutôt qu'une phrase entière (ex. « horaires mairie Conakry » plutôt que « je voudrais savoir à quelle heure ouvre la mairie »)</li>
+          <li>Appuyez sur Entrée, puis parcourez les premiers résultats</li>
+        </ol>
+        <h4>Télécharger un fichier</h4>
+        <p>Cliquez sur le lien ou bouton de téléchargement : le fichier est enregistré automatiquement dans le dossier « Téléchargements ». Vous pouvez ensuite le déplacer où vous le souhaitez.</p>
+        <div class="callout warning">
+          <strong>Prudence —</strong> ne téléchargez que depuis des sites que vous connaissez ou jugez fiables — c'est la porte d'entrée la plus fréquente des virus (voir Module 8).
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 6</span>
+        <h3>La messagerie électronique (email)</h3>
+        <p>L'email permet d'envoyer et recevoir des messages écrits, avec ou sans documents joints, instantanément et gratuitement.</p>
+        <h4>Créer une adresse email</h4>
+        <ol>
+          <li>Choisissez un service gratuit (Gmail, Outlook, Yahoo…)</li>
+          <li>Rendez-vous sur son site et cliquez sur « Créer un compte »</li>
+          <li>Renseignez vos informations et choisissez une adresse simple (ex. prenom.nom@gmail.com)</li>
+          <li>Définissez un mot de passe solide (voir Module 8)</li>
+        </ol>
+        <h4>Envoyer un email</h4>
+        <ol>
+          <li>Cliquez sur « Nouveau message » ou « Écrire »</li>
+          <li>Dans « À », saisissez l'adresse du destinataire</li>
+          <li>Renseignez un « Objet » clair et résumant le message</li>
+          <li>Rédigez votre texte dans le corps du message</li>
+          <li>Pour joindre un document, cliquez sur l'icône trombone puis sélectionnez le fichier</li>
+          <li>Cliquez sur « Envoyer »</li>
+        </ol>
+        <div class="callout">
+          <strong>Bon à savoir —</strong> les mails indésirables ou suspects atterrissent souvent dans le dossier « Spam » ou « Courrier indésirable » — vérifiez-le si vous attendez un message qui n'arrive pas.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 7</span>
+        <h3>Rédiger un document (traitement de texte)</h3>
+        <p>Un logiciel de traitement de texte (Word, Google Docs, LibreOffice Writer…) permet d'écrire, mettre en forme et imprimer des documents.</p>
+        <h4>Les bases de la mise en forme</h4>
+        <ul>
+          <li><strong>Police et taille —</strong> choisissez la police (ex. Arial) et la taille du texte dans la barre d'outils</li>
+          <li><strong>Gras, italique, souligné —</strong> sélectionnez le texte puis cliquez sur G, I ou S (ou Ctrl+G, Ctrl+I, Ctrl+U)</li>
+          <li><strong>Alignement —</strong> gauche, centré, droit ou justifié</li>
+          <li><strong>Listes à puces ou numérotées —</strong> pour structurer une énumération</li>
+        </ul>
+        <h4>Enregistrer son travail</h4>
+        <ol>
+          <li>Cliquez sur « Fichier » puis « Enregistrer sous » (ou Ctrl+S)</li>
+          <li>Choisissez l'emplacement (ex. dossier « Documents »)</li>
+          <li>Donnez un nom clair au fichier</li>
+          <li>Validez : le document est désormais sauvegardé</li>
+        </ol>
+        <div class="callout">
+          <strong>Réflexe essentiel —</strong> enregistrez régulièrement (Ctrl+S) pendant la rédaction — une coupure de courant ou un plantage peut faire perdre tout travail non enregistré.
+        </div>
+        <h4>Imprimer un document</h4>
+        <p>Ctrl+P ouvre l'aperçu avant impression : vérifiez l'imprimante sélectionnée, le nombre de copies, puis cliquez sur « Imprimer ».</p>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 8</span>
+        <h3>Sécurité informatique de base</h3>
+        <p>Quelques réflexes simples suffisent à éviter la majorité des problèmes de sécurité.</p>
+        <h4>Créer un mot de passe solide</h4>
+        <ul>
+          <li>Au moins 10-12 caractères, avec majuscules, minuscules, chiffres et symboles</li>
+          <li>Évitez les informations personnelles évidentes (date de naissance, prénom)</li>
+          <li>Un mot de passe différent pour chaque service important (email, banque…)</li>
+        </ul>
+        <h4>Repérer les tentatives d'arnaque (phishing)</h4>
+        <ul>
+          <li>Méfiez-vous des emails créant un sentiment d'urgence (« Votre compte sera fermé dans 24h »)</li>
+          <li>Vérifiez l'adresse exacte de l'expéditeur, pas seulement le nom affiché</li>
+          <li>Ne cliquez jamais sur un lien douteux ; passez plutôt directement par le site officiel en le tapant vous-même</li>
+          <li>Aucune banque ou administration sérieuse ne demande un mot de passe par email</li>
+        </ul>
+        <h4>Protéger son ordinateur</h4>
+        <ul>
+          <li>Installez un antivirus et laissez-le à jour</li>
+          <li>Effectuez les mises à jour du système dès qu'elles sont proposées — elles corrigent des failles de sécurité</li>
+          <li>Ne branchez pas de clé USB inconnue sur votre ordinateur</li>
+          <li>En cas de doute sur un email ou un site, ne cliquez sur rien et demandez conseil à une personne de confiance avant d'agir</li>
+        </ul>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 9</span>
+        <h3>Entretenir son ordinateur</h3>
+        <h4>Gestes réguliers</h4>
+        <ul>
+          <li>Redémarrer l'ordinateur une fois par semaine environ, pour libérer la mémoire et appliquer les mises à jour</li>
+          <li>Vider la corbeille et supprimer les fichiers inutiles régulièrement</li>
+          <li>Désinstaller les logiciels que vous n'utilisez plus (Panneau de configuration → Programmes)</li>
+          <li>Dépoussiérer physiquement les grilles d'aération de temps en temps pour éviter la surchauffe</li>
+        </ul>
+        <h4>Sauvegarder ses données</h4>
+        <p>Copiez régulièrement vos fichiers importants (photos, documents) sur un support externe (clé USB, disque dur externe) ou un espace de stockage en ligne (Google Drive, OneDrive…). En cas de panne, vos données restent protégées.</p>
+        <div class="callout">
+          <strong>Règle simple —</strong> un fichier qui n'existe qu'à un seul endroit est un fichier en danger.
+        </div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 10</span>
+        <h3>Glossaire des termes essentiels</h3>
+        <ul>
+          <li><strong>Bureau —</strong> écran principal affiché après le démarrage, contenant icônes et raccourcis</li>
+          <li><strong>Cliquer —</strong> appuyer brièvement sur le bouton de la souris</li>
+          <li><strong>Curseur —</strong> petite flèche ou trait clignotant indiquant la position active à l'écran</li>
+          <li><strong>Fichier —</strong> élément numérique contenant une information (texte, image, son…)</li>
+          <li><strong>Dossier —</strong> espace de rangement regroupant plusieurs fichiers</li>
+          <li><strong>Logiciel / Application —</strong> programme installé permettant d'effectuer une tâche précise</li>
+          <li><strong>Navigateur —</strong> logiciel utilisé pour accéder à Internet (Chrome, Firefox, Safari…)</li>
+          <li><strong>Mot de passe —</strong> code secret protégeant l'accès à un compte ou un service</li>
+          <li><strong>Wifi —</strong> connexion Internet sans fil</li>
+          <li><strong>Téléchargement —</strong> action de récupérer un fichier depuis Internet vers son ordinateur</li>
+          <li><strong>Mise à jour —</strong> amélioration d'un logiciel ou du système, souvent liée à la sécurité</li>
+          <li><strong>Antivirus —</strong> logiciel protégeant l'ordinateur contre les programmes malveillants</li>
+        </ul>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Module 11</span>
+        <h3>Tableau récapitulatif</h3>
+        <table class="table-cours">
+          <thead><tr><th>Module</th><th>Ce que vous savez faire ensuite</th></tr></thead>
+          <tbody>
+            <tr><td>1. L'ordinateur</td><td>Nommer les composants principaux et leur rôle</td></tr>
+            <tr><td>2. Allumer/éteindre</td><td>Démarrer et arrêter sans risque, se repérer sur le bureau</td></tr>
+            <tr><td>3. Souris et clavier</td><td>Cliquer, glisser-déposer, utiliser les raccourcis de base</td></tr>
+            <tr><td>4. Fichiers et dossiers</td><td>Créer, ranger, renommer et retrouver ses documents</td></tr>
+            <tr><td>5. Internet</td><td>Naviguer, rechercher et télécharger en toute confiance</td></tr>
+            <tr><td>6. Email</td><td>Créer un compte, envoyer un message avec pièce jointe</td></tr>
+            <tr><td>7. Traitement de texte</td><td>Rédiger, mettre en forme, enregistrer et imprimer</td></tr>
+            <tr><td>8. Sécurité</td><td>Créer un mot de passe solide, repérer une arnaque</td></tr>
+            <tr><td>9. Entretien</td><td>Garder un ordinateur rapide et ses données sauvegardées</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Module 12</span>
+        <h3>Bonnes pratiques générales</h3>
+        <ol>
+          <li>Prenez le temps de vous entraîner sur chaque geste avant de passer au suivant — la répétition ancre l'habitude</li>
+          <li>N'ayez pas peur de cliquer : la plupart des actions sont réversibles (Ctrl+Z, corbeille)</li>
+          <li>Notez les raccourcis que vous utilisez souvent pour les mémoriser plus vite</li>
+          <li>Sauvegardez votre travail régulièrement, sans attendre la fin</li>
+          <li>En cas de blocage, redémarrez l'ordinateur avant de chercher plus loin — cela résout une grande partie des soucis</li>
+          <li>Demandez de l'aide sans hésiter : personne ne maîtrise l'informatique sans être passé par les mêmes débuts</li>
+        </ol>
+      </div>
+    `
+  },
+
 };
 
 // Utilitaire conservé pour les prochaines formations : à appeler une fois quand vous
