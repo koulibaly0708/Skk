@@ -497,6 +497,11 @@
     padding:14px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
     font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal); width:100%;
   }
+  form.modal-form textarea{
+    padding:14px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
+    font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal); width:100%;
+    resize:vertical; min-height:80px;
+  }
   .collab-tabs{display:flex; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line);}
   .collab-tab{
     font-family:'Work Sans',sans-serif; font-size:.92rem; font-weight:500; color:#8a8378;
@@ -661,6 +666,8 @@
   .checklist-grid{display:grid; grid-template-columns:1fr; gap:8px;}
   .checklist-item{display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:#463f36; cursor:pointer;}
   .checklist-item input{margin-top:3px; flex-shrink:0; accent-color:var(--clay); cursor:pointer;}
+  .consent-box{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:4px 0;}
+  .consent-box[hidden]{display:none !important;}
   .modal-success{display:none; text-align:center; padding:10px 0;}
   .modal-success.show{display:block;}
   .modal-success p{color:var(--sage); font-weight:600;}
@@ -1775,6 +1782,27 @@
       <input type="password" name="collabPassword" id="collabPassword" placeholder="Mot de passe (6 caractères min.)" required autocomplete="current-password" maxlength="200">
       <span class="modal-error" id="errCollabPassword">Le mot de passe doit contenir au moins 6 caractères.</span>
 
+      <button type="button" class="link-btn" id="collabForgotBtn" style="align-self:flex-start; margin:-6px 0 4px;">Mot de passe oublié ?</button>
+      <p class="modal-error" id="collabForgotMsg" style="color:var(--clay);"></p>
+
+      <input type="tel" name="collabTelephone" id="collabTelephone" placeholder="Téléphone" autocomplete="tel" maxlength="30" hidden>
+      <span class="modal-error" id="errCollabTelephone">Merci d'indiquer votre numéro de téléphone.</span>
+
+      <input type="text" name="collabTravail" id="collabTravail" placeholder="Votre travail / activité" autocomplete="organization-title" maxlength="150" hidden>
+      <span class="modal-error" id="errCollabTravail">Merci d'indiquer votre activité professionnelle.</span>
+
+      <input type="text" name="collabPays" id="collabPays" placeholder="Pays" autocomplete="country-name" maxlength="100" hidden>
+      <span class="modal-error" id="errCollabPays">Merci d'indiquer votre pays.</span>
+
+      <textarea name="collabProjet" id="collabProjet" placeholder="Votre projet" maxlength="1000" hidden rows="3"></textarea>
+      <span class="modal-error" id="errCollabProjet">Merci de décrire votre projet.</span>
+
+      <label class="consent-box checklist-item" id="collabConsentBox" hidden>
+        <input type="checkbox" name="collabConsent" id="collabConsent">
+        <span>J'accepte que mes informations soient utilisées par SKk pour la mise en relation avec des projets. Mes données ne seront pas partagées avec des tiers.</span>
+      </label>
+      <span class="modal-error" id="errCollabConsent">Merci d'accepter que vos informations soient utilisées avant de créer votre compte.</span>
+
       <button type="submit" class="btn btn-primary" id="collabSubmitBtn">Se connecter</button>
       <p class="modal-error" id="collabSendError"></p>
     </form>
@@ -2397,6 +2425,13 @@
   const collabModalSub = document.getElementById('collabModalSub');
   const collabSubmitBtn = document.getElementById('collabSubmitBtn');
   const collabSendError = document.getElementById('collabSendError');
+  const collabForgotBtn = document.getElementById('collabForgotBtn');
+  const collabForgotMsg = document.getElementById('collabForgotMsg');
+  const collabRegisterOnlyFields = ['collabTelephone', 'collabTravail', 'collabPays', 'collabProjet']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const collabConsentBox = document.getElementById('collabConsentBox');
+  const collabConsent = document.getElementById('collabConsent');
+  const errCollabConsentTab = document.getElementById('errCollabConsent');
 
   window.collabMode = 'login';
   window.collabModalContext = 'collab'; // 'collab' ou 'admin' : détermine le titre affiché dans la modale
@@ -2410,19 +2445,29 @@
     if (estAdmin) mode = 'login'; // inscription impossible côté administrateur
     window.collabMode = mode;
     resetCollabErrors();
+    if (collabForgotMsg) { collabForgotMsg.textContent = ''; collabForgotMsg.classList.remove('show'); }
     if (collabModalTitle) collabModalTitle.textContent = estAdmin ? 'Espace Administrateur' : 'Espace Collaborateur';
     if (mode === 'login') {
       tabLogin.classList.add('active'); tabRegister.classList.remove('active');
       collabNameField.hidden = true; collabNameField.required = false;
+      collabRegisterOnlyFields.forEach(f => { f.hidden = true; f.required = false; });
+      if (collabConsentBox) collabConsentBox.hidden = true;
+      if (collabConsent) { collabConsent.required = false; collabConsent.checked = false; }
+      if (errCollabConsentTab) errCollabConsentTab.classList.remove('show');
       collabModalSub.textContent = estAdmin
         ? 'Accès réservé.'
         : 'Connectez-vous pour accéder au forum des membres.';
       collabSubmitBtn.textContent = 'Se connecter';
+      if (collabForgotBtn) collabForgotBtn.hidden = false;
     } else {
       tabRegister.classList.add('active'); tabLogin.classList.remove('active');
       collabNameField.hidden = false; collabNameField.required = true;
+      collabRegisterOnlyFields.forEach(f => { f.hidden = false; f.required = true; });
+      if (collabConsentBox) collabConsentBox.hidden = false;
+      if (collabConsent) collabConsent.required = true;
       collabModalSub.textContent = 'Créez votre compte pour rejoindre le forum des membres.';
       collabSubmitBtn.textContent = 'Créer mon compte';
+      if (collabForgotBtn) collabForgotBtn.hidden = true;
     }
   }
   if (tabLogin) tabLogin.addEventListener('click', () => setCollabTab('login'));
@@ -2690,7 +2735,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged, updateProfile
+    signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
     getDatabase, ref, push, set, update, onValue, get,
@@ -2725,8 +2770,20 @@
   const errCollabName = document.getElementById('errCollabName');
   const errCollabEmail = document.getElementById('errCollabEmail');
   const errCollabPassword = document.getElementById('errCollabPassword');
+  const collabTelephone = document.getElementById('collabTelephone');
+  const collabTravail = document.getElementById('collabTravail');
+  const collabPays = document.getElementById('collabPays');
+  const collabProjet = document.getElementById('collabProjet');
+  const collabConsent = document.getElementById('collabConsent');
+  const errCollabTelephone = document.getElementById('errCollabTelephone');
+  const errCollabTravail = document.getElementById('errCollabTravail');
+  const errCollabPays = document.getElementById('errCollabPays');
+  const errCollabProjet = document.getElementById('errCollabProjet');
+  const errCollabConsent = document.getElementById('errCollabConsent');
   const collabSendError = document.getElementById('collabSendError');
   const collabSubmitBtn = document.getElementById('collabSubmitBtn');
+  const collabForgotBtn = document.getElementById('collabForgotBtn');
+  const collabForgotMsg = document.getElementById('collabForgotMsg');
   const navCollabLink = document.getElementById('navCollabLink');
 
   const collabSpace = document.getElementById('collabSpace');
@@ -2889,20 +2946,39 @@
       errCollabName.classList.remove('show');
       errCollabEmail.classList.remove('show');
       errCollabPassword.classList.remove('show');
+      errCollabTelephone.classList.remove('show');
+      errCollabTravail.classList.remove('show');
+      errCollabPays.classList.remove('show');
+      errCollabProjet.classList.remove('show');
+      if (errCollabConsent) errCollabConsent.classList.remove('show');
 
       const mode = window.collabMode || 'login';
       const emailVal = collabEmail.value.trim();
       const passVal = collabPassword.value;
       const nameVal = collabName.value.trim();
+      const telephoneVal = collabTelephone.value.trim();
+      const travailVal = collabTravail.value.trim();
+      const paysVal = collabPays.value.trim();
+      const projetVal = collabProjet.value.trim();
 
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
       const passOk = passVal.length >= 6;
       const nameOk = mode === 'login' || nameVal.length > 0;
+      const telephoneOk = mode === 'login' || telephoneVal.length > 0;
+      const travailOk = mode === 'login' || travailVal.length > 0;
+      const paysOk = mode === 'login' || paysVal.length > 0;
+      const projetOk = mode === 'login' || projetVal.length > 0;
+      const consentOk = mode === 'login' || (collabConsent && collabConsent.checked);
 
       errCollabEmail.classList.toggle('show', !emailOk);
       errCollabPassword.classList.toggle('show', !passOk);
       errCollabName.classList.toggle('show', !nameOk);
-      if (!emailOk || !passOk || !nameOk) return;
+      errCollabTelephone.classList.toggle('show', !telephoneOk);
+      errCollabTravail.classList.toggle('show', !travailOk);
+      errCollabPays.classList.toggle('show', !paysOk);
+      errCollabProjet.classList.toggle('show', !projetOk);
+      if (errCollabConsent) errCollabConsent.classList.toggle('show', !consentOk);
+      if (!emailOk || !passOk || !nameOk || !telephoneOk || !travailOk || !paysOk || !projetOk || !consentOk) return;
 
       collabSubmitBtn.disabled = true;
       try {
@@ -2912,6 +2988,10 @@
           await set(ref(rtdb, 'users/' + cred.user.uid), {
             name: nameVal,
             email: emailVal,
+            telephone: telephoneVal,
+            travail: travailVal,
+            pays: paysVal,
+            projet: projetVal,
             createdAt: rtdbServerTimestamp()
           }).catch(() => {});
         } else {
@@ -2940,6 +3020,35 @@
         collabSendError.classList.add('show');
       } finally {
         collabSubmitBtn.disabled = false;
+      }
+    });
+  }
+
+  if (collabForgotBtn) {
+    collabForgotBtn.addEventListener('click', async () => {
+      const emailVal = collabEmail.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      if (!collabForgotMsg) return;
+      collabForgotMsg.classList.remove('show');
+      if (!emailOk) {
+        collabForgotMsg.textContent = "Indiquez d'abord votre adresse e-mail ci-dessus, puis cliquez à nouveau.";
+        collabForgotMsg.style.color = '#b3261e';
+        collabForgotMsg.classList.add('show');
+        collabEmail.focus();
+        return;
+      }
+      collabForgotBtn.disabled = true;
+      try {
+        await sendPasswordResetEmail(auth, emailVal);
+        collabForgotMsg.textContent = "E-mail envoyé : suivez le lien reçu à " + emailVal + " pour réinitialiser votre mot de passe.";
+        collabForgotMsg.style.color = 'var(--clay)';
+        collabForgotMsg.classList.add('show');
+      } catch (err) {
+        collabForgotMsg.textContent = messageErreurFirebase(err.code);
+        collabForgotMsg.style.color = '#b3261e';
+        collabForgotMsg.classList.add('show');
+      } finally {
+        collabForgotBtn.disabled = false;
       }
     });
   }

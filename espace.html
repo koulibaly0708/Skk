@@ -491,6 +491,11 @@
     padding:14px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
     font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal); width:100%;
   }
+  form.modal-form textarea{
+    padding:14px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
+    font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal); width:100%;
+    resize:vertical; min-height:80px;
+  }
   .collab-tabs{display:flex; flex-wrap:wrap; row-gap:6px; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line);}
   .collab-tab{
     font-family:'Work Sans',sans-serif; font-size:.92rem; font-weight:500; color:#8a8378;
@@ -654,6 +659,8 @@
   .checklist-group-title{font-weight:600; font-size:.86rem; color:var(--ink); margin-bottom:8px;}
   .checklist-grid{display:grid; grid-template-columns:1fr; gap:8px;}
   .checklist-item{display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:#463f36; cursor:pointer;}
+  .consent-box{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:4px 0;}
+  .consent-box[hidden]{display:none !important;}
   .checklist-item input{margin-top:3px; flex-shrink:0; accent-color:var(--clay); cursor:pointer;}
   .modal-success{display:none; text-align:center; padding:10px 0;}
   .modal-success.show{display:block;}
@@ -1901,6 +1908,24 @@
       <button type="button" class="link-btn" id="collabForgotBtn" style="align-self:flex-start; margin:-6px 0 4px;">Mot de passe oublié ?</button>
       <p class="modal-error" id="collabForgotMsg" style="color:var(--clay);"></p>
 
+      <input type="tel" name="collabTelephone" id="collabTelephone" placeholder="Téléphone" autocomplete="tel" maxlength="30" hidden>
+      <span class="modal-error" id="errCollabTelephone">Merci d'indiquer votre numéro de téléphone.</span>
+
+      <input type="text" name="collabTravail" id="collabTravail" placeholder="Votre travail / activité" autocomplete="organization-title" maxlength="150" hidden>
+      <span class="modal-error" id="errCollabTravail">Merci d'indiquer votre activité professionnelle.</span>
+
+      <input type="text" name="collabPays" id="collabPays" placeholder="Pays" autocomplete="country-name" maxlength="100" hidden>
+      <span class="modal-error" id="errCollabPays">Merci d'indiquer votre pays.</span>
+
+      <textarea name="collabProjet" id="collabProjet" placeholder="Votre projet" maxlength="1000" hidden rows="3"></textarea>
+      <span class="modal-error" id="errCollabProjet">Merci de décrire votre projet.</span>
+
+      <label class="consent-box checklist-item" id="collabConsentBox" hidden>
+        <input type="checkbox" name="collabConsent" id="collabConsent">
+        <span>J'accepte que mes informations soient utilisées par SKk pour la mise en relation avec des projets. Mes données ne seront pas partagées avec des tiers.</span>
+      </label>
+      <span class="modal-error" id="errCollabConsent">Merci d'accepter que vos informations soient utilisées avant de créer votre compte.</span>
+
       <button type="submit" class="btn btn-primary" id="collabSubmitBtn">Se connecter</button>
       <p class="modal-error" id="collabSendError"></p>
     </form>
@@ -2069,6 +2094,7 @@
     <div class="collab-tabs">
       <button type="button" class="collab-tab active" id="adminTabCollabMsgs">Messages des collaborateurs <span class="chat-badge" id="collabTabBadge" hidden>0</span></button>
       <button type="button" class="collab-tab" id="adminTabBroadcast">Diffuser une annonce</button>
+      <button type="button" class="collab-tab" id="adminTabGestion">Gestion des collaborateurs</button>
     </div>
 
     <div class="forum-layout" id="adminPanelCollabMsgs">
@@ -2099,6 +2125,15 @@
         </form>
         <span class="modal-error" id="errBroadcastText">Merci d'écrire un message.</span>
         <div class="thread-list" id="broadcastHistory" style="margin-top:24px;"></div>
+      </div>
+    </div>
+
+    <div class="forum-layout" id="adminPanelGestion" hidden>
+      <div class="forum-panel" style="width:100%;">
+        <p class="section-lede" style="margin:0 0 10px;">Désactivez un collaborateur pour lui bloquer temporairement l'accès à son espace (il pourra être réactivé à tout moment), ou supprimez-le définitivement de la liste.</p>
+        <div class="thread-list" id="gestionCollabList">
+          <p class="forum-empty" id="gestionCollabListEmpty">Aucun collaborateur inscrit pour le moment.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -2543,6 +2578,11 @@
   const collabSendError = document.getElementById('collabSendError');
   const collabForgotBtn = document.getElementById('collabForgotBtn');
   const collabForgotMsg = document.getElementById('collabForgotMsg');
+  const collabRegisterOnlyFields = ['collabTelephone', 'collabTravail', 'collabPays', 'collabProjet']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const collabConsentBox = document.getElementById('collabConsentBox');
+  const collabConsent = document.getElementById('collabConsent');
+  const errCollabConsentTab = document.getElementById('errCollabConsent');
 
   window.collabMode = 'login';
   window.collabModalContext = 'collab'; // 'collab' ou 'admin' : détermine le titre affiché dans la modale
@@ -2561,6 +2601,10 @@
     if (mode === 'login') {
       tabLogin.classList.add('active'); tabRegister.classList.remove('active');
       collabNameField.hidden = true; collabNameField.required = false;
+      collabRegisterOnlyFields.forEach(f => { f.hidden = true; f.required = false; });
+      if (collabConsentBox) collabConsentBox.hidden = true;
+      if (collabConsent) { collabConsent.required = false; collabConsent.checked = false; }
+      if (errCollabConsentTab) errCollabConsentTab.classList.remove('show');
       collabModalSub.textContent = estAdmin
         ? 'Accès réservé.'
         : 'Connectez-vous pour accéder au forum des membres.';
@@ -2569,6 +2613,9 @@
     } else {
       tabRegister.classList.add('active'); tabLogin.classList.remove('active');
       collabNameField.hidden = false; collabNameField.required = true;
+      collabRegisterOnlyFields.forEach(f => { f.hidden = false; f.required = true; });
+      if (collabConsentBox) collabConsentBox.hidden = false;
+      if (collabConsent) collabConsent.required = true;
       collabModalSub.textContent = 'Créez votre compte pour rejoindre le forum des membres.';
       collabSubmitBtn.textContent = 'Créer mon compte';
       if (collabForgotBtn) collabForgotBtn.hidden = true;
@@ -2825,8 +2872,20 @@
   const errCollabName = document.getElementById('errCollabName');
   const errCollabEmail = document.getElementById('errCollabEmail');
   const errCollabPassword = document.getElementById('errCollabPassword');
+  const collabTelephone = document.getElementById('collabTelephone');
+  const collabTravail = document.getElementById('collabTravail');
+  const collabPays = document.getElementById('collabPays');
+  const collabProjet = document.getElementById('collabProjet');
+  const collabConsent = document.getElementById('collabConsent');
+  const errCollabTelephone = document.getElementById('errCollabTelephone');
+  const errCollabTravail = document.getElementById('errCollabTravail');
+  const errCollabPays = document.getElementById('errCollabPays');
+  const errCollabProjet = document.getElementById('errCollabProjet');
+  const errCollabConsent = document.getElementById('errCollabConsent');
   const collabSendError = document.getElementById('collabSendError');
   const collabSubmitBtn = document.getElementById('collabSubmitBtn');
+  const collabForgotBtn = document.getElementById('collabForgotBtn');
+  const collabForgotMsg = document.getElementById('collabForgotMsg');
   const navCollabLink = document.getElementById('navCollabLink');
 
   const collabSpace = document.getElementById('collabSpace');
@@ -2840,8 +2899,12 @@
   const adminCollabSpace = document.getElementById('adminCollabSpace');
   const adminTabCollabMsgs = document.getElementById('adminTabCollabMsgs');
   const adminTabBroadcast = document.getElementById('adminTabBroadcast');
+  const adminTabGestion = document.getElementById('adminTabGestion');
   const adminPanelCollabMsgs = document.getElementById('adminPanelCollabMsgs');
   const adminPanelBroadcast = document.getElementById('adminPanelBroadcast');
+  const adminPanelGestion = document.getElementById('adminPanelGestion');
+  const gestionCollabList = document.getElementById('gestionCollabList');
+  const gestionCollabListEmpty = document.getElementById('gestionCollabListEmpty');
   const collabTabBadge = document.getElementById('collabTabBadge');
   const collabChatList = document.getElementById('collabChatList');
   const collabChatListEmpty = document.getElementById('collabChatListEmpty');
@@ -2998,20 +3061,39 @@
       errCollabName.classList.remove('show');
       errCollabEmail.classList.remove('show');
       errCollabPassword.classList.remove('show');
+      errCollabTelephone.classList.remove('show');
+      errCollabTravail.classList.remove('show');
+      errCollabPays.classList.remove('show');
+      errCollabProjet.classList.remove('show');
+      if (errCollabConsent) errCollabConsent.classList.remove('show');
 
       const mode = window.collabMode || 'login';
       const emailVal = collabEmail.value.trim();
       const passVal = collabPassword.value;
       const nameVal = collabName.value.trim();
+      const telephoneVal = collabTelephone.value.trim();
+      const travailVal = collabTravail.value.trim();
+      const paysVal = collabPays.value.trim();
+      const projetVal = collabProjet.value.trim();
 
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
       const passOk = passVal.length >= 6;
       const nameOk = mode === 'login' || nameVal.length > 0;
+      const telephoneOk = mode === 'login' || telephoneVal.length > 0;
+      const travailOk = mode === 'login' || travailVal.length > 0;
+      const paysOk = mode === 'login' || paysVal.length > 0;
+      const consentOk = mode === 'login' || (collabConsent && collabConsent.checked);
+      const projetOk = mode === 'login' || projetVal.length > 0;
 
       errCollabEmail.classList.toggle('show', !emailOk);
       errCollabPassword.classList.toggle('show', !passOk);
       errCollabName.classList.toggle('show', !nameOk);
-      if (!emailOk || !passOk || !nameOk) return;
+      errCollabTelephone.classList.toggle('show', !telephoneOk);
+      errCollabTravail.classList.toggle('show', !travailOk);
+      errCollabPays.classList.toggle('show', !paysOk);
+      errCollabProjet.classList.toggle('show', !projetOk);
+      if (errCollabConsent) errCollabConsent.classList.toggle('show', !consentOk);
+      if (!emailOk || !passOk || !nameOk || !telephoneOk || !travailOk || !paysOk || !projetOk || !consentOk) return;
 
       collabSubmitBtn.disabled = true;
       try {
@@ -3021,6 +3103,10 @@
           await set(ref(rtdb, 'users/' + cred.user.uid), {
             name: nameVal,
             email: emailVal,
+            telephone: telephoneVal,
+            travail: travailVal,
+            pays: paysVal,
+            projet: projetVal,
             createdAt: rtdbServerTimestamp()
           }).catch(() => {});
         } else {
@@ -3038,6 +3124,22 @@
             if (!estAdminConfirme) {
               await signOut(auth);
               collabSendError.textContent = "Accès refusé : ce compte n'est pas configuré comme administrateur.";
+              collabSendError.classList.add('show');
+              return;
+            }
+          } else {
+            // Connexion classique : on vérifie que le compte n'a pas été désactivé/supprimé par un administrateur
+            let estBloque = false;
+            try {
+              const userSnap = await get(ref(rtdb, 'users/' + cred.user.uid));
+              const userData = userSnap.val() || {};
+              estBloque = userData.actif === false || userData.supprime === true;
+            } catch (errUser) {
+              estBloque = false;
+            }
+            if (estBloque) {
+              await signOut(auth);
+              collabSendError.textContent = 'Ce compte a été désactivé. Contactez l\'administrateur pour plus d\'informations.';
               collabSendError.classList.add('show');
               return;
             }
@@ -3157,7 +3259,21 @@
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
-        // Membre non-admin : ni forum, ni messages visiteurs, ni espace administrateur —
+        // Membre non-admin : on vérifie d'abord que le compte n'a pas été désactivé/supprimé entre-temps
+        let estBloque = false;
+        try {
+          const userSnap = await get(ref(rtdb, 'users/' + user.uid));
+          const userData = userSnap.val() || {};
+          estBloque = userData.actif === false || userData.supprime === true;
+        } catch (errUser) {
+          estBloque = false;
+        }
+        if (estBloque) {
+          await signOut(auth);
+          window.location.href = 'index.html';
+          return;
+        }
+        // ni forum, ni messages visiteurs, ni espace administrateur —
         // mais accès à ses propres annonces + à sa discussion directe avec l'administrateur
         if (collabAdminZone) collabAdminZone.hidden = true;
         if (adminCollabSpace) adminCollabSpace.hidden = true;
@@ -3238,16 +3354,32 @@
       if (!window.isAdminStaff) return;
       adminTabCollabMsgs.classList.add('active');
       adminTabBroadcast.classList.remove('active');
+      if (adminTabGestion) adminTabGestion.classList.remove('active');
       adminPanelCollabMsgs.hidden = false;
       adminPanelBroadcast.hidden = true;
+      if (adminPanelGestion) adminPanelGestion.hidden = true;
     });
     adminTabBroadcast.addEventListener('click', () => {
       if (!window.isAdminStaff) return;
       adminTabBroadcast.classList.add('active');
       adminTabCollabMsgs.classList.remove('active');
+      if (adminTabGestion) adminTabGestion.classList.remove('active');
       adminPanelBroadcast.hidden = false;
       adminPanelCollabMsgs.hidden = true;
+      if (adminPanelGestion) adminPanelGestion.hidden = true;
     });
+    if (adminTabGestion) {
+      adminTabGestion.addEventListener('click', () => {
+        if (!window.isAdminStaff) return;
+        adminTabGestion.classList.add('active');
+        adminTabCollabMsgs.classList.remove('active');
+        adminTabBroadcast.classList.remove('active');
+        adminPanelGestion.hidden = false;
+        adminPanelCollabMsgs.hidden = true;
+        adminPanelBroadcast.hidden = true;
+        renderGestionCollabList();
+      });
+    }
   }
 
   // ==================== MESSAGES VISITEURS (côté équipe) — Realtime Database ====================
@@ -3992,7 +4124,7 @@
   function renderCollabList() {
     if (!collabChatList) return;
     collabChatList.innerHTML = '';
-    const uids = Object.keys(collabUsersCache).filter(uid => !window.collabUser || uid !== window.collabUser.uid);
+    const uids = Object.keys(collabUsersCache).filter(uid => !collabUsersCache[uid].supprime && (!window.collabUser || uid !== window.collabUser.uid));
 
     if (uids.length === 0) {
       collabChatList.appendChild(collabChatListEmpty);
@@ -4047,12 +4179,101 @@
     }
   }
 
+  // ==================== ESPACE ADMINISTRATEUR : GESTION DES COLLABORATEURS (désactiver / supprimer) ====================
+  function renderGestionCollabList() {
+    if (!gestionCollabList) return;
+    gestionCollabList.innerHTML = '';
+    const uids = Object.keys(collabUsersCache).filter(uid => !collabUsersCache[uid].supprime && (!window.collabUser || uid !== window.collabUser.uid));
+
+    if (uids.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucun collaborateur inscrit pour le moment.';
+      gestionCollabList.appendChild(p);
+      return;
+    }
+
+    uids.sort((a, b) => (collabUsersCache[a].name || collabUsersCache[a].email || '').localeCompare(collabUsersCache[b].name || collabUsersCache[b].email || ''));
+
+    uids.forEach((uid) => {
+      const u = collabUsersCache[uid] || {};
+      const estActif = u.actif !== false;
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = u.name || u.email || 'Collaborateur';
+      if (!estActif) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = '#8a8378';
+        badge.textContent = 'DÉSACTIVÉ';
+        nameLine.appendChild(badge);
+      }
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      detailLine.textContent = u.email || '';
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.type = 'button';
+      toggleBtn.className = 'admin-toggle-btn' + (estActif ? '' : ' is-admin');
+      toggleBtn.textContent = estActif ? 'Désactiver' : 'Réactiver';
+      toggleBtn.addEventListener('click', () => basculerCollaborateurActif(uid, estActif));
+      btnGroup.appendChild(toggleBtn);
+
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerCollaborateur(uid, u.name || u.email || 'ce collaborateur'));
+      btnGroup.appendChild(supprimerBtn);
+
+      row.appendChild(btnGroup);
+      gestionCollabList.appendChild(row);
+    });
+  }
+
+  async function basculerCollaborateurActif(uid, estActuellementActif) {
+    try {
+      await update(ref(rtdb, 'users/' + uid), { actif: !estActuellementActif });
+    } catch (err) {
+      notifier('Erreur', 'Impossible de modifier ce collaborateur. Réessayez.');
+    }
+  }
+
+  async function supprimerCollaborateur(uid, nom) {
+    if (!uid) return;
+    if (!confirm('Supprimer ' + nom + ' de la liste des collaborateurs ? Son accès à l\'espace collaborateur sera définitivement bloqué.')) return;
+    try {
+      await update(ref(rtdb, 'users/' + uid), { actif: false, supprime: true });
+    } catch (err) {
+      notifier('Erreur', 'Impossible de supprimer ce collaborateur. Réessayez.');
+    }
+  }
+
   function demarrerEcouteCollabChats() {
     if (unsubCollabUsers) unsubCollabUsers();
     if (unsubCollabChatsList) unsubCollabChatsList();
     unsubCollabUsers = onValue(ref(rtdb, 'users'), (snap) => {
       collabUsersCache = snap.val() || {};
       renderCollabList();
+      if (adminPanelGestion && !adminPanelGestion.hidden) renderGestionCollabList();
     });
     unsubCollabChatsList = onValue(ref(rtdb, 'collabChats'), (snap) => {
       collabChatsCache = snap.val() || {};
