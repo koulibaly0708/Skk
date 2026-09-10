@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forum — Espace Administration — Solo Koumana Koulibaly</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --clay:#D98E3D;
+    --paper:#F6F1E7;
+    --charcoal:#2B2622;
+    --sage:#4C6B54;
+    --white:#FFFFFF;
+    --line: rgba(27,42,74,0.16);
+    --max: 880px;
+  }
+  *{box-sizing:border-box;}
+  html{overflow-x:hidden;}
+  body{
+    margin:0; min-height:100vh;
+    background:var(--paper); color:var(--charcoal);
+    font-family:'Work Sans', sans-serif; font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Roboto', sans-serif; color:var(--ink); margin:0 0 .4em; letter-spacing:-0.01em;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:40px 24px 80px;}
+  .top-bar{
+    border-bottom:1px solid var(--line); background:var(--white);
+    padding:16px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .top-bar .logo{font-family:'Fraunces',serif; font-weight:600; color:var(--ink); font-size:1.1rem; text-decoration:none;}
+  .top-bar .logo span{color:var(--clay);}
+  .top-bar a.back{color:var(--clay); font-size:.88rem; font-weight:500; text-decoration:underline;}
+  .eyebrow{font-family:'JetBrains Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--sage); display:block; margin-bottom:10px;}
+  .section-lede{color:#5a544c; font-size:.95rem; margin:0 0 28px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:3px;
+    font-weight:600; font-size:.9rem; border:1.5px solid var(--ink); cursor:pointer;
+    transition:transform .18s ease, background .18s ease, color .18s ease; text-decoration:none;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-primary:hover{transform:translateY(-2px); background:var(--charcoal);}
+  .btn-ghost{background:transparent; color:var(--ink);}
+  .btn-ghost:hover{transform:translateY(-2px); background:var(--ink); color:var(--paper);}
+  .link-btn{background:none; border:none; color:var(--clay); font-family:'Work Sans',sans-serif; font-size:.92rem; font-weight:500; cursor:pointer; padding:0; text-decoration:underline;}
+  .modal-error{display:none; color:#b3261e; font-size:.85rem; margin-top:-4px;}
+  .modal-error.show{display:block;}
+
+  .forum-panel{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:28px;}
+  .forum-new-thread{display:flex; gap:10px; margin-bottom:6px;}
+  .forum-new-thread input{
+    flex:1; padding:11px 14px; border:1px solid var(--line); border-radius:4px; font-family:'Work Sans',sans-serif; font-size:.95rem;
+  }
+  .forum-empty{color:#8a8378; font-size:.92rem; padding:18px 0;}
+  .thread-list{margin-top:18px; display:flex; flex-direction:column; gap:2px;}
+  .thread-item{
+    display:flex; align-items:center; gap:14px; width:100%; text-align:left; background:none; border:none;
+    padding:14px 8px; border-top:1px solid var(--line); cursor:pointer; font-family:inherit;
+  }
+  .thread-list .thread-item:first-child{border-top:none;}
+  .thread-item:hover{background:var(--paper);}
+  .thread-item .t-title{font-weight:500; color:var(--ink); font-size:.98rem;}
+  .thread-item .t-meta{font-size:.8rem; color:#8a8378; margin-top:3px;}
+  .thread-item .t-arrow{color:var(--clay); flex-shrink:0;}
+  .thread-messages{display:flex; flex-direction:column; gap:14px; margin:20px 0; max-height:460px; overflow-y:auto;}
+  .thread-msg{display:flex; gap:12px; align-items:flex-start; background:var(--paper); border-radius:8px; padding:14px 16px;}
+  .thread-msg .msg-body{flex:1; min-width:0;}
+  .thread-msg .msg-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .thread-msg .m-author{font-size:.8rem; font-weight:600; color:var(--clay); margin-bottom:4px;}
+  .thread-msg .m-text{font-size:.94rem; color:var(--charcoal); white-space:pre-wrap; line-height:1.5; word-break:break-word;}
+  .thread-msg .m-time{font-size:.72rem; color:#a39c8f; margin-top:6px;}
+  .thread-msg.own{background:#f1e6d2;}
+  h3#threadViewTitle{margin-top:14px; font-size:1.3rem;}
+
+  .avatar-sm{
+    width:36px; height:36px; border-radius:50%; flex-shrink:0; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size:.92rem; color:var(--white);
+  }
+  .thread-item .avatar-sm{width:38px; height:38px; font-size:.95rem;}
+  .collab-user-chip{display:inline-flex; align-items:center; gap:8px; vertical-align:middle;}
+  .collab-user-chip .avatar-sm{width:26px; height:26px; font-size:.7rem;}
+
+  .msg-delete-btn{
+    background:none; border:none; cursor:pointer; flex-shrink:0; padding:2px 6px;
+    color:#a39c8f; font-family:'JetBrains Mono',monospace; font-size:.78rem;
+    border-radius:4px; transition:color .15s ease, background .15s ease;
+  }
+  .msg-delete-btn:hover{color:#b3261e; background:rgba(179,38,30,0.08);}
+
+  .forum-reply-form{display:flex; flex-direction:column; gap:10px;}
+  .forum-reply-form textarea{
+    padding:12px 14px; border:1px solid var(--line); border-radius:4px; font-family:'Work Sans',sans-serif;
+    font-size:.95rem; min-height:90px; resize:vertical;
+  }
+  .forum-reply-form button{align-self:flex-start;}
+
+  #toastStack{position:fixed; bottom:22px; right:22px; z-index:2000; display:flex; flex-direction:column; gap:10px; max-width:320px;}
+  .toast-notif{
+    background:var(--ink); color:var(--paper); border-radius:8px; padding:14px 16px;
+    box-shadow:0 14px 30px -10px rgba(15,26,48,0.55); font-size:.88rem; line-height:1.4;
+    display:flex; gap:10px; align-items:flex-start; opacity:0; transform:translateY(10px);
+    animation:toastIn .25s ease forwards;
+  }
+  .toast-notif strong{color:var(--clay); display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; font-family:'JetBrains Mono',monospace;}
+  .toast-notif.leaving{animation:toastOut .2s ease forwards;}
+  @keyframes toastIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  @keyframes toastOut{from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(10px);}}
+
+  .etat-info{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:32px; text-align:center; color:#5a544c;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">SK<span>K</span>. — Forum</a>
+  <a class="back" href="index.html">&larr; Retour au site principal</a>
+</div>
+
+<div class="wrap">
+  <span class="eyebrow">Espace Collaborateur</span>
+  <h2>Forum des administrateurs</h2>
+  <p class="section-lede" id="forumSousTitre">Vérification de l'accès…</p>
+
+  <div id="forumEtatChargement" class="etat-info">Vérification de votre accès en cours…</div>
+
+  <div id="forumEtatRefuse" class="etat-info" hidden>
+    <p style="margin:0 0 16px;">Cet espace est réservé aux administrateurs du site.</p>
+    <a class="btn btn-primary" href="index.html">Retourner au site</a>
+  </div>
+
+  <div id="forumApp" hidden>
+    <div class="forum-panel" id="forumListPanel">
+      <form class="forum-new-thread" id="newThreadForm" novalidate>
+        <input type="text" id="newThreadTitle" placeholder="Titre d'une nouvelle discussion..." maxlength="140" required>
+        <button type="submit" class="btn btn-primary">Créer</button>
+      </form>
+      <span class="modal-error" id="errNewThread">Merci d'indiquer un titre.</span>
+
+      <div class="thread-list" id="threadList">
+        <p class="forum-empty" id="threadListEmpty">Aucune discussion pour le moment. Soyez le premier à en lancer une !</p>
+      </div>
+    </div>
+
+    <div class="forum-panel" id="forumThreadPanel" hidden>
+      <button type="button" class="link-btn" id="backToThreads">&larr; Retour aux discussions</button>
+      <h3 id="threadViewTitle"></h3>
+      <div class="thread-messages" id="threadMessages"></div>
+      <form class="forum-reply-form" id="replyForm" novalidate>
+        <textarea id="replyText" placeholder="Écrire une réponse..." maxlength="4000" required></textarea>
+        <button type="submit" class="btn btn-primary">Répondre</button>
+      </form>
+      <span class="modal-error" id="errReply">Merci d'écrire un message.</span>
+    </div>
+  </div>
+</div>
+
+<div id="toastStack" aria-live="polite"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import {
+    getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+  // Même configuration Firebase que le site principal : la session de connexion (Firebase Auth)
+  // est déjà active dans ce nouvel onglet, aucune reconnexion n'est nécessaire.
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
+    authDomain: "mon-site-skkoulibaly.firebaseapp.com",
+    databaseURL: "https://mon-site-skkoulibaly-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mon-site-skkoulibaly",
+    storageBucket: "mon-site-skkoulibaly.firebasestorage.app",
+    messagingSenderId: "367698551446",
+    appId: "1:367698551446:web:15534cc2af8beda4ba58b7",
+    measurementId: "G-QYLJJP5XKY"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);   // Firestore : threads du forum
+  const rtdb = getDatabase(app);  // Realtime Database : vérification du rôle admin
+
+  // ---- Éléments DOM ----
+  const forumSousTitre = document.getElementById('forumSousTitre');
+  const forumEtatChargement = document.getElementById('forumEtatChargement');
+  const forumEtatRefuse = document.getElementById('forumEtatRefuse');
+  const forumApp = document.getElementById('forumApp');
+
+  const forumListPanel = document.getElementById('forumListPanel');
+  const forumThreadPanel = document.getElementById('forumThreadPanel');
+  const threadList = document.getElementById('threadList');
+  const threadListEmpty = document.getElementById('threadListEmpty');
+  const newThreadForm = document.getElementById('newThreadForm');
+  const newThreadTitle = document.getElementById('newThreadTitle');
+  const errNewThread = document.getElementById('errNewThread');
+  const backToThreads = document.getElementById('backToThreads');
+  const threadViewTitle = document.getElementById('threadViewTitle');
+  const threadMessages = document.getElementById('threadMessages');
+  const replyForm = document.getElementById('replyForm');
+  const replyText = document.getElementById('replyText');
+  const errReply = document.getElementById('errReply');
+
+  let unsubThreads = null;
+  let unsubMessages = null;
+  let currentThreadId = null;
+  window.collabUser = null;
+
+  function displayNameFor(user) {
+    return user.displayName || user.email;
+  }
+
+  // ---- Avatars (initiales générées, pas de photo) ----
+  const AVATAR_PALETTE = ['#D98E3D', '#4C6B54', '#1B2A4A', '#8a5a44', '#6b5b95', '#a03c50'];
+  function couleurAvatar(cle) {
+    let h = 0;
+    for (let i = 0; i < cle.length; i++) h = (h * 31 + cle.charCodeAt(i)) >>> 0;
+    return AVATAR_PALETTE[h % AVATAR_PALETTE.length];
+  }
+  function initialesDe(nom) {
+    const propre = (nom || '?').trim();
+    const parts = propre.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return propre.slice(0, 2).toUpperCase() || '?';
+  }
+  function avatarHTML(nom, cle) {
+    const bg = couleurAvatar(cle || nom || '?');
+    const div = document.createElement('div');
+    div.className = 'avatar-sm';
+    div.style.background = bg;
+    div.textContent = initialesDe(nom);
+    div.title = nom || '';
+    return div;
+  }
+
+  // ---- Notifications (toasts internes) ----
+  const toastStack = document.getElementById('toastStack');
+  function notifier(titre, texte) {
+    if (!toastStack) return;
+    const el = document.createElement('div');
+    el.className = 'toast-notif';
+    el.innerHTML = `<span><strong></strong><span class="t-txt"></span></span>`;
+    el.querySelector('strong').textContent = titre;
+    el.querySelector('.t-txt').textContent = texte;
+    toastStack.appendChild(el);
+    setTimeout(() => {
+      el.classList.add('leaving');
+      setTimeout(() => el.remove(), 220);
+    }, 5000);
+  }
+
+  // ---- Contrôle d'accès : connecté + admin uniquement ----
+  onAuthStateChanged(auth, async (user) => {
+    window.collabUser = user;
+
+    if (!user) {
+      forumEtatChargement.hidden = true;
+      forumApp.hidden = true;
+      forumEtatRefuse.hidden = false;
+      forumEtatRefuse.querySelector('p').textContent = "Vous devez être connecté en tant qu'administrateur pour accéder au forum. Connectez-vous depuis le site principal, puis rouvrez le forum.";
+      forumSousTitre.textContent = 'Accès non connecté.';
+      return;
+    }
+
+    let estAdmin = false;
+    try {
+      const adminSnap = await get(ref(rtdb, 'admins/' + user.uid));
+      estAdmin = adminSnap.exists() && adminSnap.val() === true;
+    } catch (err) {
+      estAdmin = false;
+    }
+
+    forumEtatChargement.hidden = true;
+
+    if (!estAdmin) {
+      forumApp.hidden = true;
+      forumEtatRefuse.hidden = false;
+      forumEtatRefuse.querySelector('p').textContent = "Cet espace est réservé aux administrateurs du site.";
+      forumSousTitre.textContent = 'Accès refusé.';
+      return;
+    }
+
+    forumEtatRefuse.hidden = true;
+    forumApp.hidden = false;
+    forumSousTitre.textContent = 'Connecté en tant que ' + displayNameFor(user) + '.';
+    demarrerEcouteFils();
+  });
+
+  // ---- Liste des discussions (temps réel) ----
+  let premierChargementFils = true;
+  function demarrerEcouteFils() {
+    if (unsubThreads) unsubThreads();
+    premierChargementFils = true;
+    const q = query(collection(db, 'threads'), orderBy('createdAt', 'desc'));
+    unsubThreads = onSnapshot(q, (snap) => {
+      threadList.innerHTML = '';
+      if (snap.empty) {
+        threadListEmpty.style.display = 'block';
+      } else {
+        threadListEmpty.style.display = 'none';
+        snap.forEach((docSnap) => {
+          const t = docSnap.data();
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'thread-item';
+          const date = t.createdAt ? t.createdAt.toDate().toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
+          const auteur = t.authorName || t.authorEmail || 'membre';
+          btn.appendChild(avatarHTML(auteur, t.authorUid));
+          const infos = document.createElement('span');
+          infos.innerHTML = `<span class="t-title"></span><br><span class="t-meta"></span>`;
+          infos.querySelector('.t-title').textContent = t.title || '(sans titre)';
+          infos.querySelector('.t-meta').textContent = 'Par ' + auteur + (date ? ' · ' + date : '');
+          btn.appendChild(infos);
+          const arrow = document.createElement('span');
+          arrow.className = 't-arrow';
+          arrow.innerHTML = '&rarr;';
+          btn.appendChild(arrow);
+          btn.addEventListener('click', () => ouvrirFil(docSnap.id, t.title));
+          threadList.appendChild(btn);
+        });
+      }
+
+      // Notification : nouvelle discussion créée par un autre admin
+      if (!premierChargementFils) {
+        snap.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            const t = change.doc.data();
+            if (window.collabUser && t.authorUid !== window.collabUser.uid) {
+              notifier('Nouvelle discussion', (t.authorName || t.authorEmail || 'Un admin') + ' a lancé « ' + (t.title || 'sans titre') + ' »');
+            }
+          }
+        });
+      }
+      premierChargementFils = false;
+    });
+  }
+
+  if (newThreadForm) {
+    newThreadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = newThreadTitle.value.trim();
+      errNewThread.classList.toggle('show', title.length === 0);
+      if (!title || !window.collabUser) return;
+      await addDoc(collection(db, 'threads'), {
+        title,
+        authorUid: window.collabUser.uid,
+        authorEmail: window.collabUser.email,
+        authorName: displayNameFor(window.collabUser),
+        createdAt: serverTimestamp()
+      });
+      newThreadForm.reset();
+      errNewThread.classList.remove('show');
+    });
+  }
+
+  // ---- Vue d'un fil de discussion ----
+  function afficherListeFils() {
+    forumListPanel.hidden = false;
+    forumThreadPanel.hidden = true;
+    currentThreadId = null;
+    if (unsubMessages) { unsubMessages(); unsubMessages = null; }
+  }
+
+  function ouvrirFil(threadId, title) {
+    currentThreadId = threadId;
+    threadViewTitle.textContent = title || '(sans titre)';
+    forumListPanel.hidden = true;
+    forumThreadPanel.hidden = false;
+    threadMessages.innerHTML = '';
+
+    if (unsubMessages) unsubMessages();
+    let premierChargementMessages = true;
+    const msgsRef = collection(db, 'threads', threadId, 'messages');
+    const q = query(msgsRef, orderBy('createdAt', 'asc'));
+    unsubMessages = onSnapshot(q, (snap) => {
+      threadMessages.innerHTML = '';
+      snap.forEach((docSnap) => {
+        const m = docSnap.data();
+        const estAuteur = window.collabUser && m.authorUid === window.collabUser.uid;
+        const auteur = m.authorName || m.authorEmail || 'membre';
+        const el = document.createElement('div');
+        el.className = 'thread-msg' + (estAuteur ? ' own' : '');
+
+        const time = m.createdAt ? m.createdAt.toDate().toLocaleString('fr-FR', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
+
+        el.appendChild(avatarHTML(auteur, m.authorUid));
+
+        const body = document.createElement('div');
+        body.className = 'msg-body';
+        body.innerHTML = `<div class="msg-head"><div class="m-author"></div></div><div class="m-text"></div><div class="m-time"></div>`;
+        body.querySelector('.m-author').textContent = auteur;
+        body.querySelector('.m-text').textContent = m.text || '';
+        body.querySelector('.m-time').textContent = time;
+
+        if (estAuteur) {
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'msg-delete-btn';
+          delBtn.textContent = 'Supprimer';
+          delBtn.addEventListener('click', async () => {
+            if (!confirm('Supprimer définitivement ce message ?')) return;
+            delBtn.disabled = true;
+            try {
+              await deleteDoc(doc(db, 'threads', threadId, 'messages', docSnap.id));
+            } catch (err) {
+              delBtn.disabled = false;
+              notifier('Erreur', "Impossible de supprimer ce message pour le moment.");
+            }
+          });
+          body.querySelector('.msg-head').appendChild(delBtn);
+        }
+
+        el.appendChild(body);
+        threadMessages.appendChild(el);
+      });
+      threadMessages.scrollTop = threadMessages.scrollHeight;
+
+      // Notification : nouveau message d'un autre admin dans le fil ouvert
+      if (!premierChargementMessages) {
+        snap.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            const m = change.doc.data();
+            if (window.collabUser && m.authorUid !== window.collabUser.uid) {
+              notifier('Nouveau message', (m.authorName || m.authorEmail || 'Un admin') + ' : ' + (m.text || '').slice(0, 80));
+            }
+          }
+        });
+      }
+      premierChargementMessages = false;
+    });
+  }
+
+  if (backToThreads) backToThreads.addEventListener('click', afficherListeFils);
+
+  if (replyForm) {
+    replyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = replyText.value.trim();
+      errReply.classList.toggle('show', text.length === 0);
+      if (!text || !currentThreadId || !window.collabUser) return;
+      await addDoc(collection(db, 'threads', currentThreadId, 'messages'), {
+        text,
+        authorUid: window.collabUser.uid,
+        authorEmail: window.collabUser.email,
+        authorName: displayNameFor(window.collabUser),
+        createdAt: serverTimestamp()
+      });
+      replyText.value = '';
+      errReply.classList.remove('show');
+    });
+  }
+</script>
+
+</body>
+</html>

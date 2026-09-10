@@ -1966,6 +1966,7 @@
         <button type="button" class="collab-tab" id="spaceTabCodes">Codes formation <span class="chat-badge" id="codesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabDemandes">Demandes de code <span class="chat-badge" id="demandesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabDemandesFormulaires">Demandes de formulaires <span class="chat-badge" id="demandesFormulairesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabDemandesDevisOffres">Demandes de devis (offres) <span class="chat-badge" id="demandesDevisOffresTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
@@ -2068,6 +2069,15 @@
           <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue des formulaires par des personnes intéressées par un formulaire sur mesure. Contactez la personne pour cadrer le besoin puis, une fois le paiement reçu, marquez la demande comme traitée.</p>
           <div class="thread-list" id="demandesFormulairesList">
             <p class="forum-empty" id="demandesFormulairesListEmpty">Aucune demande de formulaire pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelDemandesDevisOffres" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue offres et services par des personnes intéressées par un pack de prestation. Contactez la personne pour établir le devis puis marquez la demande comme traitée.</p>
+          <div class="thread-list" id="demandesDevisOffresList">
+            <p class="forum-empty" id="demandesDevisOffresListEmpty">Aucune demande de devis pour le moment.</p>
           </div>
         </div>
       </div>
@@ -2946,6 +2956,10 @@
   const spacePanelDemandesFormulaires = document.getElementById('spacePanelDemandesFormulaires');
   const demandesFormulairesList = document.getElementById('demandesFormulairesList');
   const demandesFormulairesTabBadge = document.getElementById('demandesFormulairesTabBadge');
+  const spaceTabDemandesDevisOffres = document.getElementById('spaceTabDemandesDevisOffres');
+  const spacePanelDemandesDevisOffres = document.getElementById('spacePanelDemandesDevisOffres');
+  const demandesDevisOffresList = document.getElementById('demandesDevisOffresList');
+  const demandesDevisOffresTabBadge = document.getElementById('demandesDevisOffresTabBadge');
   const spaceTabUtilisateurs = document.getElementById('spaceTabUtilisateurs');
   const spacePanelUtilisateurs = document.getElementById('spacePanelUtilisateurs');
   const utilisateursList = document.getElementById('utilisateursList');
@@ -2968,7 +2982,9 @@
   let unsubDemandes = null;
   let demandesCache = {};
   let unsubDemandesFormulaires = null;
+  let unsubDemandesDevisOffres = null;
   let demandesFormulairesCache = {};
+  let demandesDevisOffresCache = {};
 
   // ---- Messages visiteurs (staff) ----
   const visitorList = document.getElementById('visitorList');
@@ -3256,6 +3272,7 @@
         demarrerEcouteCodes();
         demarrerEcouteDemandes();
         demarrerEcouteDemandesFormulaires();
+        demarrerEcouteDemandesDevisOffres();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3301,6 +3318,7 @@
       if (unsubCodes) { unsubCodes(); unsubCodes = null; }
       if (unsubDemandes) { unsubDemandes(); unsubDemandes = null; }
       if (unsubDemandesFormulaires) { unsubDemandesFormulaires(); unsubDemandesFormulaires = null; }
+      if (unsubDemandesDevisOffres) { unsubDemandesDevisOffres(); unsubDemandesDevisOffres = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
@@ -3321,6 +3339,7 @@
     if (spaceTabCodes) spaceTabCodes.classList.toggle('active', nom === 'codes');
     if (spaceTabDemandes) spaceTabDemandes.classList.toggle('active', nom === 'demandes');
     if (spaceTabDemandesFormulaires) spaceTabDemandesFormulaires.classList.toggle('active', nom === 'demandesFormulaires');
+    if (spaceTabDemandesDevisOffres) spaceTabDemandesDevisOffres.classList.toggle('active', nom === 'demandesDevisOffres');
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
@@ -3328,6 +3347,7 @@
     if (spacePanelCodes) spacePanelCodes.hidden = nom !== 'codes';
     if (spacePanelDemandes) spacePanelDemandes.hidden = nom !== 'demandes';
     if (spacePanelDemandesFormulaires) spacePanelDemandesFormulaires.hidden = nom !== 'demandesFormulaires';
+    if (spacePanelDemandesDevisOffres) spacePanelDemandesDevisOffres.hidden = nom !== 'demandesDevisOffres';
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
@@ -3343,6 +3363,9 @@
   }
   if (spaceTabDemandesFormulaires) {
     spaceTabDemandesFormulaires.addEventListener('click', () => activerOngletEspaceAdmin('demandesFormulaires'));
+  }
+  if (spaceTabDemandesDevisOffres) {
+    spaceTabDemandesDevisOffres.addEventListener('click', () => activerOngletEspaceAdmin('demandesDevisOffres'));
   }
   if (spaceTabUtilisateurs) {
     spaceTabUtilisateurs.addEventListener('click', () => activerOngletEspaceAdmin('utilisateurs'));
@@ -4114,6 +4137,110 @@
     unsubDemandesFormulaires = onValue(ref(rtdb, 'demandesFormulaires'), (snap) => {
       demandesFormulairesCache = snap.val() || {};
       renderDemandesFormulairesList();
+    });
+  }
+
+  // ==================== DEMANDES DE DEVIS OFFRES (depuis le catalogue-offres-services public) ====================
+  function renderDemandesDevisOffresList() {
+    if (!demandesDevisOffresList) return;
+    demandesDevisOffresList.innerHTML = '';
+    const ids = Object.keys(demandesDevisOffresCache).filter((id) => (demandesDevisOffresCache[id] || {}).statut !== 'traite');
+
+    if (demandesDevisOffresTabBadge) {
+      demandesDevisOffresTabBadge.hidden = ids.length === 0;
+      demandesDevisOffresTabBadge.textContent = String(ids.length);
+    }
+
+    if (ids.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucune demande de devis pour le moment.';
+      demandesDevisOffresList.appendChild(p);
+      return;
+    }
+    // Tri du plus récent au plus ancien
+    ids.sort((a, b) => (demandesDevisOffresCache[b].dateCreation || 0) - (demandesDevisOffresCache[a].dateCreation || 0));
+
+    ids.forEach((id) => {
+      const d = demandesDevisOffresCache[id] || {};
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = d.nom || 'Nom non renseigné';
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
+      detailLine.textContent = (d.pack || '—') + (d.telephone ? ' · ' + d.telephone : '') + (dateTxt ? ' · ' + dateTxt : '');
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
+
+      if (d.telephone) {
+        const waBtn = document.createElement('a');
+        waBtn.href = 'https://wa.me/' + d.telephone.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent("Bonjour " + (d.nom || '') + ", je reviens vers vous au sujet de votre demande de devis pour le \"" + (d.pack || 'pack') + "\".");
+        waBtn.target = '_blank';
+        waBtn.rel = 'noopener';
+        waBtn.className = 'admin-toggle-btn is-admin';
+        waBtn.textContent = 'Contacter sur WhatsApp';
+        btnGroup.appendChild(waBtn);
+      }
+
+      const traiteBtn = document.createElement('button');
+      traiteBtn.type = 'button';
+      traiteBtn.className = 'admin-toggle-btn';
+      traiteBtn.textContent = 'Marquer traitée';
+      traiteBtn.addEventListener('click', () => marquerDemandeDevisOffreTraitee(id));
+      btnGroup.appendChild(traiteBtn);
+
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerDemandeDevisOffre(id));
+      btnGroup.appendChild(supprimerBtn);
+
+      row.appendChild(btnGroup);
+      demandesDevisOffresList.appendChild(row);
+    });
+  }
+
+  async function marquerDemandeDevisOffreTraitee(id) {
+    try {
+      await update(ref(rtdb, 'demandesDevisOffres/' + id), { statut: 'traite' });
+    } catch (err) {
+      notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
+    }
+  }
+
+  async function supprimerDemandeDevisOffre(id) {
+    if (!id) return;
+    if (!confirm('Supprimer définitivement cette demande ?')) return;
+    try {
+      await remove(ref(rtdb, 'demandesDevisOffres/' + id));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer cette demande. Réessayez.");
+    }
+  }
+
+  function demarrerEcouteDemandesDevisOffres() {
+    if (unsubDemandesDevisOffres) unsubDemandesDevisOffres();
+    unsubDemandesDevisOffres = onValue(ref(rtdb, 'demandesDevisOffres'), (snap) => {
+      demandesDevisOffresCache = snap.val() || {};
+      renderDemandesDevisOffresList();
     });
   }
 

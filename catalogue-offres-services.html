@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue Offre & Service de prestation — Solo Koumana Koulibaly</title>
+<meta name="description" content="Les packs de prestations clés en main de Solo Koumana Koulibaly : e-commerce, site web, CV pro, infographie et community management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A4A;
+    --clay:#D98E3D;
+    --paper:#F6F1E7;
+    --charcoal:#2B2622;
+    --sage:#4C6B54;
+    --white:#FFFFFF;
+    --line: rgba(27,42,74,0.16);
+    --max: 1180px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--charcoal); font-family:'Work Sans',sans-serif; font-size:16px; line-height:1.6;}
+  a{color:inherit; text-decoration:none;}
+  h1,h2,h3,h4{font-family:'Roboto',sans-serif; color:var(--ink); margin:0 0 .4em;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+  header.site{background:rgba(15,26,48,0.97); border-bottom:1px solid rgba(246,241,231,0.14); position:sticky; top:0; z-index:50;}
+  header.site nav{display:flex; align-items:center; justify-content:space-between; height:76px; max-width:var(--max); margin:0 auto; padding:0 28px;}
+  .logo{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1.5rem; color:var(--paper);}
+  .logo span{color:var(--clay);}
+  header.site nav a.back{color:var(--paper); font-size:.9rem; border:1px solid rgba(246,241,231,.3); border-radius:20px; padding:8px 18px;}
+  header.site nav a.back:hover{background:rgba(246,241,231,.14);}
+  .hero{padding:56px 0 30px; text-align:center;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:.9rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--paper); background:var(--clay); display:inline-flex; padding:8px 20px; border-radius:999px; margin-bottom:16px;
+  }
+  .hero p.lede{max-width:640px; color:#5a5349; margin-left:auto; margin-right:auto;}
+  .hero-actions{margin-top:22px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:3px; font-weight:600; font-size:.9rem; border:1.5px solid var(--ink);}
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-primary:hover{background:var(--charcoal);}
+  .btn-ghost{background:transparent; color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink); color:var(--paper);}
+  .category{padding:36px 0;}
+  .category h2{font-size:1.3rem; border-bottom:2px solid var(--line); padding-bottom:12px; margin-bottom:24px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;}
+  .card{
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:24px; display:flex; flex-direction:column;
+  }
+  .card h3{font-size:1.08rem; margin-bottom:8px;}
+  .card p.desc{color:#5a5349; font-size:.92rem; flex:1; margin:0 0 14px;}
+  .card .price{
+    font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--clay); font-size:1.05rem; margin-bottom:14px;
+  }
+  .card .price span{display:block; font-family:'Work Sans',sans-serif; font-weight:400; color:#8a8378; font-size:.78rem; margin-top:2px;}
+  .card .card-note{font-size:.8rem; color:#8a8378; margin:0 0 14px; line-height:1.4;}
+  .card a.btn{justify-content:center; width:100%;}
+  .note{
+    max-width:820px; margin:40px auto 0; background:rgba(76,107,84,0.08); border:1px solid rgba(76,107,84,0.25);
+    border-radius:8px; padding:16px 20px; font-size:.9rem; color:var(--sage);
+  }
+  footer{padding:40px 0 60px; text-align:center; color:#8a8378; font-size:.85rem;}
+  footer a{color:var(--clay); font-weight:500;}
+
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(27,26,23,0.55); z-index:100;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--white); border-radius:10px; padding:32px; max-width:440px; width:100%;
+    position:relative; max-height:90vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.5rem;
+    line-height:1; cursor:pointer; color:#8a8378;
+  }
+  .modal-box h3{margin-bottom:6px;}
+  .modal-sub{color:#5a5349; font-size:.9rem; margin:0 0 18px;}
+  .modal-form{display:flex; flex-direction:column; gap:12px;}
+  .modal-form input, .modal-form select{
+    padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif;
+    font-size:.92rem; background:var(--white); color:var(--charcoal); width:100%;
+  }
+  .modal-form label{font-size:.86rem; font-weight:500; color:var(--ink); margin-bottom:-6px;}
+  .modal-error{display:none; color:#b3432b; font-size:.82rem; margin-top:-6px;}
+  .modal-error.show{display:block;}
+  .modal-success{display:none; background:rgba(76,107,84,0.1); border:1px solid rgba(76,107,84,0.3); border-radius:8px; padding:14px 16px; color:var(--sage); font-size:.9rem;}
+  .modal-success.show{display:block;}
+
+  .payment-invite{display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--line);}
+  .payment-invite.show{display:block;}
+  .payment-invite h4{font-size:1rem; margin:0 0 6px;}
+  .payment-invite .pi-sub{color:#5a5349; font-size:.88rem; margin:0 0 14px;}
+  .pay-methods{display:flex; gap:16px; flex-wrap:wrap; margin:14px 0 18px;}
+  .pay-method{display:flex; align-items:center; gap:10px;}
+  .pay-logo{width:34px; height:34px; object-fit:contain; border-radius:6px; background:var(--white); border:1px solid var(--line); padding:4px;}
+  .pay-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+  .pay-method strong{display:block; font-size:.9rem; color:var(--ink);}
+  .pay-method span{display:block; font-family:'JetBrains Mono',monospace; font-size:.8rem; color:#5a544c;}
+  .pay-benefits{margin:0 0 18px; padding-left:20px; font-size:.88rem; color:#5a544c;}
+  .pay-benefits li{margin-bottom:6px;}
+
+  /* Styles additionnels pour la section Offre & Service de prestation (repris du site principal, contenu inchangé) */
+  section.alt{background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:56px 0;}
+  .section-head{max-width:640px; margin-bottom:52px;}
+  .section-head h2{font-size:clamp(2rem,3.6vw,2.9rem); font-weight:600;}
+  .section-head p{color:#5a544c; font-size:1.02rem;}
+  .tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px; border-bottom:1px solid var(--line);}
+  .tab-btn{
+    background:none; border:none; cursor:pointer; padding:12px 4px; margin-right:26px;
+    font-family:'JetBrains Mono',monospace; font-size:.82rem; letter-spacing:.04em; text-transform:uppercase;
+    color:#9a938a; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{color:var(--ink); border-color:var(--clay);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .fiche-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .fiche-grid.single{grid-template-columns:1fr; max-width:820px;}
+  .fiche{background:var(--white); border:1px solid var(--line); border-radius:4px; padding:28px;}
+  .fiche h4{font-size:1.08rem; margin-bottom:14px;}
+  .fiche dl{margin:0 0 16px; font-size:.86rem;}
+  .fiche dt{font-family:'JetBrains Mono',monospace; color:var(--sage); font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; margin-top:10px;}
+  .fiche dd{margin:2px 0 0; color:#5a544c;}
+  .fiche ol{padding-left:18px; margin:0; font-size:.88rem; color:#5a544c;}
+  .fiche ol li{margin-bottom:4px;}
+  .cta-row-formations{margin-top:40px; display:flex; gap:16px; flex-wrap:wrap;}
+  .cta-row-formations button, .cta-row-formations a{cursor:pointer;}
+  @media (max-width:900px){ .fiche-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <nav>
+    <a href="index.html" class="logo">SK<span>K</span>.</a>
+    <a href="index.html" class="back">&larr; Retour au site</a>
+  </nav>
+</header>
+
+<!-- ============ OFFRE ET SERVICE DE PRESTATION ============ -->
+<section class="alt" id="prestations">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Offre & Service de prestation</span>
+      <h2>Cinq packs de prestations pour répondre vite à un besoin précis</h2>
+      <p>Une offre clé en main pensée pour les demandes ponctuelles, en dehors du format formation. Le détail de chaque pack sera publié très prochainement.</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="pack-ecommerce" role="tab" aria-selected="true">Pack E-commerce</button>
+      <button class="tab-btn" data-tab="pack-siteweb" role="tab" aria-selected="false">Pack Site Web</button>
+      <button class="tab-btn" data-tab="pack-cv" role="tab" aria-selected="false">Pack CV Pro</button>
+      <button class="tab-btn" data-tab="pack-infographie" role="tab" aria-selected="false">Pack Infographie</button>
+      <button class="tab-btn" data-tab="pack-cm" role="tab" aria-selected="false">Pack Community Manager</button>
+    </div>
+
+    <div class="tab-panel active" id="pack-ecommerce">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack E-commerce</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Vendeurs, artisans, boutiques et entrepreneurs qui veulent vendre en ligne 24h/24</dd>
+            <dt>Élément du pack</dt><dd>Une boutique en ligne</dd>
+            <dt>Délai</dt><dd>Sur devis, selon la taille du catalogue</dd>
+          </dl>
+          <ol>
+            <li>Catalogue produits illimité avec photos, prix, variantes et descriptions</li>
+            <li>Panier d'achat et tunnel de commande simplifié</li>
+            <li>Paiement en ligne (Orange Money, Mobile Money, carte bancaire)</li>
+            <li>Tableau de bord pour gérer commandes, stocks et clients</li>
+            <li>Design responsive adapté au mobile et à l'ordinateur</li>
+            <li>Intégration WhatsApp Business pour le suivi des commandes</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-siteweb">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack Site Web</h4>
+          <dl>
+            <dt>Site vitrine</dt><dd>Plusieurs pages statiques présentant votre activité (accueil, services, à propos, contact), navigation claire, design responsive, formulaire de contact intégré</dd>
+            <dt>Page web</dt><dd>Une seule page (landing page) orientée conversion, pensée pour une offre, un événement ou une campagne, avec bouton d'action direct (appel, WhatsApp, formulaire)</dd>
+            <dt>Blog</dt><dd>Articles organisés par catégories, moteur de recherche interne, partage sur les réseaux sociaux, mise à jour autonome via une interface simple</dd>
+            <dt>Plate-forme sur mesure pour entreprise</dt><dd>Site multi-fonctionnalités développé selon vos besoins (espace client, réservation, gestion de contenu, intégrations spécifiques), architecture évolutive</dd>
+          </dl>
+          <ol>
+            <li>Nom de domaine et hébergement inclus la première année</li>
+            <li>Design responsive adapté à tous les écrans</li>
+            <li>Référencement de base pour être visible sur Google</li>
+            <li>Formation à la prise en main de votre site</li>
+            <li>Un mois de support technique après livraison</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-cv">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack CV Pro</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Demandeurs d'emploi, étudiants, professionnels en reconversion et candidats à un poste ou une bourse</dd>
+            <dt>Cv basique</dt><dd>Mise en forme claire d'un CV déjà existant : correction de la structure, de l'orthographe et de la présentation. Livré en PDF, sans accompagnement</dd>
+            <dt>Cv simple ou standard</dt><dd>Création complète d'un CV structuré à partir de vos informations (profil, expérience, formation, compétences, langues), design professionnel et sobre. Livré en PDF et Word</dd>
+            <dt>Cv pro plus accompagnement</dt><dd>CV professionnel personnalisé et optimisé selon le poste visé, avec lettre de motivation assortie et une séance de conseil (relecture, conseils pour l'entretien). Livré en PDF et Word, avec un suivi après livraison</dd>
+            <dt>Délai</dt><dd>24 à 72h selon la formule choisie</dd>
+          </dl>
+          <ol>
+            <li>Choix entre trois formules selon le niveau de besoin et d'accompagnement</li>
+            <li>Rédaction ou reprise du contenu (profil, expérience, formation, compétences, langues)</li>
+            <li>Mise en page professionnelle et lisible, adaptée aux recruteurs</li>
+            <li>Livraison au format PDF (et Word selon la formule)</li>
+            <li>Possibilité de générer et télécharger un premier jet gratuitement via l'outil « Confier mon CV » du site avant de passer à la formule payante</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-infographie">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack Infographie</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Entrepreneurs, commerçants et entreprises qui veulent une identité visuelle cohérente et professionnelle</dd>
+            <dt>Logo</dt><dd>Création d'un logo original et personnalisé reflétant votre activité, décliné en plusieurs formats (couleur, noir & blanc, fond transparent)</dd>
+            <dt>Carte de visite</dt><dd>Design recto-verso aux couleurs de votre marque, prêt à imprimer, avec vos coordonnées et réseaux sociaux</dd>
+            <dt>Carte professionnelle</dt><dd>Support d'identification pour votre activité ou votre entreprise (agent, employé, membre), design soigné et prêt à imprimer</dd>
+            <dt>Charte graphique</dt><dd>Document de référence regroupant logo, couleurs, typographies et règles d'usage pour une image de marque cohérente sur tous vos supports</dd>
+            <dt>Délai</dt><dd>Sur devis, selon le nombre d'éléments choisis</dd>
+          </dl>
+          <ol>
+            <li>Choix à la carte parmi les quatre éléments selon vos besoins</li>
+            <li>Échanges pour cerner votre univers de marque avant création</li>
+            <li>Fichiers livrés dans les formats prêts à l'impression et au web</li>
+            <li>Retouches incluses pour affiner le rendu final</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-cm">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack Community Manager</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Entreprises, commerces et entrepreneurs qui veulent développer leur présence et leur communauté sur les réseaux sociaux</dd>
+            <dt>Gestion de réseau social</dt><dd>Prise en charge complète de vos pages (Facebook, Instagram, WhatsApp Business, TikTok...) : création de contenus, publication régulière, animation de la communauté et suivi des statistiques</dd>
+            <dt>Délai</dt><dd>Sur devis, selon la formule et le nombre de réseaux à gérer</dd>
+          </dl>
+          <ol>
+            <li>Calendrier de publication adapté à votre activité</li>
+            <li>Création de visuels et de textes engageants</li>
+            <li>Réponse aux messages et commentaires de votre communauté</li>
+            <li>Suivi des performances et rapport régulier</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row-formations">
+      <button type="button" class="btn btn-primary" id="btnDemanderDevisOffres">Demander un devis</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><a href="index.html">← Retour au site</a></p>
+</footer>
+
+<!-- ============ MODALE DEMANDE DE DEVIS (OFFRES & PRESTATIONS) ============ -->
+<div class="modal-overlay" id="demandeDevisModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="demandeDevisTitle">
+    <button type="button" class="modal-close" id="demandeDevisClose" aria-label="Fermer">&times;</button>
+    <h3 id="demandeDevisTitle">Demander un devis</h3>
+    <p class="modal-sub" id="demandeDevisSub">Laissez vos coordonnées, je reviens vers vous rapidement avec un devis adapté.</p>
+
+    <form class="modal-form" id="demandeDevisForm" novalidate>
+      <div id="demandeDevisFields" style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label for="demandeDevisPack">Pack qui vous intéresse</label>
+          <select id="demandeDevisPack" required>
+            <option value="" disabled selected>Choisir un pack…</option>
+            <option value="Pack E-commerce">Pack E-commerce</option>
+            <option value="Pack Site Web">Pack Site Web</option>
+            <option value="Pack CV Pro">Pack CV Pro</option>
+            <option value="Pack Infographie">Pack Infographie</option>
+            <option value="Pack Community Manager">Pack Community Manager</option>
+          </select>
+          <span class="modal-error" id="errDemandeDevisPack">Merci de choisir un pack.</span>
+        </div>
+
+        <input type="text" id="demandeDevisNom" placeholder="Votre nom et prénom" required autocomplete="name" maxlength="120">
+        <span class="modal-error" id="errDemandeDevisNom">Merci d'indiquer votre nom.</span>
+
+        <input type="tel" id="demandeDevisTelephone" placeholder="Numéro de téléphone / WhatsApp" required autocomplete="tel" inputmode="tel" pattern="[0-9+ ]{6,20}" maxlength="20">
+        <span class="modal-error" id="errDemandeDevisTelephone">Merci d'indiquer un numéro valide.</span>
+
+        <input type="text" name="_gotcha" style="position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <button type="submit" class="btn btn-primary" id="demandeDevisSubmitBtn">Envoyer ma demande</button>
+        <p class="modal-error" id="demandeDevisSendError">Une erreur est survenue, merci de réessayer ou de m'écrire directement sur WhatsApp.</p>
+      </div>
+      <div class="modal-success" id="demandeDevisSuccess">Merci ! Votre demande a bien été transmise. Vous recevrez votre devis très prochainement.</div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+  // ---- Firebase : écriture des demandes de devis dans le même espace que l'admin ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
+    authDomain: "mon-site-skkoulibaly.firebaseapp.com",
+    databaseURL: "https://mon-site-skkoulibaly-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mon-site-skkoulibaly",
+    storageBucket: "mon-site-skkoulibaly.firebasestorage.app",
+    messagingSenderId: "367698551446",
+    appId: "1:367698551446:web:15534cc2af8beda4ba58b7",
+    measurementId: "G-QYLJJP5XKY"
+  };
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig, "catalogueOffresApp");
+  const rtdb = getDatabase(app);
+
+  // ---- Onglets des packs de prestations ----
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---- Modale « Demander un devis » ----
+  const modal = document.getElementById('demandeDevisModal');
+  const modalClose = document.getElementById('demandeDevisClose');
+  const form = document.getElementById('demandeDevisForm');
+  const packSelect = document.getElementById('demandeDevisPack');
+  const nomInput = document.getElementById('demandeDevisNom');
+  const telInput = document.getElementById('demandeDevisTelephone');
+  const submitBtn = document.getElementById('demandeDevisSubmitBtn');
+  const sendError = document.getElementById('demandeDevisSendError');
+  const success = document.getElementById('demandeDevisSuccess');
+
+  function ouvrirModaleDevis() {
+    form.reset();
+    document.getElementById('demandeDevisFields').style.display = 'flex';
+    success.classList.remove('show');
+    sendError.classList.remove('show');
+    document.querySelectorAll('#demandeDevisForm .modal-error').forEach((el) => el.classList.remove('show'));
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function fermerModaleDevis() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  const btnDemanderDevisOffres = document.getElementById('btnDemanderDevisOffres');
+  if (btnDemanderDevisOffres) btnDemanderDevisOffres.addEventListener('click', ouvrirModaleDevis);
+
+  modalClose.addEventListener('click', fermerModaleDevis);
+  modal.addEventListener('click', (e) => { if (e.target === modal) fermerModaleDevis(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) fermerModaleDevis(); });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    sendError.classList.remove('show');
+
+    // Anti-spam : champ piège invisible
+    const honeypot = form.querySelector('[name="_gotcha"]').value;
+    if (honeypot) return;
+
+    const pack = packSelect.value;
+    const nom = nomInput.value.trim();
+    const telephone = telInput.value.trim();
+    const telRegex = /^[0-9+ ]{6,20}$/;
+
+    let valide = true;
+    document.getElementById('errDemandeDevisPack').classList.toggle('show', !pack);
+    if (!pack) valide = false;
+    document.getElementById('errDemandeDevisNom').classList.toggle('show', !nom);
+    if (!nom) valide = false;
+    document.getElementById('errDemandeDevisTelephone').classList.toggle('show', !telRegex.test(telephone));
+    if (!telRegex.test(telephone)) valide = false;
+
+    if (!valide) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi...';
+    try {
+      const nouvelleRef = push(ref(rtdb, 'demandesDevisOffres'));
+      await set(nouvelleRef, {
+        pack: pack,
+        nom: nom,
+        telephone: telephone,
+        dateCreation: Date.now(),
+        statut: 'en_attente'
+      });
+      document.getElementById('demandeDevisFields').style.display = 'none';
+      success.classList.add('show');
+    } catch (err) {
+      sendError.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Envoyer ma demande';
+    }
+  });
+</script>
+
+</body>
+</html>
