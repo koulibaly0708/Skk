@@ -491,7 +491,7 @@
     padding:14px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
     font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal); width:100%;
   }
-  .collab-tabs{display:flex; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line);}
+  .collab-tabs{display:flex; flex-wrap:wrap; row-gap:6px; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line);}
   .collab-tab{
     font-family:'Work Sans',sans-serif; font-size:.92rem; font-weight:500; color:#8a8378;
     background:none; border:none; padding:10px 4px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
@@ -670,6 +670,11 @@
   .cv-type-option:has(input:checked){border-color:var(--clay); background:rgba(217,142,61,0.06);}
   @media (max-width:640px){
     .modal-box{padding:28px 22px;}
+  }
+  @media (max-width:640px){
+    .collab-tabs{gap:4px 12px; row-gap:8px;}
+    .collab-tab{font-size:.82rem; padding:8px 2px;}
+    #openForumBtn{margin-left:0 !important; width:100%; justify-content:center; margin-top:4px;}
   }
 
   /* ---------- FOOTER ---------- */
@@ -1930,6 +1935,7 @@
         <button type="button" class="collab-tab" id="spaceTabAdmin">Administration</button>
         <button type="button" class="collab-tab" id="spaceTabCodes">Codes formation <span class="chat-badge" id="codesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabDemandes">Demandes de code <span class="chat-badge" id="demandesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabDemandesFormulaires">Demandes de formulaires <span class="chat-badge" id="demandesFormulairesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
@@ -2023,6 +2029,15 @@
           <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue par des personnes intéressées par une formation. Une fois le paiement reçu (Orange Money ou autre), cliquez sur <strong>Générer le code</strong> pour préremplir le formulaire de génération avec la bonne formation et le nom du client, puis marquez la demande comme traitée.</p>
           <div class="thread-list" id="demandesList">
             <p class="forum-empty" id="demandesListEmpty">Aucune demande de code pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelDemandesFormulaires" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Demandes envoyées depuis le catalogue des formulaires par des personnes intéressées par un formulaire sur mesure. Contactez la personne pour cadrer le besoin puis, une fois le paiement reçu, marquez la demande comme traitée.</p>
+          <div class="thread-list" id="demandesFormulairesList">
+            <p class="forum-empty" id="demandesFormulairesListEmpty">Aucune demande de formulaire pour le moment.</p>
           </div>
         </div>
       </div>
@@ -2854,6 +2869,10 @@
   const spacePanelDemandes = document.getElementById('spacePanelDemandes');
   const demandesList = document.getElementById('demandesList');
   const demandesTabBadge = document.getElementById('demandesTabBadge');
+  const spaceTabDemandesFormulaires = document.getElementById('spaceTabDemandesFormulaires');
+  const spacePanelDemandesFormulaires = document.getElementById('spacePanelDemandesFormulaires');
+  const demandesFormulairesList = document.getElementById('demandesFormulairesList');
+  const demandesFormulairesTabBadge = document.getElementById('demandesFormulairesTabBadge');
   const spaceTabUtilisateurs = document.getElementById('spaceTabUtilisateurs');
   const spacePanelUtilisateurs = document.getElementById('spacePanelUtilisateurs');
   const utilisateursList = document.getElementById('utilisateursList');
@@ -2875,6 +2894,8 @@
   let codesCache = {};
   let unsubDemandes = null;
   let demandesCache = {};
+  let unsubDemandesFormulaires = null;
+  let demandesFormulairesCache = {};
 
   // ---- Messages visiteurs (staff) ----
   const visitorList = document.getElementById('visitorList');
@@ -3093,6 +3114,7 @@
         demarrerEcouteBroadcastsAdmin();
         demarrerEcouteCodes();
         demarrerEcouteDemandes();
+        demarrerEcouteDemandesFormulaires();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3123,6 +3145,7 @@
       if (unsubNewsletterList) { unsubNewsletterList(); unsubNewsletterList = null; }
       if (unsubCodes) { unsubCodes(); unsubCodes = null; }
       if (unsubDemandes) { unsubDemandes(); unsubDemandes = null; }
+      if (unsubDemandesFormulaires) { unsubDemandesFormulaires(); unsubDemandesFormulaires = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
@@ -3142,12 +3165,14 @@
     spaceTabAdmin.classList.toggle('active', nom === 'admin');
     if (spaceTabCodes) spaceTabCodes.classList.toggle('active', nom === 'codes');
     if (spaceTabDemandes) spaceTabDemandes.classList.toggle('active', nom === 'demandes');
+    if (spaceTabDemandesFormulaires) spaceTabDemandesFormulaires.classList.toggle('active', nom === 'demandesFormulaires');
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
     if (spacePanelCodes) spacePanelCodes.hidden = nom !== 'codes';
     if (spacePanelDemandes) spacePanelDemandes.hidden = nom !== 'demandes';
+    if (spacePanelDemandesFormulaires) spacePanelDemandesFormulaires.hidden = nom !== 'demandesFormulaires';
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
@@ -3160,6 +3185,9 @@
   }
   if (spaceTabDemandes) {
     spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
+  }
+  if (spaceTabDemandesFormulaires) {
+    spaceTabDemandesFormulaires.addEventListener('click', () => activerOngletEspaceAdmin('demandesFormulaires'));
   }
   if (spaceTabUtilisateurs) {
     spaceTabUtilisateurs.addEventListener('click', () => activerOngletEspaceAdmin('utilisateurs'));
@@ -3764,6 +3792,92 @@
     unsubDemandes = onValue(ref(rtdb, 'demandesCodes'), (snap) => {
       demandesCache = snap.val() || {};
       renderDemandesList();
+    });
+  }
+
+  // ==================== DEMANDES DE FORMULAIRES (depuis le catalogue-formulaires public) ====================
+  function renderDemandesFormulairesList() {
+    if (!demandesFormulairesList) return;
+    demandesFormulairesList.innerHTML = '';
+    const ids = Object.keys(demandesFormulairesCache).filter((id) => (demandesFormulairesCache[id] || {}).statut !== 'traite');
+
+    if (demandesFormulairesTabBadge) {
+      demandesFormulairesTabBadge.hidden = ids.length === 0;
+      demandesFormulairesTabBadge.textContent = String(ids.length);
+    }
+
+    if (ids.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucune demande de formulaire pour le moment.';
+      demandesFormulairesList.appendChild(p);
+      return;
+    }
+    // Tri du plus récent au plus ancien
+    ids.sort((a, b) => (demandesFormulairesCache[b].dateCreation || 0) - (demandesFormulairesCache[a].dateCreation || 0));
+
+    ids.forEach((id) => {
+      const d = demandesFormulairesCache[id] || {};
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = d.nom || 'Nom non renseigné';
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
+      detailLine.textContent = (d.formulaire || '—') + (d.telephone ? ' · ' + d.telephone : '') + (dateTxt ? ' · ' + dateTxt : '');
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+
+      if (d.telephone) {
+        const waBtn = document.createElement('a');
+        waBtn.href = 'https://wa.me/' + d.telephone.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent("Bonjour " + (d.nom || '') + ", je reviens vers vous au sujet de votre demande de \"" + (d.formulaire || 'formulaire') + "\".");
+        waBtn.target = '_blank';
+        waBtn.rel = 'noopener';
+        waBtn.className = 'admin-toggle-btn is-admin';
+        waBtn.textContent = 'Contacter sur WhatsApp';
+        btnGroup.appendChild(waBtn);
+      }
+
+      const traiteBtn = document.createElement('button');
+      traiteBtn.type = 'button';
+      traiteBtn.className = 'admin-toggle-btn';
+      traiteBtn.textContent = 'Marquer traitée';
+      traiteBtn.addEventListener('click', () => marquerDemandeFormulaireTraitee(id));
+      btnGroup.appendChild(traiteBtn);
+
+      row.appendChild(btnGroup);
+      demandesFormulairesList.appendChild(row);
+    });
+  }
+
+  async function marquerDemandeFormulaireTraitee(id) {
+    try {
+      await update(ref(rtdb, 'demandesFormulaires/' + id), { statut: 'traite' });
+    } catch (err) {
+      notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
+    }
+  }
+
+  function demarrerEcouteDemandesFormulaires() {
+    if (unsubDemandesFormulaires) unsubDemandesFormulaires();
+    unsubDemandesFormulaires = onValue(ref(rtdb, 'demandesFormulaires'), (snap) => {
+      demandesFormulairesCache = snap.val() || {};
+      renderDemandesFormulairesList();
     });
   }
 
