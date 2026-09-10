@@ -517,11 +517,11 @@
   .thread-item .t-meta{font-size:.8rem; color:#8a8378; margin-top:3px;}
   .thread-item .t-arrow{color:var(--clay); flex-shrink:0;}
   .thread-messages{display:flex; flex-direction:column; gap:14px; margin:20px 0; max-height:420px; overflow-y:auto;}
-  .thread-msg{display:flex; gap:12px; align-items:flex-start; background:var(--paper); border-radius:8px; padding:14px 16px;}
-  .thread-msg .msg-body{flex:1; min-width:0;}
-  .thread-msg .msg-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .thread-msg .m-author{font-size:.8rem; font-weight:600; color:var(--clay); margin-bottom:4px;}
-  .thread-msg .m-text{font-size:.94rem; color:var(--charcoal); white-space:pre-wrap; line-height:1.5; word-break:break-word;}
+  .thread-msg{display:flex; gap:12px; align-items:flex-start; background:var(--paper); border-radius:8px; padding:14px 16px; max-width:100%; box-sizing:border-box;}
+  .thread-msg .msg-body{flex:1; min-width:0; max-width:100%;}
+  .thread-msg .msg-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .thread-msg .m-author{font-size:.8rem; font-weight:600; color:var(--clay); margin-bottom:4px; overflow-wrap:anywhere;}
+  .thread-msg .m-text{font-size:.94rem; color:var(--charcoal); white-space:pre-wrap; line-height:1.5; word-break:break-word; overflow-wrap:anywhere;}
   .thread-msg .m-time{font-size:.72rem; color:#a39c8f; margin-top:6px;}
   .thread-msg.own{background:#f1e6d2;}
 
@@ -596,7 +596,7 @@
     padding:12px 14px; border:1px solid var(--line); border-radius:3px; background:var(--paper);
     font-family:'Work Sans',sans-serif; font-size:.92rem; color:var(--charcoal);
   }
-  .chat-messages{flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--paper);}
+  .chat-messages{flex:1; overflow-y:auto; overflow-x:hidden; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--paper);}
   .chat-msg{max-width:82%; padding:9px 12px; border-radius:12px; font-size:.88rem; line-height:1.45; background:var(--white); align-self:flex-start; box-shadow:0 2px 6px rgba(27,42,74,0.06); white-space:pre-wrap; word-break:break-word;}
   .chat-msg .cm-meta{font-family:'JetBrains Mono',monospace; font-size:.65rem; color:#a39c8f; margin-top:4px;}
   .chat-msg.mine{align-self:flex-end; background:var(--clay); color:var(--white);}
@@ -1898,6 +1898,9 @@
       <input type="password" name="collabPassword" id="collabPassword" placeholder="Mot de passe (6 caractères min.)" required autocomplete="current-password" maxlength="200">
       <span class="modal-error" id="errCollabPassword">Le mot de passe doit contenir au moins 6 caractères.</span>
 
+      <button type="button" class="link-btn" id="collabForgotBtn" style="align-self:flex-start; margin:-6px 0 4px;">Mot de passe oublié ?</button>
+      <p class="modal-error" id="collabForgotMsg" style="color:var(--clay);"></p>
+
       <button type="submit" class="btn btn-primary" id="collabSubmitBtn">Se connecter</button>
       <p class="modal-error" id="collabSendError"></p>
     </form>
@@ -2538,6 +2541,8 @@
   const collabModalSub = document.getElementById('collabModalSub');
   const collabSubmitBtn = document.getElementById('collabSubmitBtn');
   const collabSendError = document.getElementById('collabSendError');
+  const collabForgotBtn = document.getElementById('collabForgotBtn');
+  const collabForgotMsg = document.getElementById('collabForgotMsg');
 
   window.collabMode = 'login';
   window.collabModalContext = 'collab'; // 'collab' ou 'admin' : détermine le titre affiché dans la modale
@@ -2551,6 +2556,7 @@
     if (estAdmin) mode = 'login'; // inscription impossible côté administrateur
     window.collabMode = mode;
     resetCollabErrors();
+    if (collabForgotMsg) { collabForgotMsg.textContent = ''; collabForgotMsg.classList.remove('show'); }
     if (collabModalTitle) collabModalTitle.textContent = estAdmin ? 'Espace Administrateur' : 'Espace Collaborateur';
     if (mode === 'login') {
       tabLogin.classList.add('active'); tabRegister.classList.remove('active');
@@ -2559,11 +2565,13 @@
         ? 'Accès réservé.'
         : 'Connectez-vous pour accéder au forum des membres.';
       collabSubmitBtn.textContent = 'Se connecter';
+      if (collabForgotBtn) collabForgotBtn.hidden = false;
     } else {
       tabRegister.classList.add('active'); tabLogin.classList.remove('active');
       collabNameField.hidden = false; collabNameField.required = true;
       collabModalSub.textContent = 'Créez votre compte pour rejoindre le forum des membres.';
       collabSubmitBtn.textContent = 'Créer mon compte';
+      if (collabForgotBtn) collabForgotBtn.hidden = true;
     }
   }
   if (tabLogin) tabLogin.addEventListener('click', () => setCollabTab('login'));
@@ -2782,7 +2790,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged, updateProfile
+    signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
     getDatabase, ref, push, set, update, remove, onValue, get,
@@ -3041,6 +3049,35 @@
         collabSendError.classList.add('show');
       } finally {
         collabSubmitBtn.disabled = false;
+      }
+    });
+  }
+
+  if (collabForgotBtn) {
+    collabForgotBtn.addEventListener('click', async () => {
+      const emailVal = collabEmail.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      if (!collabForgotMsg) return;
+      collabForgotMsg.classList.remove('show');
+      if (!emailOk) {
+        collabForgotMsg.textContent = "Indiquez d'abord votre adresse e-mail ci-dessus, puis cliquez à nouveau.";
+        collabForgotMsg.style.color = '#b3261e';
+        collabForgotMsg.classList.add('show');
+        collabEmail.focus();
+        return;
+      }
+      collabForgotBtn.disabled = true;
+      try {
+        await sendPasswordResetEmail(auth, emailVal);
+        collabForgotMsg.textContent = "E-mail envoyé : suivez le lien reçu à " + emailVal + " pour réinitialiser votre mot de passe.";
+        collabForgotMsg.style.color = 'var(--clay)';
+        collabForgotMsg.classList.add('show');
+      } catch (err) {
+        collabForgotMsg.textContent = messageErreurFirebase(err.code);
+        collabForgotMsg.style.color = '#b3261e';
+        collabForgotMsg.classList.add('show');
+      } finally {
+        collabForgotBtn.disabled = false;
       }
     });
   }
@@ -3636,6 +3673,13 @@
       toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
       btnGroup.appendChild(toggleBtn);
 
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerCode(code));
+      btnGroup.appendChild(supprimerBtn);
+
       row.appendChild(btnGroup);
       codesList.appendChild(row);
     });
@@ -3646,6 +3690,16 @@
       await update(ref(rtdb, 'formationCodes/' + code), { actif: !estActuellementActif });
     } catch (err) {
       notifier('Erreur', "Impossible de modifier ce code. Réessayez.");
+    }
+  }
+
+  async function supprimerCode(code) {
+    if (!code) return;
+    if (!confirm('Supprimer définitivement le code ' + code + ' ? Il ne sera plus utilisable.')) return;
+    try {
+      await remove(ref(rtdb, 'formationCodes/' + code));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer ce code. Réessayez.");
     }
   }
 
@@ -3782,6 +3836,13 @@
       traiteBtn.addEventListener('click', () => marquerDemandeTraitee(id));
       btnGroup.appendChild(traiteBtn);
 
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerDemandeCode(id));
+      btnGroup.appendChild(supprimerBtn);
+
       row.appendChild(btnGroup);
       demandesList.appendChild(row);
     });
@@ -3799,6 +3860,16 @@
       await update(ref(rtdb, 'demandesCodes/' + id), { statut: 'traite' });
     } catch (err) {
       notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
+    }
+  }
+
+  async function supprimerDemandeCode(id) {
+    if (!id) return;
+    if (!confirm('Supprimer définitivement cette demande ?')) return;
+    try {
+      await remove(ref(rtdb, 'demandesCodes/' + id));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer cette demande. Réessayez.");
     }
   }
 
@@ -3876,6 +3947,13 @@
       traiteBtn.addEventListener('click', () => marquerDemandeFormulaireTraitee(id));
       btnGroup.appendChild(traiteBtn);
 
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerDemandeFormulaire(id));
+      btnGroup.appendChild(supprimerBtn);
+
       row.appendChild(btnGroup);
       demandesFormulairesList.appendChild(row);
     });
@@ -3886,6 +3964,16 @@
       await update(ref(rtdb, 'demandesFormulaires/' + id), { statut: 'traite' });
     } catch (err) {
       notifier('Erreur', "Impossible de mettre à jour cette demande. Réessayez.");
+    }
+  }
+
+  async function supprimerDemandeFormulaire(id) {
+    if (!id) return;
+    if (!confirm('Supprimer définitivement cette demande ?')) return;
+    try {
+      await remove(ref(rtdb, 'demandesFormulaires/' + id));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer cette demande. Réessayez.");
     }
   }
 
