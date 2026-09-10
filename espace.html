@@ -629,7 +629,7 @@
   .visitor-unread-dot{width:9px; height:9px; border-radius:50%; background:var(--clay); flex-shrink:0;}
 
   /* ---------- Espace Administration (gestion des rôles admin) ---------- */
-  .admin-row{display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; padding:14px 4px; border-top:1px solid var(--line); font-family:'Work Sans',sans-serif;}
+  .admin-row{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 14px; width:100%; padding:14px 4px; border-top:1px solid var(--line); font-family:'Work Sans',sans-serif;}
   .admin-row:first-child{border-top:none;}
   .admin-row .a-infos{display:flex; align-items:center; gap:12px; min-width:0;}
   .admin-row .a-name{font-weight:500; color:var(--ink); font-size:.96rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
@@ -675,6 +675,8 @@
     .collab-tabs{gap:4px 12px; row-gap:8px;}
     .collab-tab{font-size:.82rem; padding:8px 2px;}
     #openForumBtn{margin-left:0 !important; width:100%; justify-content:center; margin-top:4px;}
+    .admin-row{gap:8px;}
+    .admin-row .a-infos{width:100%;}
   }
 
   /* ---------- FOOTER ---------- */
@@ -2783,7 +2785,7 @@
     signOut, onAuthStateChanged, updateProfile
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
-    getDatabase, ref, push, set, update, onValue, get,
+    getDatabase, ref, push, set, update, remove, onValue, get,
     query as rtdbQuery, orderByChild, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
@@ -3308,16 +3310,27 @@
 
         const body = document.createElement('div');
         body.className = 'msg-body';
-        body.innerHTML = `<div class="msg-head"><div class="m-author"></div></div><div class="m-text"></div><div class="m-time"></div>`;
+        body.innerHTML = `<div class="msg-head"><div class="m-author"></div><button type="button" class="msg-delete-btn" title="Supprimer ce message">Supprimer</button></div><div class="m-text"></div><div class="m-time"></div>`;
         body.querySelector('.m-author').textContent = m.authorName || (estStaff ? 'Équipe SKK' : 'Visiteur');
         body.querySelector('.m-text').textContent = m.text || '';
         body.querySelector('.m-time').textContent = time;
+        body.querySelector('.msg-delete-btn').addEventListener('click', () => supprimerMessageVisiteur(childSnap.key));
 
         el.appendChild(body);
         visitorMessages.appendChild(el);
       });
       visitorMessages.scrollTop = visitorMessages.scrollHeight;
     });
+  }
+
+  async function supprimerMessageVisiteur(msgId) {
+    if (!currentVisitorId || !msgId) return;
+    if (!confirm('Supprimer ce message ?')) return;
+    try {
+      await remove(ref(rtdb, 'liveChats/' + currentVisitorId + '/messages/' + msgId));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer ce message. Réessayez.");
+    }
   }
 
   if (backToVisitors) backToVisitors.addEventListener('click', afficherListeVisiteurs);
@@ -3603,6 +3616,7 @@
       const btnGroup = document.createElement('div');
       btnGroup.style.display = 'flex';
       btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
 
       const copyBtn = document.createElement('button');
       copyBtn.type = 'button';
@@ -3752,6 +3766,7 @@
       const btnGroup = document.createElement('div');
       btnGroup.style.display = 'flex';
       btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
 
       const genererBtn = document.createElement('button');
       genererBtn.type = 'button';
@@ -3842,6 +3857,7 @@
       const btnGroup = document.createElement('div');
       btnGroup.style.display = 'flex';
       btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
 
       if (d.telephone) {
         const waBtn = document.createElement('a');
@@ -3988,16 +4004,27 @@
 
         const body = document.createElement('div');
         body.className = 'msg-body';
-        body.innerHTML = `<div class="msg-head"><div class="m-author"></div></div><div class="m-text"></div><div class="m-time"></div>`;
+        body.innerHTML = `<div class="msg-head"><div class="m-author"></div><button type="button" class="msg-delete-btn" title="Supprimer ce message">Supprimer</button></div><div class="m-text"></div><div class="m-time"></div>`;
         body.querySelector('.m-author').textContent = m.authorName || (estStaff ? 'Administrateur' : 'Collaborateur');
         body.querySelector('.m-text').textContent = m.text || '';
         body.querySelector('.m-time').textContent = time;
+        body.querySelector('.msg-delete-btn').addEventListener('click', () => supprimerMessageCollab(childSnap.key));
 
         el.appendChild(body);
         collabThreadMessages.appendChild(el);
       });
       collabThreadMessages.scrollTop = collabThreadMessages.scrollHeight;
     });
+  }
+
+  async function supprimerMessageCollab(msgId) {
+    if (!currentCollabThreadUid || !msgId) return;
+    if (!confirm('Supprimer ce message ?')) return;
+    try {
+      await remove(ref(rtdb, 'collabChats/' + currentCollabThreadUid + '/messages/' + msgId));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer ce message. Réessayez.");
+    }
   }
 
   if (backToCollabList) backToCollabList.addEventListener('click', afficherListeCollab);
@@ -4039,11 +4066,22 @@
       const item = document.createElement('div');
       item.className = 'thread-msg';
       item.style.marginBottom = '10px';
-      item.innerHTML = `<div class="msg-body"><div class="m-text"></div><div class="m-time"></div></div>`;
+      item.innerHTML = `<div class="msg-body"><div class="msg-head"><div></div><button type="button" class="msg-delete-btn" title="Supprimer cette annonce">Supprimer</button></div><div class="m-text"></div><div class="m-time"></div></div>`;
       item.querySelector('.m-text').textContent = b.text || '';
       item.querySelector('.m-time').textContent = (b.authorName || 'Administrateur') + ' · ' + time;
+      item.querySelector('.msg-delete-btn').addEventListener('click', () => supprimerBroadcast(id));
       broadcastHistory.appendChild(item);
     });
+  }
+
+  async function supprimerBroadcast(id) {
+    if (!id) return;
+    if (!confirm('Supprimer cette annonce pour tous les collaborateurs ?')) return;
+    try {
+      await remove(ref(rtdb, 'broadcasts/' + id));
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer cette annonce. Réessayez.");
+    }
   }
 
   function demarrerEcouteBroadcastsAdmin() {
