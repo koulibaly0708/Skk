@@ -247,7 +247,7 @@
   .section-head p{color:#5a544c; font-size:1.02rem;}
 
   /* ---------- SERVICES ---------- */
-  .services{display:grid; grid-template-columns:repeat(3,1fr); gap:26px;}
+  .services{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:26px;}
   .service-card{
     background:var(--white); border:1px solid var(--line); border-radius:4px;
     padding:34px 28px; position:relative; overflow:hidden;
@@ -819,6 +819,7 @@
       <a href="#accueil">Accueil</a>
       <a href="#formations">Formations & Coaching</a>
       <a href="catalogue-formations.html">Catalogue formations</a>
+      <a href="catalogue-formulaires.html">Catalogue des outils digitaux</a>
       <a href="#prestations">Offre & Prestations</a>
       <a href="#studio">Studio Design</a>
       <a href="#livres">Livres</a>
@@ -894,7 +895,7 @@
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Le carrefour des services</span>
-      <h2>Trois portes d'entrée, une seule exigence de clarté</h2>
+      <h2>Quatre portes d'entrée, une seule exigence de clarté</h2>
       <p>Que vous cherchiez à monter en compétences, faire créer votre image ou être conseillé, chaque pôle répond à un objectif précis.</p>
     </div>
     <div class="services">
@@ -921,6 +922,14 @@
         <h3>Offre et service de prestation</h3>
         <p>Des packs de prestations clés en main pour répondre vite à un besoin précis, sans passer par une formation complète.</p>
         <a href="#prestations" class="taglink">Voir les offres →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-badge badge-clay">
+          <svg viewBox="0 0 44 44"><rect x="8" y="10" width="28" height="24" rx="2" fill="none" stroke="#fff" stroke-width="3"/><line x1="14" y1="18" x2="30" y2="18" stroke="#fff" stroke-width="3" stroke-linecap="round"/><line x1="14" y1="24" x2="26" y2="24" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Outils digitaux</h3>
+        <p>Formulaires sur mesure pour vos enquêtes, votre recrutement ou vos remontées de terrain, hébergés et prêts à diffuser.</p>
+        <a href="catalogue-formulaires.html" class="taglink">Voir le catalogue →</a>
       </div>
     </div>
   </div>
@@ -1112,11 +1121,6 @@
 
     <div class="tab-panel" id="digital">
       <div class="fiche-grid">
-        <div class="fiche">
-          <h4>Initiation à l'informatique</h4>
-          <dl><dt>Durée</dt><dd>Environ 2h30</dd><dt>Public</dt><dd>Grand public, aucune connaissance informatique préalable requise</dd><dt>Prérequis</dt><dd>Aucun</dd></dl>
-          <ol><li>Découvrir son ordinateur, allumer/éteindre et se repérer</li><li>Fichiers, Internet, email et traitement de texte</li><li>Sécurité, entretien et bonnes pratiques</li></ol>
-        </div>
         <div class="fiche">
           <h4>Initiation aux outils du web</h4>
           <dl><dt>Durée</dt><dd>Sur-mesure</dd><dt>Public</dt><dd>Entrepreneurs, équipes commerciales</dd><dt>Prérequis</dt><dd>Aucun</dd></dl>
@@ -1740,7 +1744,6 @@
         <div class="checklist-group">
           <div class="checklist-group-title">Compétences digitales</div>
           <div class="checklist-grid">
-            <label class="checklist-item"><input type="checkbox" name="formations" value="Initiation à l'informatique"> Initiation à l'informatique</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Initiation aux outils du web"> Initiation aux outils du web</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="IA générative appliquée"> IA générative appliquée</label>
             <label class="checklist-item"><input type="checkbox" name="formations" value="Gestion de projet en ligne"> Gestion de projet en ligne</label>
@@ -1985,7 +1988,6 @@
                 <option value="PowerPoint — Présentations d'impact">PowerPoint — Présentations d'impact</option>
               </optgroup>
               <optgroup label="Compétences digitales">
-                <option value="Initiation à l'informatique">Initiation à l'informatique</option>
                 <option value="Initiation aux outils du web">Initiation aux outils du web</option>
                 <option value="IA générative appliquée">IA générative appliquée</option>
                 <option value="Créer un site web avec l'IA">Créer un site web avec l'IA</option>
@@ -2088,6 +2090,7 @@
       <a href="#accueil" class="logo">SK<span>K</span>.</a>
       <nav>
         <a href="#formations">Formations</a>
+        <a href="catalogue-formulaires.html">Outils digitaux</a>
         <a href="#prestations">Offre & Prestations</a>
         <a href="#studio">Studio</a>
         <a href="#livres">Livres</a>
@@ -2765,7 +2768,7 @@
     signOut, onAuthStateChanged, updateProfile
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
-    getDatabase, ref, push, set, update, remove, onValue, get,
+    getDatabase, ref, push, set, update, onValue, get,
     query as rtdbQuery, orderByChild, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
@@ -3591,14 +3594,6 @@
       toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
       btnGroup.appendChild(toggleBtn);
 
-      const deleteBtn = document.createElement('button');
-      deleteBtn.type = 'button';
-      deleteBtn.className = 'admin-toggle-btn';
-      deleteBtn.style.color = '#b3261e';
-      deleteBtn.textContent = 'Supprimer';
-      deleteBtn.addEventListener('click', () => supprimerCode(code, detailLine.textContent));
-      btnGroup.appendChild(deleteBtn);
-
       row.appendChild(btnGroup);
       codesList.appendChild(row);
     });
@@ -3609,17 +3604,6 @@
       await update(ref(rtdb, 'formationCodes/' + code), { actif: !estActuellementActif });
     } catch (err) {
       notifier('Erreur', "Impossible de modifier ce code. Réessayez.");
-    }
-  }
-
-  async function supprimerCode(code, infosLigne) {
-    const confirmation = window.confirm('Supprimer définitivement le code ' + code + (infosLigne ? ' (' + infosLigne + ')' : '') + ' ?\n\nCette action est irréversible.');
-    if (!confirmation) return;
-    try {
-      await remove(ref(rtdb, 'formationCodes/' + code));
-      notifier('Supprimé', 'Le code ' + code + ' a été supprimé.');
-    } catch (err) {
-      notifier('Erreur', "Impossible de supprimer ce code. Réessayez.");
     }
   }
 
@@ -3673,26 +3657,12 @@
       infos.appendChild(texte);
       row.appendChild(infos);
 
-      const btnGroupUtil = document.createElement('div');
-      btnGroupUtil.style.display = 'flex';
-      btnGroupUtil.style.gap = '8px';
-
       const toggleBtn = document.createElement('button');
       toggleBtn.type = 'button';
       toggleBtn.className = 'admin-toggle-btn' + (estActif ? ' is-admin' : '');
       toggleBtn.textContent = estActif ? 'Désactiver' : 'Réactiver';
       toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
-      btnGroupUtil.appendChild(toggleBtn);
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.type = 'button';
-      deleteBtn.className = 'admin-toggle-btn';
-      deleteBtn.style.color = '#b3261e';
-      deleteBtn.textContent = 'Supprimer';
-      deleteBtn.addEventListener('click', () => supprimerCode(code, detailLine.textContent));
-      btnGroupUtil.appendChild(deleteBtn);
-
-      row.appendChild(btnGroupUtil);
+      row.appendChild(toggleBtn);
 
       utilisateursList.appendChild(row);
     });
