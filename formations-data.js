@@ -3887,6 +3887,230 @@ export const FORMATIONS = {
     `
   },
 
+  "Habitudes & Productivité — Masterclass": {
+    titre: "Habitudes & Productivité — Masterclass",
+    duree: "Environ 1h30", public: "Entrepreneurs et professionnels qui veulent transformer leurs habitudes de travail en résultats mesurables", prerequis: "Aucun",
+    modules: [
+      "Partie 1 — Comprendre le mécanisme des habitudes (chapitres 1 à 4)",
+      "Partie 2 — Concevoir son environnement et ses systèmes (chapitres 5 à 6)",
+      "Partie 3 — Maîtriser son temps, son attention, son énergie (chapitres 7 à 11)",
+      "Partie 4 — Tenir dans la durée (chapitres 12 à 15)",
+      "Partie 5 — Application, pièges et plan d'action (chapitres 16 à 19)",
+      "Conclusion — Votre plan d'action sur 30 jours",
+      "Annexe — Boîte à outils"
+    ],
+    apercu: "Un ouvrage pensé pour les entrepreneurs et professionnels qui veulent transformer leurs habitudes de travail en résultats mesurables — sans jargon, avec des méthodes applicables dès la première page.",
+    pdfUrl: "formation-habitudes-productivite.pdf",
+    contenuComplet: `
+      <p class="lede-cours">La vie que vous menez dans dix ans sera, pour l'essentiel, la somme de vos habitudes d'aujourd'hui. Ce n'est pas un cours sur la motivation — carburant précieux mais peu fiable. C'est un cours sur le mécanisme réel des habitudes : comment concevoir un environnement qui travaille pour vous, et construire des systèmes assez solides pour fonctionner même les jours où la motivation est absente.</p>
+
+      <div class="module-block">
+        <span class="module-tag">Partie 1</span>
+        <h3>Comprendre le mécanisme des habitudes</h3>
+        <h4>1. Pourquoi les habitudes changent tout</h4>
+        <p>Nous surestimons l'importance d'une grande décision et sous-estimons celle des petits gestes répétés. Vos habitudes sont l'intérêt composé de l'amélioration personnelle : invisibles à court terme, écrasantes à long terme.</p>
+        <ul>
+          <li>Un objectif donne une direction ; un système produit des résultats</li>
+          <li>Concentrez-vous sur le système, les résultats suivront d'eux-mêmes</li>
+          <li>L'absence de conséquence immédiate rend les mauvaises habitudes difficiles à corriger par la seule volonté</li>
+        </ul>
+        <h4>2. La science des habitudes : la boucle</h4>
+        <p>Toute habitude suit la même mécanique en quatre temps : le signal déclenche l'action, l'envie la motive, la réponse l'exécute, la récompense la fixe dans le cerveau.</p>
+        <ul>
+          <li>Signal → Envie → Réponse → Récompense</li>
+          <li>On n'agit jamais pour l'habitude elle-même, mais pour l'état qu'elle procure</li>
+          <li>Les mauvaises habitudes combinent récompense immédiate et coût différé — l'inverse des bonnes</li>
+        </ul>
+        <h4>3. L'identité avant l'action</h4>
+        <p>Le changement le plus durable ne vise pas un résultat, mais une identité. Chaque petite action accomplie est un vote pour le type de personne que vous devenez.</p>
+        <ul>
+          <li>Trois couches du changement : résultats, processus, identité — en partant de l'identité</li>
+          <li>Chaque action répétée est un vote pour votre nouvelle identité</li>
+          <li>Règle d'or : ne jamais rater une habitude deux fois de suite</li>
+        </ul>
+        <h4>4. La loi du 1 % : la puissance des petits progrès</h4>
+        <p>S'améliorer de 1 % chaque jour semble insignifiant, mais la régularité prime sur l'intensité. Toute nouvelle habitude peut être réduite à une version de deux minutes.</p>
+        <ul>
+          <li>La règle des deux minutes rend toute habitude accessible dès aujourd'hui</li>
+          <li>Le but au démarrage n'est pas la performance, c'est la régularité</li>
+          <li>Les bénéfices restent invisibles jusqu'à un seuil de bascule — ne pas abandonner trop tôt</li>
+        </ul>
+        <div class="callout">« Vous ne montez pas au niveau de vos objectifs, vous descendez au niveau de vos systèmes. »</div>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Partie 2</span>
+        <h3>Concevoir son environnement et ses systèmes</h3>
+        <h4>5. Concevoir son environnement</h4>
+        <p>La volonté est limitée et peu fiable ; l'environnement, lui, agit en permanence sans fatigue. Un cadre de vie bien conçu rend le bon choix aussi facile que possible.</p>
+        <ul>
+          <li>Rendez visibles les signaux des bonnes habitudes, invisibles ceux des mauvaises</li>
+          <li>Réduisez la friction des habitudes désirées, augmentez-la pour les indésirables</li>
+          <li>Associez un contexte (lieu) à un nombre limité d'activités</li>
+        </ul>
+        <h4>6. Créer des systèmes plutôt que des objectifs</h4>
+        <p>Un objectif est un point sur la carte ; un système est la manière dont vous marchez. Sans système, tout résultat atteint reste temporaire.</p>
+        <ul>
+          <li>Planifiez au niveau de la semaine, pas de la journée</li>
+          <li>Révisez votre système régulièrement — une fois par mois</li>
+          <li>Documentez votre système par écrit pour l'ancrer dans le réel</li>
+        </ul>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Partie 3</span>
+        <h3>Maîtriser son temps, son attention, son énergie</h3>
+        <h4>7. Vaincre la procrastination</h4>
+        <p>La procrastination est une réponse émotionnelle à l'inconfort, pas un manque de discipline. Réduire une tâche à son premier geste minuscule diminue la résistance à démarrer.</p>
+        <ul>
+          <li>La règle des cinq minutes contourne la résistance émotionnelle</li>
+          <li>Divisez une tâche jusqu'à ce que sa première étape devienne trivialement facile</li>
+          <li>Une procrastination récurrente sur une tâche précise est un signal à interroger</li>
+        </ul>
+        <h4>8. Prioriser l'essentiel</h4>
+        <p>Être productif ne signifie pas faire plus de choses, mais faire les bonnes. Prioriser est un acte de renoncement autant que de choix.</p>
+        <ul>
+          <li>Distinguez l'urgent (réclame l'attention) de l'important (mérite l'attention)</li>
+          <li>La règle du plus gros caillou : traitez votre priorité avant toute sollicitation</li>
+          <li>Limitez le nombre de priorités simultanées à une, au maximum trois</li>
+        </ul>
+        <h4>9. Le travail profond</h4>
+        <p>La capacité à se concentrer intensément, sans interruption, est devenue rare et précieuse. Le travail profond ne survient presque jamais par accident : il se planifie.</p>
+        <ul>
+          <li>Chaque changement de tâche a un coût cognitif largement sous-estimé</li>
+          <li>Bloquez des plages fixes, protégées de toute notification</li>
+          <li>Construisez un rituel d'entrée qui signale au cerveau le passage en mode concentration</li>
+        </ul>
+        <h4>10. Dompter la technologie</h4>
+        <p>Les applications les plus utilisées sont conçues pour capter votre attention, pas pour la respecter. Retirer les signaux est plus efficace que résister aux envies.</p>
+        <ul>
+          <li>Désactivez les notifications non essentielles, créez des zones sans écran</li>
+          <li>Remplacez plutôt que de simplement supprimer une habitude numérique</li>
+          <li>Distinguez l'usage choisi (intentionnel) de l'usage réflexe (automatique)</li>
+        </ul>
+        <h4>11. Gérer son énergie, pas seulement son temps</h4>
+        <p>Deux heures disponibles ne valent rien si l'énergie nécessaire pour les remplir a déjà été dépensée ailleurs. La gestion de l'énergie détermine la qualité réelle du temps.</p>
+        <ul>
+          <li>Identifiez vos pics naturels d'énergie et réservez-les aux tâches importantes</li>
+          <li>Sommeil, mouvement et vraies pauses sont les fondations de la productivité</li>
+          <li>Quatre types d'énergie à gérer : physique, émotionnelle, mentale, relationnelle</li>
+        </ul>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Partie 4</span>
+        <h3>Tenir dans la durée</h3>
+        <h4>12. Suivre ses progrès et rester motivé</h4>
+        <p>La motivation initiale s'estompe avant que les résultats ne deviennent visibles. Un suivi visuel comble ce vide en offrant une preuve concrète de progrès.</p>
+        <ul>
+          <li>Rendez le progrès visible : cocher une case suffit à ancrer l'engagement</li>
+          <li>Comparez-vous à votre propre trajectoire, jamais à celle des autres</li>
+          <li>Célébrez les petites victoires plutôt que d'attendre le résultat final</li>
+        </ul>
+        <h4>13. Se défaire des mauvaises habitudes</h4>
+        <p>Éliminer une habitude est souvent plus difficile qu'en créer une. La méthode fiable démonte méthodiquement chaque maillon de la boucle qui la maintient.</p>
+        <ul>
+          <li>Rendez le signal invisible pour réduire l'occasion même d'y céder</li>
+          <li>Substituez une réponse différente à la même envie plutôt que de l'interdire</li>
+          <li>Un engagement rendu concret ou public augmente la probabilité de tenir</li>
+        </ul>
+        <h4>14. La discipline au-delà de la motivation</h4>
+        <p>La motivation est un état instable ; la discipline est une méthode fiable. Commencer une action génère souvent la motivation, plus que l'inverse.</p>
+        <ul>
+          <li>Construisez des rituels qui ne dépendent pas de l'humeur du jour</li>
+          <li>L'action précède la motivation bien plus souvent qu'elle ne la suit</li>
+          <li>Tenir un petit engagement envers soi-même renforce la confiance future</li>
+        </ul>
+        <h4>15. S'entourer pour réussir</h4>
+        <p>L'entourage définit silencieusement ce que l'on considère comme normal ou possible. Le simple fait d'être responsable devant un tiers change le comportement.</p>
+        <ul>
+          <li>Rejoindre un groupe où l'habitude visée est déjà la norme réduit l'effort de volonté</li>
+          <li>La responsabilisation par un tiers augmente la probabilité de tenir un engagement</li>
+          <li>Choisissez vos modèles avec soin : ils élèvent votre référence intérieure</li>
+        </ul>
+      </div>
+
+      <div class="module-block">
+        <span class="module-tag">Partie 5</span>
+        <h3>Application, pièges et plan d'action</h3>
+        <h4>16. Appliquer la méthode : santé, argent, carrière</h4>
+        <p>Les mêmes principes s'appliquent à tous les domaines : systèmes durables plutôt que régimes ponctuels, automatisation de la bonne décision, accumulation patiente.</p>
+        <ul>
+          <li>Santé : des systèmes minimes et permanents plutôt que des régimes temporaires</li>
+          <li>Argent : automatiser la bonne décision (virement automatique dès le salaire)</li>
+          <li>Carrière : composer des compétences chaque semaine, pas des exploits isolés</li>
+        </ul>
+        <h4>17. Études de cas : trois parcours</h4>
+        <p>Trois parcours illustratifs montrent qu'une seule habitude bien choisie, tenue avec constance, produit souvent plus qu'une réorganisation ambitieuse mais dispersée.</p>
+        <ul>
+          <li>Retrouver du temps pour soi : cinq minutes de lecture avant de dormir</li>
+          <li>Lancer un projet personnel : un seul créneau hebdomadaire protégé</li>
+          <li>Sortir d'une désorganisation : une seule priorité, un horaire de sommeil fixe</li>
+        </ul>
+        <h4>18. Les pièges courants et comment les éviter</h4>
+        <p>Certaines erreurs reviennent systématiquement dans les tentatives de changement. Les nommer permet de les éviter, ou d'en limiter les dégâts.</p>
+        <ul>
+          <li>Vouloir tout changer en même temps dilue l'attention disponible</li>
+          <li>Viser une intensité trop élevée épuise la motivation avant l'automatisation</li>
+          <li>La plupart des échecs de « volonté » sont en réalité des échecs de conception de l'environnement</li>
+        </ul>
+        <h4>19. Tenir sur le long terme</h4>
+        <p>Trente jours suffisent pour amorcer un changement ; une vie entière suffit à peine pour le consolider face aux imprévus. Certaines saisons demandent de ralentir, pas d'abandonner.</p>
+        <ul>
+          <li>Acceptez les saisons de vie sans y voir un échec — maintenez la version minimale</li>
+          <li>Révisez votre système dans son ensemble une fois par trimestre</li>
+          <li>Une habitude peut légitimement s'effacer une fois son objectif atteint</li>
+        </ul>
+      </div>
+
+      <div class="module-block synthese">
+        <span class="module-tag">Conclusion</span>
+        <h3>Votre plan d'action sur 30 jours, boîte à outils et synthèse</h3>
+        <table class="table-cours">
+          <thead><tr><th>Semaine</th><th>Objectif</th><th>Ce que vous faites</th></tr></thead>
+          <tbody>
+            <tr><td>S1</td><td>Observer</td><td>Journal de 3 lignes chaque soir : ce qui a bien marché, ce qui a coûté de l'énergie, votre pic de concentration.</td></tr>
+            <tr><td>S2</td><td>Simplifier</td><td>Une seule habitude à installer, une seule à éliminer. Version deux minutes. Réduisez la friction.</td></tr>
+            <tr><td>S3</td><td>Répéter & suivre</td><td>Suivi visuel quotidien. Ne jamais rater deux fois de suite. Informez un proche de votre engagement.</td></tr>
+            <tr><td>S4</td><td>Ajuster & consolider</td><td>30 min de révision : gardez, ajustez, puis seulement ensuite ajoutez une deuxième habitude.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">« Vous n'avez pas besoin de changer votre vie en un jour. Vous avez besoin d'un système que vous répéterez encore dans un an. »</div>
+
+        <h4>Boîte à outils</h4>
+        <ul>
+          <li>Fiche d'habitude — identité visée, version minimale, signal, environnement, récompense, méthode de suivi</li>
+          <li>Grille de suivi hebdomadaire — un tableau des 7 jours à cocher, avec une phrase de bilan chaque fin de semaine</li>
+          <li>Questions de révision mensuelle — quelle habitude est devenue automatique ? Laquelle a été contournée, et pourquoi ?</li>
+          <li>Glossaire — boucle de l'habitude, identité, friction, système, travail profond, plateau caché</li>
+        </ul>
+
+        <h4>Les idées à retenir</h4>
+        <ul>
+          <li>Concentrez-vous sur le système, pas seulement sur l'objectif</li>
+          <li>Réduisez chaque nouvelle habitude à sa version de deux minutes</li>
+          <li>Rendez visibles les signaux des bonnes habitudes, invisibles ceux des mauvaises</li>
+          <li>Ne ratez jamais une habitude deux fois de suite</li>
+          <li>Gérez votre énergie autant que votre temps</li>
+          <li>Un environnement bien conçu vaut mieux qu'une volonté sollicitée en permanence</li>
+          <li>La motivation suit souvent l'action ; elle ne doit pas la précéder</li>
+          <li>Célébrez les petites victoires : elles entretiennent l'élan sur la durée</li>
+        </ul>
+
+        <div class="exercice">
+          <span class="exercice-tag">Exercice pratique</span>
+          <h4>Mettre en place votre première habitude</h4>
+          <ol>
+            <li>Tenez un journal de 3 lignes chaque soir pendant une semaine (S1 — Observer)</li>
+            <li>Choisissez une seule habitude à installer et réduisez-la à sa version de deux minutes (S2 — Simplifier)</li>
+            <li>Suivez-la visuellement chaque jour sans jamais la rater deux fois de suite (S3 — Répéter & suivre)</li>
+            <li>Faites un bilan de 30 minutes en fin de mois avant d'ajouter une deuxième habitude (S4 — Ajuster & consolider)</li>
+          </ol>
+        </div>
+      </div>
+    `
+  },
+
 };
 
 // Utilitaire conservé pour les prochaines formations : à appeler une fois quand vous
