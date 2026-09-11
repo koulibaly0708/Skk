@@ -417,6 +417,22 @@
       submitBtn.textContent = 'Envoyer ma demande';
     }
   });
+
+  // ---- Arrivée depuis un lien avec ancre (ex: catalogue-livres.html renvoie vers #pack-cv) ----
+  // Active l'onglet correspondant et, pour le CV pro payant, pré-ouvre la demande de devis
+  // avec le pack déjà sélectionné.
+  const ongletDepuisAncre = window.location.hash.replace('#', '');
+  if (ongletDepuisAncre) {
+    const btnOngletCible = document.querySelector('.tab-btn[data-tab="' + ongletDepuisAncre + '"]');
+    if (btnOngletCible) {
+      btnOngletCible.click();
+      btnOngletCible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (ongletDepuisAncre === 'pack-cv') {
+      ouvrirModaleDevis();
+      packSelect.value = 'Pack CV Pro';
+    }
+  }
 </script>
 
 </body>

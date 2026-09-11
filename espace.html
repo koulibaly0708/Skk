@@ -2043,6 +2043,9 @@
                 <option value="Posture de dirigeant">Posture de dirigeant</option>
                 <option value="Community Manager">Community Manager</option>
               </optgroup>
+              <optgroup label="Livre">
+                <option value="Habitudes & Productivité — Masterclass">Habitudes & Productivité — Masterclass</option>
+              </optgroup>
             </select>
             <input type="text" id="codeGenClient" placeholder="Nom du client (optionnel)" maxlength="120">
             <button type="submit" class="btn btn-primary" id="codeGenSubmitBtn">Générer un nouveau code</button>
@@ -2360,6 +2363,40 @@
       modalSubmitBtn.disabled = true;
       modalSubmitBtn.textContent = 'Envoi...';
       try {
+        // Enregistrement dans l'espace admin (onglets "Demandes de formulaires" /
+        // "Demandes de devis (offres)"), en plus de l'e-mail. Si Firebase n'est pas
+        // encore prêt ou échoue, on ignore silencieusement : l'envoi par mailto
+        // reste l'action principale et ne doit jamais être bloqué par ça.
+        try {
+          const bridge = window.__rtdbBridge;
+          if (bridge) {
+            if (estDevisOffres) {
+              const nouvelleRef = bridge.push(bridge.ref(bridge.rtdb, 'demandesDevisOffres'));
+              await bridge.set(nouvelleRef, {
+                pack: offresChoisies.join(', '),
+                nom: nomPrenom,
+                telephone: telephone,
+                email: email,
+                dateCreation: Date.now(),
+                statut: 'en_attente'
+              });
+            } else {
+              const nouvelleRef = bridge.push(bridge.ref(bridge.rtdb, 'demandesFormulaires'));
+              await bridge.set(nouvelleRef, {
+                formulaire: estDevis ? 'Demande de devis' : 'Inscription à la prochaine session',
+                nom: nomPrenom,
+                telephone: telephone,
+                email: email,
+                formations_souhaitees: estDevis ? formationsChoisies.join(', ') : 'N/A',
+                dateCreation: Date.now(),
+                statut: 'en_attente'
+              });
+            }
+          }
+        } catch (errRtdb) {
+          console.error('Enregistrement dans l\'espace admin impossible :', errRtdb);
+        }
+
         const ok = await envoyerFormulaire({
           _subject: estDevis ? 'Demande de devis — site SKK' : (estDevisOffres ? 'Demande de devis (offres) — site SKK' : 'Inscription à la prochaine session — site SKK'),
           formulaire: estDevis ? 'Demande de devis' : (estDevisOffres ? 'Demande de devis (offres)' : 'Inscription à la prochaine session'),
@@ -2873,6 +2910,11 @@
   const auth = getAuth(app);
   const rtdb = getDatabase(app);      // Realtime Database : chat visiteurs + rôles admin
   const db = getFirestore(app);       // Firestore : miroir des rôles admin, utilisé par les règles du forum
+
+  // Pont vers le script classique plus haut dans la page (modale Inscription / Devis) :
+  // ce module charge en différé, mais les gestionnaires "submit" ne s'exécutent qu'au
+  // clic de l'utilisateur, donc ces références seront déjà prêtes à ce moment-là.
+  window.__rtdbBridge = { rtdb, ref, push, set };
 
   // ---- Éléments DOM ----
   const collabForm = document.getElementById('collabForm');

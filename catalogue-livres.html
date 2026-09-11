@@ -113,6 +113,52 @@
     .writer-copy{flex:1;}
     .book-cover{flex:0 0 360px;}
   }
+
+  /* ============ SECTION CV RAPIDE ============ */
+  section.alt{background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:56px 0;}
+  .section-head{max-width:640px; margin-bottom:36px;}
+  .section-head h2{font-size:clamp(1.6rem,3vw,2.2rem); font-weight:600;}
+  .section-head p{color:#5a544c; font-size:1rem;}
+  #cv-builder.cv-builder-hidden{display:none;}
+  .cv-builder-grid{display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;}
+  .cv-form-box{background:var(--white); border:1px solid var(--line); border-radius:10px; padding:26px;}
+  .cv-form-box h3{font-size:1.02rem; margin-bottom:4px;}
+  .cv-form-box .cv-form-sub{color:#8a8378; font-size:.88rem; margin-bottom:18px;}
+  .cv-field{margin-bottom:14px;}
+  .cv-field label{display:block; font-family:'JetBrains Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; color:var(--clay); margin-bottom:6px;}
+  .cv-field input, .cv-field textarea{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:3px; background:var(--white);
+    font-family:'Work Sans',sans-serif; font-size:.92rem; color:var(--charcoal);
+  }
+  .cv-field textarea{min-height:74px; resize:vertical;}
+  .cv-download-btns{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+  .btn-pro-cv{background:var(--sage); border-color:var(--sage); color:var(--white);}
+  .btn-pro-cv:hover{opacity:.9;}
+  .cv-pro-note{font-size:.82rem; color:#8a8378; margin-top:10px; max-width:60ch;}
+  .cv-preview-wrap{position:sticky; top:100px;}
+  .cv-preview-label{font-family:'JetBrains Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--clay); margin-bottom:10px; display:block;}
+  #cvPreview.cv-page{
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:34px 30px;
+    font-family:'Work Sans',sans-serif; color:var(--charcoal); min-height:400px;
+  }
+  #cvPreview .cv-page-name{font-family:'Fraunces',serif; font-weight:600; font-size:1.5rem; color:var(--ink); margin-bottom:2px;}
+  #cvPreview .cv-page-title{color:var(--clay); font-weight:600; font-size:.92rem; margin-bottom:14px;}
+  #cvPreview .cv-page-contact{font-size:.82rem; color:var(--charcoal); margin-bottom:20px; line-height:1.7;}
+  #cvPreview .cv-page-section{margin-bottom:16px;}
+  #cvPreview .cv-page-block-title{
+    font-family:'JetBrains Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--clay); border-bottom:1px solid var(--line); padding-bottom:4px; margin-bottom:8px;
+  }
+  #cvPreview .cv-page-section p{font-size:.86rem; line-height:1.6; white-space:pre-line; margin:0;}
+  @media (max-width:900px){
+    .cv-builder-grid{grid-template-columns:1fr;}
+    .cv-preview-wrap{position:static;}
+  }
+  @media print{
+    body *{visibility:hidden;}
+    #cvPreview, #cvPreview *{visibility:visible;}
+    #cvPreview{position:absolute; top:0; left:0; width:100%; border:none; padding:0;}
+  }
 </style>
 </head>
 <body>
@@ -139,39 +185,14 @@
       </div>
 
       <div class="cta-row" style="margin-bottom:30px;">
-        <button type="button" id="btnAcheterPdf" class="btn btn-primary">Acheter le PDF</button>
         <button type="button" id="btnCommanderPapier" class="btn btn-ghost">Commander un exemplaire (version papier)</button>
-      </div>
-
-      <div class="service-card" id="paiement-livre" style="max-width:560px; margin-bottom:22px; display:none;">
-        <div class="cv-form-close-row">
-          <button type="button" class="cv-form-close" id="btnFermerPaiementLivre" aria-label="Fermer le formulaire de paiement">✕ Fermer</button>
-        </div>
-        <span class="eyebrow" style="margin-bottom:12px;">Paiement mobile</span>
-        <h3 style="font-size:1.1rem;">Payez par Orange Money ou Crédit Money — 25 000 GNF</h3>
-        <div class="pay-methods">
-          <div class="pay-method">
-            <span class="pay-dot" style="background:#FF6600;"></span>
-            <div><strong>Orange Money</strong><span>621 10 98 47</span></div>
-          </div>
-          <div class="pay-method">
-            <span class="pay-dot" style="background:var(--ink);"></span>
-            <div><strong>Crédit Money</strong><span>621 10 98 47</span></div>
-          </div>
-        </div>
-        <ol class="pay-steps">
-          <li>Envoyez 25 000 GNF au 621 10 98 47 via Orange Money ou Crédit Money.</li>
-          <li>Transmettez la capture du paiement ainsi que votre adresse e-mail par WhatsApp.</li>
-          <li>Le livre vous est envoyé par e-mail dès la confirmation du paiement.</li>
-        </ol>
-        <a href="https://wa.me/224621109847?text=Bonjour%2C%20je%20viens%20d%27effectuer%20le%20paiement%20pour%20le%20livre%20Habitudes%20%26%20Productivit%C3%A9.%20Voici%20ma%20preuve%20de%20paiement%20et%20mon%20adresse%20e-mail%20pour%20la%20r%C3%A9ception%20%3A" target="_blank" rel="noopener" class="btn btn-clay">Envoyer ma preuve de paiement</a>
       </div>
 
       <div class="service-card" style="max-width:520px;">
         <span class="eyebrow" style="margin-bottom:12px;">Bonus linguiste après achat du livre</span>
         <h3 style="font-size:1.1rem;">Je réalise votre CV</h3>
         <p>Obtenir votre CV en cliquant sur « Confier mon cv ».</p>
-        <a href="index.html#cv-builder" class="taglink" id="lienConfierCV">Confier mon cv →</a>
+        <a href="#cv-builder" class="taglink" id="lienConfierCV">Confier mon cv →</a>
       </div>
 
       <div class="service-card" style="max-width:520px; margin-top:22px;">
@@ -192,6 +213,80 @@
     </div>
   </div>
 </div>
+
+<!-- ============ CONFECTION DE CV RAPIDE ============ -->
+<section class="alt cv-builder-hidden" id="cv-builder">
+  <div class="wrap">
+    <div class="cv-form-close-row">
+      <button type="button" class="cv-form-close" id="btnFermerCV" aria-label="Fermer le formulaire CV">✕ Fermer</button>
+    </div>
+    <div class="section-head">
+      <span class="eyebrow">Bonus linguiste après achat du livre</span>
+      <h2>Votre CV rapide, prêt en quelques minutes</h2>
+      <p>Remplissez les champs ci-dessous, votre CV se met à jour à droite. Téléchargez-le ensuite au format PDF ou Word, ou confiez-le à un pro pour une version payante.</p>
+    </div>
+
+    <div class="cv-builder-grid">
+      <div class="cv-form-box">
+        <h3>Vos informations</h3>
+        <p class="cv-form-sub">Tout reste sur votre appareil : rien n'est envoyé à personne.</p>
+
+        <div class="cv-field">
+          <label for="cvNom">Nom et prénom</label>
+          <input type="text" id="cvNom" placeholder="Ex : Saran Koulibaly" maxlength="120">
+        </div>
+        <div class="cv-field">
+          <label for="cvTitre">Poste visé</label>
+          <input type="text" id="cvTitre" placeholder="Ex : Assistante de direction" maxlength="120">
+        </div>
+        <div class="cv-field">
+          <label for="cvEmail">E-mail</label>
+          <input type="email" id="cvEmail" placeholder="votre@email.com" maxlength="200">
+        </div>
+        <div class="cv-field">
+          <label for="cvTelephone">Téléphone</label>
+          <input type="tel" id="cvTelephone" placeholder="+224 6XX XX XX XX" maxlength="30">
+        </div>
+        <div class="cv-field">
+          <label for="cvAdresse">Ville / Adresse</label>
+          <input type="text" id="cvAdresse" placeholder="Ex : Conakry, Guinée" maxlength="150">
+        </div>
+        <div class="cv-field">
+          <label for="cvProfil">Profil / résumé</label>
+          <textarea id="cvProfil" placeholder="2 à 3 phrases qui présentent votre parcours et vos points forts."></textarea>
+        </div>
+        <div class="cv-field">
+          <label for="cvExperience">Expérience professionnelle</label>
+          <textarea id="cvExperience" placeholder="Une ligne par poste : intitulé — entreprise — période — missions."></textarea>
+        </div>
+        <div class="cv-field">
+          <label for="cvFormation">Formation</label>
+          <textarea id="cvFormation" placeholder="Diplôme — établissement — année"></textarea>
+        </div>
+        <div class="cv-field">
+          <label for="cvCompetences">Compétences</label>
+          <textarea id="cvCompetences" placeholder="Ex : Excel, gestion d'agenda, accueil client..."></textarea>
+        </div>
+        <div class="cv-field">
+          <label for="cvLangues">Langues</label>
+          <textarea id="cvLangues" placeholder="Ex : Français (courant), Anglais (intermédiaire)"></textarea>
+        </div>
+
+        <div class="cv-download-btns">
+          <button type="button" class="btn btn-primary" id="btnTelechargerPDF">Télécharger en PDF</button>
+          <button type="button" class="btn btn-clay" id="btnTelechargerWord">Télécharger en Word</button>
+          <button type="button" class="btn btn-pro-cv" id="btnEnvoyerCVPro">Confier à un pro (payant)</button>
+        </div>
+        <p class="cv-pro-note">En cliquant sur « Confier à un pro », votre CV est téléchargé au format Word, puis vous êtes redirigé vers le Pack CV Pro du catalogue des offres pour demander votre devis (choix de la formule, paiement).</p>
+      </div>
+
+      <div class="cv-preview-wrap">
+        <span class="cv-preview-label">Aperçu de votre CV</span>
+        <div class="cv-page" id="cvPreview"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ============ MODALE DEMANDE DE CODE D'ACCÈS — FORMATION "Habitudes & Productivité" ============ -->
 <div class="modal-overlay" id="demandeCodeLivreModal" aria-hidden="true">
@@ -264,35 +359,161 @@
 </footer>
 
 <script>
-  // Afficher le paiement mobile (utilisé par le bouton "Acheter le PDF")
-  const paiementLivre = document.getElementById('paiement-livre');
-  function revealPaiement() {
-    if (!paiementLivre) return;
-    paiementLivre.style.display = 'block';
-    paiementLivre.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  const btnAcheterPdf = document.getElementById('btnAcheterPdf');
-  if (btnAcheterPdf) {
-    btnAcheterPdf.addEventListener('click', revealPaiement);
-  }
-
-  const btnFermerPaiementLivre = document.getElementById('btnFermerPaiementLivre');
-  if (btnFermerPaiementLivre && paiementLivre) {
-    btnFermerPaiementLivre.addEventListener('click', () => {
-      paiementLivre.style.display = 'none';
-    });
-  }
-
   // Commander la version papier : afficher le prix, puis diriger vers l'e-mail
   const btnCommanderPapier = document.getElementById('btnCommanderPapier');
   if (btnCommanderPapier) {
     btnCommanderPapier.addEventListener('click', () => {
-      const confirmer = window.confirm("Version papier : 50 000 GNF\n\nContinuer vers l'e-mail de commande ?");
+      const confirmer = window.confirm("Version papier : 100 000 GNF\n\nContinuer vers l'e-mail de commande ?");
       if (confirmer) {
-        window.location.href = "mailto:skoulibaly124@gmail.com?subject=Commande%20version%20papier%20(50%20000%20GNF)%20-%20Habitudes%20%26%20Productivit%C3%A9&body=Bonjour%2C%20je%20souhaite%20commander%20un%20exemplaire%20papier%20du%20livre%20Habitudes%20%26%20Productivit%C3%A9%20au%20prix%20de%2050%20000%20GNF.";
+        window.location.href = "mailto:skoulibaly124@gmail.com?subject=Commande%20version%20papier%20(100%20000%20GNF)%20-%20Habitudes%20%26%20Productivit%C3%A9&body=Bonjour%2C%20je%20souhaite%20commander%20un%20exemplaire%20papier%20du%20livre%20Habitudes%20%26%20Productivit%C3%A9%20au%20prix%20de%20100%20000%20GNF.";
       }
     });
+  }
+
+  // ============ CONFECTION DE CV RAPIDE (aperçu + téléchargement PDF / Word) ============
+  const cvChamps = ['cvNom','cvTitre','cvEmail','cvTelephone','cvAdresse','cvProfil','cvExperience','cvFormation','cvCompetences','cvLangues'];
+  const cvPreview = document.getElementById('cvPreview');
+
+  function echapperHtmlCv(texte) {
+    const div = document.createElement('div');
+    div.textContent = texte;
+    return div.innerHTML;
+  }
+
+  function construireContenuCV() {
+    const val = (id) => document.getElementById(id).value.trim();
+    const nom = val('cvNom') || 'Votre nom et prénom';
+    const titre = val('cvTitre');
+    const email = val('cvEmail');
+    const telephone = val('cvTelephone');
+    const adresse = val('cvAdresse');
+    const profil = val('cvProfil');
+    const experience = val('cvExperience');
+    const formation = val('cvFormation');
+    const competences = val('cvCompetences');
+    const langues = val('cvLangues');
+
+    const contactParts = [email, telephone, adresse].filter(Boolean).map(echapperHtmlCv);
+
+    let html = `<div class="cv-page-name">${echapperHtmlCv(nom)}</div>`;
+    if (titre) html += `<div class="cv-page-title">${echapperHtmlCv(titre)}</div>`;
+    if (contactParts.length) html += `<div class="cv-page-contact">${contactParts.join(' · ')}</div>`;
+
+    const section = (titreSection, contenu) => {
+      if (!contenu) return '';
+      return `<div class="cv-page-section"><div class="cv-page-block-title">${titreSection}</div><p>${echapperHtmlCv(contenu)}</p></div>`;
+    };
+
+    html += section('Profil', profil);
+    html += section('Expérience professionnelle', experience);
+    html += section('Formation', formation);
+    html += section('Compétences', competences);
+    html += section('Langues', langues);
+
+    return html;
+  }
+
+  function majApercuCV() {
+    if (cvPreview) cvPreview.innerHTML = construireContenuCV();
+  }
+
+  if (cvPreview) {
+    cvChamps.forEach(id => {
+      const champ = document.getElementById(id);
+      if (champ) champ.addEventListener('input', majApercuCV);
+    });
+    majApercuCV();
+  }
+
+  const btnTelechargerPDF = document.getElementById('btnTelechargerPDF');
+  if (btnTelechargerPDF) {
+    btnTelechargerPDF.addEventListener('click', () => {
+      majApercuCV();
+      window.print();
+      fermerFormulaireCV();
+    });
+  }
+
+  // Génère et télécharge le CV au format Word (.doc)
+  function genererEtTelechargerWordCV() {
+    majApercuCV();
+    const nomFichier = (document.getElementById('cvNom').value.trim() || 'CV').replace(/[^a-z0-9\-_ ]/gi, '').trim() || 'CV';
+    const styleDoc = `
+      body{font-family:Calibri, Arial, sans-serif; color:#1B2A4A;}
+      .cv-page-name{font-size:22pt; font-weight:700; margin-bottom:2px;}
+      .cv-page-title{color:#D98E3D; font-weight:600; font-size:12pt; margin-bottom:10px;}
+      .cv-page-contact{font-size:10pt; margin-bottom:16px;}
+      .cv-page-section{margin-bottom:12px;}
+      .cv-page-block-title{font-size:10pt; text-transform:uppercase; letter-spacing:1px; color:#D98E3D; border-bottom:1px solid #cccccc; padding-bottom:3px; margin-bottom:6px;}
+      .cv-page-section p{font-size:10.5pt; line-height:1.5; white-space:pre-line;}
+    `;
+    const contenuDoc = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="utf-8"><title>${echapperHtmlCv(nomFichier)}</title><style>${styleDoc}</style></head>
+      <body>${construireContenuCV()}</body>
+      </html>
+    `;
+    const blob = new Blob(['\ufeff', contenuDoc], { type: 'application/msword' });
+    const lien = document.createElement('a');
+    lien.href = URL.createObjectURL(blob);
+    lien.download = `${nomFichier}.doc`;
+    document.body.appendChild(lien);
+    lien.click();
+    document.body.removeChild(lien);
+    URL.revokeObjectURL(lien.href);
+    return nomFichier;
+  }
+
+  const btnTelechargerWord = document.getElementById('btnTelechargerWord');
+  if (btnTelechargerWord) {
+    btnTelechargerWord.addEventListener('click', () => {
+      genererEtTelechargerWordCV();
+      fermerFormulaireCV();
+    });
+  }
+
+  // « Confier à un pro (payant) » : télécharge le CV en Word, puis renvoie vers le Pack CV Pro
+  // du catalogue des offres pour la demande de devis (formule + paiement).
+  const btnEnvoyerCVPro = document.getElementById('btnEnvoyerCVPro');
+  if (btnEnvoyerCVPro) {
+    btnEnvoyerCVPro.addEventListener('click', () => {
+      majApercuCV();
+      const continuer = window.confirm(
+        "La réalisation d'un CV professionnel par un pro est un service payant.\n\n" +
+        "Votre CV va être téléchargé au format Word, puis vous serez redirigé vers le Pack CV Pro pour choisir votre formule et demander un devis.\n\n" +
+        "Continuer ?"
+      );
+      if (!continuer) return;
+      genererEtTelechargerWordCV();
+      window.location.href = 'catalogue-offres-services.html#pack-cv';
+    });
+  }
+
+  // ============ Ouverture / fermeture du formulaire CV ============
+  const cvBuilderSection = document.getElementById('cv-builder');
+  const lienConfierCV = document.getElementById('lienConfierCV');
+  const btnFermerCV = document.getElementById('btnFermerCV');
+
+  function ouvrirFormulaireCV() {
+    if (!cvBuilderSection) return;
+    cvBuilderSection.classList.remove('cv-builder-hidden');
+    cvBuilderSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function fermerFormulaireCV() {
+    if (!cvBuilderSection) return;
+    cvBuilderSection.classList.add('cv-builder-hidden');
+  }
+
+  if (lienConfierCV) {
+    lienConfierCV.addEventListener('click', (e) => {
+      e.preventDefault();
+      ouvrirFormulaireCV();
+    });
+  }
+
+  if (btnFermerCV) {
+    btnFermerCV.addEventListener('click', fermerFormulaireCV);
   }
 </script>
 
