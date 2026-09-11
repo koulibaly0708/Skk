@@ -691,6 +691,13 @@
   .footer-grid .logo{color:var(--paper);}
   footer nav{display:flex; gap:22px; flex-wrap:wrap; font-size:.88rem;}
   .foot-bottom{padding-top:22px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:.78rem; font-family:'JetBrains Mono',monospace;}
+  .foot-legal{padding-top:18px; margin-top:18px; border-top:1px solid rgba(246,241,231,.15); display:flex; justify-content:center; gap:34px; flex-wrap:wrap; font-size:.86rem;}
+  .foot-legal a{color:rgba(246,241,231,.55); transition:color .2s ease;}
+  .foot-legal a:hover{color:var(--paper);}
+  .foot-legal a.legal-highlight{color:var(--clay); font-weight:500;}
+  @media (max-width:640px){
+    .foot-legal{gap:18px 22px; justify-content:flex-start;}
+  }
 
   @media (max-width:900px){
     nav.wrap{flex-wrap:wrap; height:auto; min-height:84px; row-gap:12px; padding-top:16px; padding-bottom:16px;}
@@ -793,14 +800,14 @@
   <div class="chat-window" id="chatWindow">
     <div class="chat-window-head">
       <div>
-        <div class="cw-title">Discuter avec Solo</div>
+        <div class="cw-title">Assistant SKK en direct</div>
         <div class="cw-sub"><span class="cw-dot"></span>Réponse en direct</div>
       </div>
       <button type="button" class="chat-close-btn" id="chatCloseBtn" aria-label="Fermer le chat">&times;</button>
     </div>
 
     <div class="chat-name-gate" id="chatNameGate">
-      <p>Une question, un projet en tête ? Écrivez-moi, je réponds dès que possible.</p>
+      <p>Bonjour et bienvenue 👋 Je suis <strong>Assistant SKK en direct</strong>. Dites-moi votre prénom pour que je puisse vous répondre personnellement.</p>
       <input type="text" id="chatNameInput" placeholder="Votre prénom" maxlength="60">
       <button type="button" class="btn btn-primary" id="chatNameStart">Démarrer la discussion</button>
     </div>
@@ -1821,6 +1828,12 @@
     </div>
     <div class="foot-bottom">
       <span>Ce site est réalisé par SKK. Tous droits réservés</span>
+    </div>
+    <div class="foot-legal">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="cgv.html" class="legal-highlight">CGV</a>
+      <a href="cookies.html">Cookies</a>
     </div>
   </div>
 </footer>
@@ -3910,25 +3923,40 @@
   }
 
   let baseConnaissance = null;
-  const REPONSE_SALUTATION = "Bonjour et bienvenue !\n\nJe suis l'assistant automatique du site. Posez-moi une question précise (formations, coaching, livre, CV, tarifs, délais...) et je vous réponds tout de suite avec les informations du site.\n\nUn membre de l'équipe peut aussi prendre le relais à tout moment.";
-  const REPONSE_INCONNUE = "Je n'ai pas d'information précise à ce sujet dans le contenu du site pour l'instant.\n\nPouvez-vous reformuler en 2-3 mots-clés (ex. \"formation\", \"tarif CV\", \"livre\") ? Sinon, un membre de l'équipe va vous répondre personnellement.\n\n" + CTA_CONTACT;
+  const NOM_ASSISTANT = "Assistant SKK en direct";
+
+  // Politesse : on commence toujours par se présenter, puis on salue le visiteur par son prénom dès qu'il est connu.
+  function salutationCourtoise(nomVisiteur) {
+    const interpellation = nomVisiteur ? ` ${nomVisiteur}` : "";
+    return "Bonjour" + interpellation + " je suis " + NOM_ASSISTANT + ", que puis-je faire pour vous ?"
+      + "\n\nPosez-moi une question précise (formations, coaching, livre, CV, tarifs, délais...) et je vous réponds tout de suite avec les informations du site."
+      + "\n\nUn membre de l'équipe peut aussi prendre le relais à tout moment.";
+  }
+  function reponseInconnue(nomVisiteur) {
+    const interpellation = nomVisiteur ? nomVisiteur + ", je" : "Je";
+    return interpellation + " n'ai pas d'information précise à ce sujet dans le contenu du site pour l'instant."
+      + "\n\nPouvez-vous reformuler en 2-3 mots-clés (ex. \"formation\", \"tarif CV\", \"livre\") ? Sinon, un membre de l'équipe va vous répondre personnellement."
+      + "\n\n" + CTA_CONTACT;
+  }
   const SEUIL_SCORE_MIN = 1; // score minimum de mots-clés en commun pour considérer une réponse pertinente
 
   // Compose une réponse structurée en 3 blocs : titre, détail, prochaine étape — plus lisible qu'un paragraphe unique.
-  function formaterReponse(entree) {
+  // Le prénom du visiteur (dès qu'il est connu) est ajouté en tête pour personnaliser chaque échange.
+  function formaterReponse(entree, nomVisiteur) {
     const blocs = [entree.titre || null, entree.detail, entree.cta]
       .filter(b => b && b.trim().length > 0);
-    return blocs.join('\n\n');
+    const corps = blocs.join('\n\n');
+    return nomVisiteur ? (nomVisiteur + ", " + corps.charAt(0).toLowerCase() + corps.slice(1)) : corps;
   }
 
-  function trouverReponseAuto(messageVisiteur) {
+  function trouverReponseAuto(messageVisiteur, nomVisiteur) {
     if (!baseConnaissance) baseConnaissance = construireBaseConnaissance();
     const motsMsg = motsCles(messageVisiteur);
-    if (motsMsg.length === 0) return REPONSE_SALUTATION;
+    if (motsMsg.length === 0) return salutationCourtoise(nomVisiteur);
 
     const normMsg = normaliserTexte(messageVisiteur);
     if (/^(bonjour|salut|bonsoir|hello|coucou|bjr)\b/.test(normMsg) && motsMsg.length <= 2) {
-      return REPONSE_SALUTATION;
+      return salutationCourtoise(nomVisiteur);
     }
 
     // Score pondéré : les mots-clés rares (spécifiques) comptent plus que les mots-clés très répétés dans la base,
@@ -3950,7 +3978,7 @@
       if (score > meilleurScore) { meilleurScore = score; meilleur = entree; }
     });
 
-    return (meilleur && meilleurScore >= SEUIL_SCORE_MIN) ? formaterReponse(meilleur) : REPONSE_INCONNUE;
+    return (meilleur && meilleurScore >= SEUIL_SCORE_MIN) ? formaterReponse(meilleur, nomVisiteur) : reponseInconnue(nomVisiteur);
   }
 
   // ==================== CHAT EN DIRECT (bulle flottante, côté visiteur) — Realtime Database ====================
@@ -4064,6 +4092,17 @@
       chatMessages.hidden = false;
       chatInputForm.hidden = false;
       demarrerEcouteChatVisiteur();
+      // Accueil courtois et personnalisé dès que le prénom est connu.
+      const messageAccueil = salutationCourtoise(nom);
+      push(ref(rtdb, 'liveChats/' + visitorId + '/messages'), {
+        text: messageAccueil,
+        sender: 'staff',
+        authorName: NOM_ASSISTANT,
+        createdAt: rtdbServerTimestamp()
+      }).then(() => update(ref(rtdb, 'liveChats/' + visitorId), {
+        lastMessage: messageAccueil,
+        lastAt: rtdbServerTimestamp()
+      })).catch(() => {});
       chatInputText.focus();
     });
 
@@ -4087,13 +4126,13 @@
         });
 
         if (botActifCourant) {
-          const reponseBot = trouverReponseAuto(texte);
+          const reponseBot = trouverReponseAuto(texte, visitorName);
           setTimeout(async () => {
             try {
               await push(ref(rtdb, 'liveChats/' + visitorId + '/messages'), {
                 text: reponseBot,
                 sender: 'staff',
-                authorName: 'Assistant automatique',
+                authorName: NOM_ASSISTANT,
                 createdAt: rtdbServerTimestamp()
               });
               await update(ref(rtdb, 'liveChats/' + visitorId), {
