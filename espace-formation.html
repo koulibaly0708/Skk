@@ -178,12 +178,14 @@
 
     const modulesHtml = data.modules.map((m) => '<li>' + m + '</li>').join('');
 
-    const telechargementHtml = data.pdfUrl
-      ? '<div class="download-bar">'
-        + '<p>Support complet de la formation, à garder pour vous.</p>'
-        + '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>'
-        + '</div>'
-      : '';
+    const texteSupport = data.livre
+      ? 'Le livre ' + data.livre
+      : 'Support complet de la formation, à garder pour vous.';
+
+    const telechargementHtml = '<div class="download-bar">'
+      + '<p>' + texteSupport + '</p>'
+      + (data.pdfUrl ? '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>' : '')
+      + '</div>';
 
     const corpsHtml = data.contenuComplet
       ? data.contenuComplet
@@ -191,6 +193,7 @@
 
     content.innerHTML = ''
       + '<div class="wrap">'
+      + telechargementHtml
       + '<span class="eyebrow">Votre formation</span>'
       + '<h1>' + nomFormation + '</h1>'
       + '<dl class="meta">'
@@ -198,7 +201,6 @@
       + '<div><dt>Public</dt><dd>' + data.public + '</dd></div>'
       + '<div><dt>Prérequis</dt><dd>' + data.prerequis + '</dd></div>'
       + '</dl>'
-      + telechargementHtml
       + '<div class="modules">'
       + '<h3>Programme</h3>'
       + '<ol>' + modulesHtml + '</ol>'

@@ -3900,7 +3900,8 @@ export const FORMATIONS = {
       "Annexe — Boîte à outils"
     ],
     apercu: "Un ouvrage pensé pour les entrepreneurs et professionnels qui veulent transformer leurs habitudes de travail en résultats mesurables — sans jargon, avec des méthodes applicables dès la première page.",
-    pdfUrl: "formation-habitudes-productivite.pdf",
+    livre: "Habitudes et productivité",
+    pdfUrl: "habitudes-productivite.pdf",
     contenuComplet: `
       <p class="lede-cours">La vie que vous menez dans dix ans sera, pour l'essentiel, la somme de vos habitudes d'aujourd'hui. Ce n'est pas un cours sur la motivation — carburant précieux mais peu fiable. C'est un cours sur le mécanisme réel des habitudes : comment concevoir un environnement qui travaille pour vous, et construire des systèmes assez solides pour fonctionner même les jours où la motivation est absente.</p>
 
