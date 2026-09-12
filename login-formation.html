@@ -85,6 +85,7 @@
     <p class="lede">Le code vous a été communiqué par Solo Koumana Koulibaly après votre inscription. Il donne accès au contenu de votre formation.</p>
 
     <form id="codeLoginForm" novalidate>
+      <input type="text" id="nameInput" name="nom" placeholder="Votre nom (facultatif)" maxlength="120" autocomplete="name" style="text-transform:none; letter-spacing:normal; font-family:'Work Sans',sans-serif; font-size:.95rem; text-align:left;">
       <input type="text" id="codeInput" name="code" placeholder="EX. 7K3P9QRT" maxlength="12" autocomplete="off" required>
       <button type="submit" id="codeSubmitBtn">Accéder à ma formation</button>
       <p class="error-msg" id="codeError">Ce code est introuvable ou a été désactivé. Vérifiez la saisie ou contactez-nous.</p>
@@ -114,8 +115,20 @@
 
   const form = document.getElementById('codeLoginForm');
   const input = document.getElementById('codeInput');
+  const nameInput = document.getElementById('nameInput');
   const submitBtn = document.getElementById('codeSubmitBtn');
   const errorMsg = document.getElementById('codeError');
+
+  // Identifiant d'appareil persistant (anonyme), pour repérer si un même code
+  // est utilisé depuis plusieurs appareils différents.
+  function obtenirIdAppareil() {
+    let id = localStorage.getItem('skk_device_id');
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('dev-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+      localStorage.setItem('skk_device_id', id);
+    }
+    return id;
+  }
 
   // Si une session valide existe déjà, on propose directement l'accès à l'espace formation
   const sessionBrute = localStorage.getItem('skk_formation_session');
@@ -146,12 +159,29 @@
         return;
       }
       const data = snap.val();
+      const deviceId = obtenirIdAppareil();
+      const nomVal = nameInput.value.trim();
+      const appareilsExistants = data.appareils || {};
+      const appareilDejaConnu = !!appareilsExistants[deviceId];
+      const nbAppareilsAvant = Object.keys(appareilsExistants).length;
+
       localStorage.setItem('skk_formation_session', JSON.stringify({ code: code, formation: data.formation }));
-      // Historique de connexion, sans bloquer la redirection en cas d'échec de l'écriture
-      update(ref(rtdb, 'formationCodes/' + code), {
-        derniereConnexion: Date.now(),
-        connexions: (data.connexions || 0) + 1
-      }).catch(() => {});
+
+      // Historique de connexion + suivi des appareils, sans bloquer la redirection en cas d'échec de l'écriture
+      const maj = {};
+      maj['formationCodes/' + code + '/derniereConnexion'] = Date.now();
+      maj['formationCodes/' + code + '/connexions'] = (data.connexions || 0) + 1;
+      maj['formationCodes/' + code + '/appareils/' + deviceId] = {
+        nom: nomVal || (appareilsExistants[deviceId] && appareilsExistants[deviceId].nom) || null,
+        premiereFois: appareilDejaConnu ? appareilsExistants[deviceId].premiereFois : Date.now(),
+        derniereFois: Date.now()
+      };
+      // Un nouvel appareil apparaît alors qu'au moins un autre appareil utilisait déjà ce code : partage détecté.
+      if (!appareilDejaConnu && nbAppareilsAvant >= 1) {
+        maj['formationCodes/' + code + '/partage'] = true;
+        maj['formationCodes/' + code + '/alerteTraitee'] = false;
+      }
+      update(ref(rtdb), maj).catch(() => {});
       window.location.href = 'espace-formation.html';
     } catch (err) {
       errorMsg.textContent = "Une erreur est survenue. Vérifiez votre connexion et réessayez.";

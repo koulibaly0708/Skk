@@ -1968,6 +1968,7 @@
         <button type="button" class="collab-tab" id="spaceTabDemandesFormulaires">Demandes de formulaires <span class="chat-badge" id="demandesFormulairesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabDemandesDevisOffres">Demandes de devis (offres) <span class="chat-badge" id="demandesDevisOffresTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
+        <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2093,6 +2094,15 @@
           </div>
         </div>
       </div>
+
+      <div class="forum-layout" id="spacePanelAlertesCodes" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Un code apparaît ici dès qu'il a été utilisé depuis <strong>plus d'un appareil différent</strong> — signe possible d'un partage avec une personne qui n'a pas payé. Identifiez le nom qui ne correspond pas à l'acheteur, puis désactivez le code pour couper l'accès aux deux, ou marquez l'alerte comme traitée si tout est en ordre.</p>
+          <div class="thread-list" id="alertesCodesList">
+            <p class="forum-empty" id="alertesCodesListEmpty">Aucun partage de code détecté pour le moment.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2108,6 +2118,7 @@
       <button type="button" class="collab-tab active" id="adminTabCollabMsgs">Messages des collaborateurs <span class="chat-badge" id="collabTabBadge" hidden>0</span></button>
       <button type="button" class="collab-tab" id="adminTabBroadcast">Diffuser une annonce</button>
       <button type="button" class="collab-tab" id="adminTabGestion">Gestion des collaborateurs</button>
+      <button type="button" class="collab-tab" id="adminTabProfils">Profil des collaborateurs</button>
     </div>
 
     <div class="forum-layout" id="adminPanelCollabMsgs">
@@ -2146,6 +2157,15 @@
         <p class="section-lede" style="margin:0 0 10px;">Désactivez un collaborateur pour lui bloquer temporairement l'accès à son espace (il pourra être réactivé à tout moment), ou supprimez-le définitivement de la liste.</p>
         <div class="thread-list" id="gestionCollabList">
           <p class="forum-empty" id="gestionCollabListEmpty">Aucun collaborateur inscrit pour le moment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="forum-layout" id="adminPanelProfils" hidden>
+      <div class="forum-panel" style="width:100%;">
+        <p class="section-lede" style="margin:0 0 10px;">Toutes les informations saisies par chaque collaborateur lors de son inscription.</p>
+        <div class="thread-list" id="profilsCollabList">
+          <p class="forum-empty" id="profilsCollabListEmpty">Aucun collaborateur inscrit pour le moment.</p>
         </div>
       </div>
     </div>
@@ -2952,9 +2972,13 @@
   const adminTabCollabMsgs = document.getElementById('adminTabCollabMsgs');
   const adminTabBroadcast = document.getElementById('adminTabBroadcast');
   const adminTabGestion = document.getElementById('adminTabGestion');
+  const adminTabProfils = document.getElementById('adminTabProfils');
   const adminPanelCollabMsgs = document.getElementById('adminPanelCollabMsgs');
   const adminPanelBroadcast = document.getElementById('adminPanelBroadcast');
   const adminPanelGestion = document.getElementById('adminPanelGestion');
+  const adminPanelProfils = document.getElementById('adminPanelProfils');
+  const profilsCollabList = document.getElementById('profilsCollabList');
+  const profilsCollabListEmpty = document.getElementById('profilsCollabListEmpty');
   const gestionCollabList = document.getElementById('gestionCollabList');
   const gestionCollabListEmpty = document.getElementById('gestionCollabListEmpty');
   const collabTabBadge = document.getElementById('collabTabBadge');
@@ -3005,6 +3029,11 @@
   const spaceTabUtilisateurs = document.getElementById('spaceTabUtilisateurs');
   const spacePanelUtilisateurs = document.getElementById('spacePanelUtilisateurs');
   const utilisateursList = document.getElementById('utilisateursList');
+  const spaceTabAlertesCodes = document.getElementById('spaceTabAlertesCodes');
+  const spacePanelAlertesCodes = document.getElementById('spacePanelAlertesCodes');
+  const alertesCodesList = document.getElementById('alertesCodesList');
+  const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
+  let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
   const newsletterListEmpty = document.getElementById('newsletterListEmpty');
   let unsubNewsletterList = null;
@@ -3383,6 +3412,7 @@
     if (spaceTabDemandesFormulaires) spaceTabDemandesFormulaires.classList.toggle('active', nom === 'demandesFormulaires');
     if (spaceTabDemandesDevisOffres) spaceTabDemandesDevisOffres.classList.toggle('active', nom === 'demandesDevisOffres');
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
+    if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3391,6 +3421,7 @@
     if (spacePanelDemandesFormulaires) spacePanelDemandesFormulaires.hidden = nom !== 'demandesFormulaires';
     if (spacePanelDemandesDevisOffres) spacePanelDemandesDevisOffres.hidden = nom !== 'demandesDevisOffres';
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
+    if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3399,6 +3430,9 @@
   }
   if (spaceTabCodes) {
     spaceTabCodes.addEventListener('click', () => activerOngletEspaceAdmin('codes'));
+  }
+  if (spaceTabAlertesCodes) {
+    spaceTabAlertesCodes.addEventListener('click', () => activerOngletEspaceAdmin('alertesCodes'));
   }
   if (spaceTabDemandes) {
     spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
@@ -3420,18 +3454,22 @@
       adminTabCollabMsgs.classList.add('active');
       adminTabBroadcast.classList.remove('active');
       if (adminTabGestion) adminTabGestion.classList.remove('active');
+      if (adminTabProfils) adminTabProfils.classList.remove('active');
       adminPanelCollabMsgs.hidden = false;
       adminPanelBroadcast.hidden = true;
       if (adminPanelGestion) adminPanelGestion.hidden = true;
+      if (adminPanelProfils) adminPanelProfils.hidden = true;
     });
     adminTabBroadcast.addEventListener('click', () => {
       if (!window.isAdminStaff) return;
       adminTabBroadcast.classList.add('active');
       adminTabCollabMsgs.classList.remove('active');
       if (adminTabGestion) adminTabGestion.classList.remove('active');
+      if (adminTabProfils) adminTabProfils.classList.remove('active');
       adminPanelBroadcast.hidden = false;
       adminPanelCollabMsgs.hidden = true;
       if (adminPanelGestion) adminPanelGestion.hidden = true;
+      if (adminPanelProfils) adminPanelProfils.hidden = true;
     });
     if (adminTabGestion) {
       adminTabGestion.addEventListener('click', () => {
@@ -3439,10 +3477,26 @@
         adminTabGestion.classList.add('active');
         adminTabCollabMsgs.classList.remove('active');
         adminTabBroadcast.classList.remove('active');
+        if (adminTabProfils) adminTabProfils.classList.remove('active');
         adminPanelGestion.hidden = false;
         adminPanelCollabMsgs.hidden = true;
         adminPanelBroadcast.hidden = true;
+        if (adminPanelProfils) adminPanelProfils.hidden = true;
         renderGestionCollabList();
+      });
+    }
+    if (adminTabProfils) {
+      adminTabProfils.addEventListener('click', () => {
+        if (!window.isAdminStaff) return;
+        adminTabProfils.classList.add('active');
+        adminTabCollabMsgs.classList.remove('active');
+        adminTabBroadcast.classList.remove('active');
+        if (adminTabGestion) adminTabGestion.classList.remove('active');
+        adminPanelProfils.hidden = false;
+        adminPanelCollabMsgs.hidden = true;
+        adminPanelBroadcast.hidden = true;
+        if (adminPanelGestion) adminPanelGestion.hidden = true;
+        renderProfilsCollabList();
       });
     }
   }
@@ -3837,6 +3891,13 @@
         badge.textContent = 'DÉSACTIVÉ';
         nameLine.appendChild(badge);
       }
+      if (c.partage && !c.alerteTraitee) {
+        const badgePartage = document.createElement('span');
+        badgePartage.className = 'admin-badge';
+        badgePartage.style.background = '#b3402a';
+        badgePartage.textContent = 'PARTAGÉ ?';
+        nameLine.appendChild(badgePartage);
+      }
       const detailLine = document.createElement('span');
       detailLine.className = 'a-email';
       const connexions = c.connexions || 0;
@@ -3961,12 +4022,148 @@
     });
   }
 
+  // ==================== ESPACE ADMINISTRATEUR : ALERTES CODES PARTAGÉS (utilisés par 2 personnes différentes) ====================
+  function formaterDateAlerte(timestamp) {
+    if (!timestamp) return 'date inconnue';
+    try {
+      return new Date(timestamp).toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  async function marquerAlerteTraitee(code) {
+    try {
+      await update(ref(rtdb, 'formationCodes/' + code), { alerteTraitee: true });
+    } catch (err) {
+      notifier('Erreur', "Impossible de mettre à jour cette alerte. Réessayez.");
+    }
+  }
+
+  function renderAlertesCodesList() {
+    if (!alertesCodesList) return;
+    alertesCodesList.innerHTML = '';
+    const codes = Object.keys(codesCache).filter(code => codesCache[code] && codesCache[code].partage);
+
+    let nonTraitees = 0;
+
+    if (codes.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucun partage de code détecté pour le moment.';
+      alertesCodesList.appendChild(p);
+      if (codesPartagesTabBadge) codesPartagesTabBadge.hidden = true;
+      return;
+    }
+
+    // Tri : alertes non traitées d'abord, puis par appareil le plus récent
+    codes.sort((a, b) => {
+      const ca = codesCache[a] || {}, cb = codesCache[b] || {};
+      if (!!ca.alerteTraitee !== !!cb.alerteTraitee) return ca.alerteTraitee ? 1 : -1;
+      const da = Math.max(0, ...Object.values(ca.appareils || {}).map(x => x.derniereFois || 0));
+      const db = Math.max(0, ...Object.values(cb.appareils || {}).map(x => x.derniereFois || 0));
+      return db - da;
+    });
+
+    codes.forEach((code) => {
+      const c = codesCache[code] || {};
+      const estActif = c.actif !== false;
+      const estTraitee = !!c.alerteTraitee;
+      if (!estTraitee) nonTraitees++;
+
+      const card = document.createElement('div');
+      card.className = 'admin-row';
+      card.style.flexDirection = 'column';
+      card.style.alignItems = 'flex-start';
+      card.style.gap = '8px';
+      if (!estTraitee) card.style.borderColor = '#b3402a';
+
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = (c.formation || '—') + (c.client ? ' · acheteur déclaré : ' + c.client : '');
+      if (!estActif) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = '#8a8378';
+        badge.textContent = 'CODE DÉSACTIVÉ';
+        nameLine.appendChild(badge);
+      } else if (!estTraitee) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = '#b3402a';
+        badge.textContent = 'NON TRAITÉE';
+        nameLine.appendChild(badge);
+      }
+      card.appendChild(nameLine);
+
+      const codeLine = document.createElement('span');
+      codeLine.className = 'a-email';
+      codeLine.innerHTML = 'Code : <span style="font-family:\'JetBrains Mono\',monospace;">' + code + '</span>';
+      card.appendChild(codeLine);
+
+      const appareils = c.appareils || {};
+      const appareilsTries = Object.values(appareils).sort((a, b) => (a.premiereFois || 0) - (b.premiereFois || 0));
+      appareilsTries.forEach((a, i) => {
+        const ligne = document.createElement('span');
+        ligne.className = 'a-email';
+        ligne.style.display = 'block';
+        const strong = document.createElement('strong');
+        strong.textContent = 'Personne ' + (i + 1) + ' : ';
+        ligne.appendChild(strong);
+        ligne.appendChild(document.createTextNode((a.nom && a.nom.trim() ? a.nom : 'Nom non renseigné') + ' — première utilisation le ' + formaterDateAlerte(a.premiereFois)));
+        card.appendChild(ligne);
+      });
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
+      btnGroup.style.marginTop = '4px';
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.type = 'button';
+      toggleBtn.className = 'admin-toggle-btn' + (estActif ? ' is-admin' : '');
+      toggleBtn.textContent = estActif ? 'Désactiver le code' : 'Réactiver le code';
+      toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
+      btnGroup.appendChild(toggleBtn);
+
+      if (!estTraitee) {
+        const traiteeBtn = document.createElement('button');
+        traiteeBtn.type = 'button';
+        traiteeBtn.className = 'admin-toggle-btn';
+        traiteeBtn.textContent = 'Marquer comme traité';
+        traiteeBtn.addEventListener('click', () => marquerAlerteTraitee(code));
+        btnGroup.appendChild(traiteeBtn);
+      }
+
+      card.appendChild(btnGroup);
+      alertesCodesList.appendChild(card);
+    });
+
+    if (codesPartagesTabBadge) {
+      codesPartagesTabBadge.hidden = nonTraitees === 0;
+      codesPartagesTabBadge.textContent = String(nonTraitees);
+    }
+  }
+
   function demarrerEcouteCodes() {
     if (unsubCodes) unsubCodes();
     unsubCodes = onValue(ref(rtdb, 'formationCodes'), (snap) => {
       codesCache = snap.val() || {};
       renderCodesList();
       renderUtilisateursList();
+      renderAlertesCodesList();
+
+      // Notification en temps réel dès qu'un code partagé (non encore traité) apparaît
+      Object.keys(codesCache).forEach((code) => {
+        const c = codesCache[code] || {};
+        if (!c.partage || c.alerteTraitee) return;
+        const nbAppareils = Object.keys(c.appareils || {}).length;
+        const cle = code + ':' + nbAppareils;
+        if (codesAlertesDejaNotifiees[cle]) return;
+        codesAlertesDejaNotifiees[cle] = true;
+        notifier('Code partagé détecté', 'Le code ' + code + ' (' + (c.formation || 'formation') + ') a été utilisé depuis un nouvel appareil.');
+      });
     });
   }
 
@@ -4418,6 +4615,77 @@
     });
   }
 
+  // ==================== ESPACE ADMINISTRATEUR : PROFIL DES COLLABORATEURS (infos d'inscription) ====================
+  function formaterDateInscription(timestamp) {
+    if (!timestamp) return '';
+    try {
+      return new Date(timestamp).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function renderProfilsCollabList() {
+    if (!profilsCollabList) return;
+    profilsCollabList.innerHTML = '';
+    const uids = Object.keys(collabUsersCache).filter(uid => !collabUsersCache[uid].supprime);
+
+    if (uids.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucun collaborateur inscrit pour le moment.';
+      profilsCollabList.appendChild(p);
+      return;
+    }
+
+    uids.sort((a, b) => (collabUsersCache[a].name || collabUsersCache[a].email || '').localeCompare(collabUsersCache[b].name || collabUsersCache[b].email || ''));
+
+    uids.forEach((uid) => {
+      const u = collabUsersCache[uid] || {};
+      const estActif = u.actif !== false;
+
+      const card = document.createElement('div');
+      card.className = 'admin-row';
+      card.style.flexDirection = 'column';
+      card.style.alignItems = 'flex-start';
+      card.style.gap = '6px';
+
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = u.name || 'Nom non renseigné';
+      if (!estActif) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.style.background = '#8a8378';
+        badge.textContent = 'DÉSACTIVÉ';
+        nameLine.appendChild(badge);
+      }
+      card.appendChild(nameLine);
+
+      const champs = [
+        ['E-mail', u.email],
+        ['Téléphone', u.telephone],
+        ['Activité professionnelle', u.travail],
+        ['Pays', u.pays],
+        ['Projet', u.projet],
+        ['Inscrit le', formaterDateInscription(u.createdAt)]
+      ];
+
+      champs.forEach(([label, valeur]) => {
+        const ligne = document.createElement('span');
+        ligne.className = 'a-email';
+        ligne.style.display = 'block';
+        const strong = document.createElement('strong');
+        strong.textContent = label + ' : ';
+        ligne.appendChild(strong);
+        ligne.appendChild(document.createTextNode(valeur && String(valeur).trim() ? valeur : 'Non renseigné'));
+        card.appendChild(ligne);
+      });
+
+      profilsCollabList.appendChild(card);
+    });
+  }
+
   async function basculerCollaborateurActif(uid, estActuellementActif) {
     try {
       await update(ref(rtdb, 'users/' + uid), { actif: !estActuellementActif });
@@ -4443,6 +4711,7 @@
       collabUsersCache = snap.val() || {};
       renderCollabList();
       if (adminPanelGestion && !adminPanelGestion.hidden) renderGestionCollabList();
+      if (adminPanelProfils && !adminPanelProfils.hidden) renderProfilsCollabList();
     });
     unsubCollabChatsList = onValue(ref(rtdb, 'collabChats'), (snap) => {
       collabChatsCache = snap.val() || {};
