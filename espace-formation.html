@@ -50,9 +50,26 @@
   .modules{
     background:var(--white); border:1px solid var(--line); border-radius:10px; padding:28px 30px; margin-bottom:24px;
   }
-  .modules h3{margin-top:0;}
-  .modules ol{margin:0; padding-left:22px;}
-  .modules li{margin-bottom:10px;}
+  .modules h3{margin-top:0; margin-bottom:6px;}
+  .modules ol{margin:0; padding-left:22px; list-style:none;}
+  .modules li{margin-bottom:0;}
+  .progress-track{
+    background:rgba(27,42,74,0.08); border-radius:20px; height:10px; overflow:hidden; margin:14px 0 22px;
+  }
+  .progress-fill{
+    background:var(--sage); height:100%; border-radius:20px; width:0%;
+    transition:width .35s ease;
+  }
+  .progress-label{font-size:.85rem; color:#5a5349; margin:0 0 4px; font-weight:600;}
+  .module-item{
+    display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);
+  }
+  .module-item:last-child{border-bottom:none;}
+  .module-item input[type="checkbox"]{
+    width:20px; height:20px; margin-top:1px; flex-shrink:0; accent-color:var(--sage); cursor:pointer;
+  }
+  .module-item label{cursor:pointer; line-height:1.4;}
+  .module-item.is-done label{color:#8a8378; text-decoration:line-through;}
   .placeholder-note{
     background:rgba(76,107,84,0.08); border:1px solid rgba(76,107,84,0.25); border-radius:8px;
     padding:14px 18px; font-size:.9rem; color:var(--sage);
@@ -82,6 +99,40 @@
     display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:6px; background:var(--clay);
     color:var(--white); text-decoration:none; font-weight:600; white-space:nowrap;
   }
+  .live-banner{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:rgba(76,107,84,0.1); border:1px solid rgba(76,107,84,0.35); border-radius:10px;
+    padding:16px 20px; margin-bottom:24px;
+  }
+  .live-banner .live-dot{
+    width:10px; height:10px; border-radius:50%; background:#c0392b; flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(192,57,43,.6); animation:live-pulse 1.8s infinite;
+  }
+  @keyframes live-pulse{
+    0%{box-shadow:0 0 0 0 rgba(192,57,43,.5);}
+    70%{box-shadow:0 0 0 10px rgba(192,57,43,0);}
+    100%{box-shadow:0 0 0 0 rgba(192,57,43,0);}
+  }
+  .live-banner p{margin:0; flex:1; min-width:200px; font-size:.92rem; color:var(--ink);}
+  .live-banner a.btn-live{
+    background:var(--sage); color:var(--white); text-decoration:none; font-weight:600;
+    padding:10px 18px; border-radius:6px; white-space:nowrap; font-size:.88rem;
+  }
+  .certificate-banner{
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    background:linear-gradient(135deg, rgba(217,142,61,.14), rgba(76,107,84,.1));
+    border:1px solid rgba(217,142,61,.4); border-radius:10px;
+    padding:20px 22px; margin-bottom:24px;
+  }
+  .certificate-banner .cert-icon{font-size:1.8rem; flex-shrink:0;}
+  .certificate-banner p{margin:0; flex:1; min-width:200px; font-size:.92rem; color:var(--ink);}
+  .certificate-banner button{
+    background:var(--clay); color:var(--white); border:none; cursor:pointer; font-weight:600;
+    padding:11px 20px; border-radius:6px; font-size:.88rem; white-space:nowrap;
+  }
+  .certificate-banner button:disabled{opacity:.6; cursor:wait;}
+  .certificate-banner.is-locked{background:rgba(27,42,74,0.05); border-color:var(--line);}
+  .certificate-banner.is-locked p{color:#8a8378;}
   .lede-cours{font-size:1.05rem; color:#5a5349; margin-bottom:32px;}
   .module-block{
     background:var(--white); border:1px solid var(--line); border-radius:10px; padding:30px 32px; margin-bottom:24px;
@@ -126,9 +177,10 @@
 <div id="gate" class="loading">Vérification de votre accès…</div>
 <div id="content" hidden></div>
 
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  import { getDatabase, ref, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import { FORMATIONS } from "./formations-data.js";
 
   const firebaseConfig = {
@@ -192,7 +244,7 @@
       + '</div>';
   }
 
-  function afficherFormation(nomFormation, codeData) {
+  function afficherFormation(nomFormation, codeData, code) {
     const data = FORMATIONS[nomFormation];
     gate.hidden = true;
     content.hidden = false;
@@ -208,7 +260,29 @@
       return;
     }
 
-    const modulesHtml = data.modules.map((m) => '<li>' + m + '</li>').join('');
+    const progression = (codeData && codeData.progression) || {};
+    const modulesHtml = data.modules.map((m, i) => {
+      const estFait = !!progression[i];
+      return '<li class="module-item' + (estFait ? ' is-done' : '') + '">'
+        + '<input type="checkbox" id="module-' + i + '" data-index="' + i + '"' + (estFait ? ' checked' : '') + '>'
+        + '<label for="module-' + i + '">' + m + '</label>'
+        + '</li>';
+    }).join('');
+    const nbTermines = data.modules.filter((m, i) => progression[i]).length;
+    const totalModules = data.modules.length;
+    const pourcentage = totalModules > 0 ? Math.round((nbTermines / totalModules) * 100) : 0;
+    const formationTerminee = totalModules > 0 && nbTermines === totalModules;
+
+    const certificatHtml = formationTerminee
+      ? '<div class="certificate-banner" id="certificateBanner">'
+        + '<span class="cert-icon">🎓</span>'
+        + '<p><strong>Formation terminée !</strong> Votre certificat de réussite est prêt.</p>'
+        + '<button type="button" id="btnTelechargerCertificat">⬇ Télécharger mon certificat</button>'
+        + '</div>'
+      : '<div class="certificate-banner is-locked">'
+        + '<span class="cert-icon">🔒</span>'
+        + '<p>Terminez les ' + totalModules + ' modules pour débloquer votre certificat de réussite.</p>'
+        + '</div>';
 
     const texteSupport = data.livre
       ? 'Le livre ' + data.livre
@@ -219,12 +293,15 @@
       + (data.pdfUrl ? '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>' : '')
       + '</div>';
 
+    const liveHtml = '<div id="liveBannerSlot"></div>';
+
     const corpsHtml = data.contenuComplet
       ? data.contenuComplet
       : '<p class="placeholder-note">Les supports complets (documents, exercices) de cette formation seront ajoutés ici au fur et à mesure de votre progression.</p>';
 
     content.innerHTML = ''
       + '<div class="wrap">'
+      + liveHtml
       + telechargementHtml
       + '<span class="eyebrow">Votre formation</span>'
       + '<h1>' + nomFormation + '</h1>'
@@ -235,10 +312,185 @@
       + '</dl>'
       + '<div class="modules">'
       + '<h3>Programme</h3>'
+      + '<p class="progress-label" id="progressLabel">' + nbTermines + ' / ' + totalModules + ' modules terminés (' + pourcentage + '%)</p>'
+      + '<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:' + pourcentage + '%;"></div></div>'
       + '<ol>' + modulesHtml + '</ol>'
       + '</div>'
+      + certificatHtml
       + corpsHtml
       + '</div>';
+
+    if (code) {
+      content.querySelectorAll('.module-item input[type="checkbox"]').forEach((cb) => {
+        cb.addEventListener('change', () => {
+          const index = cb.dataset.index;
+          const estCoche = cb.checked;
+          const li = cb.closest('.module-item');
+          li.classList.toggle('is-done', estCoche);
+
+          update(ref(rtdb, 'formationCodes/' + code + '/progression'), { [index]: estCoche }).catch(() => {});
+
+          const totalCoches = content.querySelectorAll('.module-item input[type="checkbox"]:checked').length;
+          const total = data.modules.length;
+          const pct = total > 0 ? Math.round((totalCoches / total) * 100) : 0;
+          const fill = document.getElementById('progressFill');
+          const label = document.getElementById('progressLabel');
+          if (fill) fill.style.width = pct + '%';
+          if (label) label.textContent = totalCoches + ' / ' + total + ' modules terminés (' + pct + '%)';
+
+          const certifSlot = document.querySelector('.certificate-banner');
+          if (certifSlot) {
+            if (pct === 100 && certifSlot.classList.contains('is-locked')) {
+              certifSlot.classList.remove('is-locked');
+              certifSlot.innerHTML = '<span class="cert-icon">🎓</span>'
+                + '<p><strong>Formation terminée !</strong> Votre certificat de réussite est prêt.</p>'
+                + '<button type="button" id="btnTelechargerCertificat">⬇ Télécharger mon certificat</button>';
+              document.getElementById('btnTelechargerCertificat').addEventListener('click', (e) => {
+                genererCertificat(e.currentTarget, nomFormation, codeData, code);
+              });
+            } else if (pct < 100 && !certifSlot.classList.contains('is-locked')) {
+              certifSlot.classList.add('is-locked');
+              certifSlot.innerHTML = '<span class="cert-icon">🔒</span>'
+                + '<p>Terminez les ' + total + ' modules pour débloquer votre certificat de réussite.</p>';
+            }
+          }
+        });
+      });
+    }
+
+    afficherBanniereSessionLive();
+
+    const btnCertificat = document.getElementById('btnTelechargerCertificat');
+    if (btnCertificat) {
+      btnCertificat.addEventListener('click', () => genererCertificat(btnCertificat, nomFormation, codeData, code));
+    }
+  }
+
+  function genererCodeVerification() {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sans caractères ambigus (0/O, 1/I…)
+    let id = '';
+    for (let i = 0; i < 8; i++) id += alphabet[Math.floor(Math.random() * alphabet.length)];
+    return 'SKK-' + id;
+  }
+
+  async function genererCertificat(btn, nomFormation, codeData, code) {
+    if (!window.PDFLib) {
+      alert('Le générateur de certificat est indisponible pour le moment.');
+      return;
+    }
+    btn.disabled = true;
+    const texteOriginal = btn.textContent;
+    btn.textContent = 'Préparation…';
+    try {
+      const nomParticipant = (codeData && codeData.client && codeData.client.trim()) ? codeData.client.trim() : 'Participant';
+
+      // Le code et la date de complétion sont générés une seule fois puis réutilisés à chaque nouveau téléchargement.
+      let certificat = codeData && codeData.certificat;
+      if (!certificat) {
+        certificat = { codeVerification: genererCodeVerification(), dateCompletion: Date.now() };
+        const maj = {};
+        maj['formationCodes/' + code + '/certificat'] = certificat;
+        // Index public (lecture seule) permettant de vérifier un certificat à partir de son code, sans exposer le code d'accès à la formation.
+        maj['certificats/' + certificat.codeVerification] = {
+          nom: nomParticipant,
+          formation: nomFormation,
+          dateCompletion: certificat.dateCompletion
+        };
+        await update(ref(rtdb), maj).catch(() => {});
+      }
+
+      const dateTexte = new Date(certificat.dateCompletion).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([841.89, 595.28]); // A4 paysage
+      const { width, height } = page.getSize();
+
+      const police = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const policeNormale = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const policeItalique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+
+      const couleurOr = rgb(0.85, 0.56, 0.24);
+      const couleurEncre = rgb(0.106, 0.165, 0.29);
+      const couleurGris = rgb(0.45, 0.44, 0.4);
+
+      // Bordure décorative
+      page.drawRectangle({ x: 24, y: 24, width: width - 48, height: height - 48, borderColor: couleurOr, borderWidth: 3 });
+      page.drawRectangle({ x: 34, y: 34, width: width - 68, height: height - 68, borderColor: couleurEncre, borderWidth: 1 });
+
+      const centrer = (texte, taille, fonte) => (width - fonte.widthOfTextAtSize(texte, taille)) / 2;
+
+      let y = height - 110;
+      let t = 'CERTIFICAT DE RÉUSSITE';
+      page.drawText(t, { x: centrer(t, 28, police), y, size: 28, font: police, color: couleurEncre });
+
+      y -= 50;
+      t = 'décerné à';
+      page.drawText(t, { x: centrer(t, 14, policeItalique), y, size: 14, font: policeItalique, color: couleurGris });
+
+      y -= 46;
+      t = nomParticipant;
+      const tailleNom = t.length > 28 ? 26 : 32;
+      page.drawText(t, { x: centrer(t, tailleNom, police), y, size: tailleNom, font: police, color: couleurOr });
+
+      y -= 44;
+      t = 'pour avoir terminé avec succès la formation';
+      page.drawText(t, { x: centrer(t, 13, policeNormale), y, size: 13, font: policeNormale, color: couleurEncre });
+
+      y -= 32;
+      t = '« ' + nomFormation + ' »';
+      const tailleFormation = t.length > 45 ? 16 : 19;
+      page.drawText(t, { x: centrer(t, tailleFormation, police), y, size: tailleFormation, font: police, color: couleurEncre });
+
+      y -= 40;
+      t = 'Le ' + dateTexte;
+      page.drawText(t, { x: centrer(t, 12, policeNormale), y, size: 12, font: policeNormale, color: couleurGris });
+
+      // Pied de page : signature + code de vérification
+      page.drawText('Solo Koumana Koulibaly', { x: 70, y: 78, size: 13, font: police, color: couleurEncre });
+      page.drawText('Linguiste — Designer & Formateur Digital', { x: 70, y: 62, size: 9.5, font: policeNormale, color: couleurGris });
+      page.drawLine({ start: { x: 70, y: 96 }, end: { x: 280, y: 96 }, thickness: 1, color: couleurGris });
+
+      const codeTexte = 'Code de vérification : ' + certificat.codeVerification;
+      page.drawText(codeTexte, { x: width - 70 - policeNormale.widthOfTextAtSize(codeTexte, 10), y: 78, size: 10, font: policeNormale, color: couleurGris });
+      const texteVerif = 'À vérifier sur verifier-certificat.html';
+      page.drawText(texteVerif, { x: width - 70 - policeNormale.widthOfTextAtSize(texteVerif, 9), y: 64, size: 9, font: policeNormale, color: couleurGris });
+
+      const octets = await pdfDoc.save();
+      const blob = new Blob([octets], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'certificat-' + nomFormation.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Une erreur est survenue lors de la génération du certificat. Réessayez.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = texteOriginal;
+    }
+  }
+
+  async function afficherBanniereSessionLive() {
+    const slot = document.getElementById('liveBannerSlot');
+    if (!slot) return;
+    try {
+      const snap = await get(ref(rtdb, 'liveSession'));
+      if (!snap.exists()) return;
+      const s = snap.val();
+      if (!s.date || s.date < Date.now()) return; // session passée ou incomplète : pas de bannière
+      const dateTexte = new Date(s.date).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+      slot.innerHTML = '<div class="live-banner">'
+        + '<span class="live-dot"></span>'
+        + '<p><strong>Session live à venir</strong> — ' + (s.sujet || 'Questions-réponses') + ', le ' + dateTexte + '</p>'
+        + '<a class="btn-live" href="' + s.lien + '" target="_blank" rel="noopener">Rejoindre →</a>'
+        + '</div>';
+    } catch (err) {
+      // pas de bannière si la lecture échoue, sans bloquer l'affichage de la formation
+    }
   }
 
   let dejaAffiche = false;
@@ -278,7 +530,7 @@
       }
       if (!dejaAffiche) {
         dejaAffiche = true;
-        afficherFormation(data.formation || session.formation, data);
+        afficherFormation(data.formation || session.formation, data, session.code);
       }
     }, () => {
       afficherVerrou("Impossible de vérifier votre accès pour le moment");

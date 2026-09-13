@@ -1969,6 +1969,8 @@
         <button type="button" class="collab-tab" id="spaceTabDemandesDevisOffres">Demandes de devis (offres) <span class="chat-badge" id="demandesDevisOffresTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabCodesInactifs">Codes à relancer <span class="chat-badge" id="codesInactifsTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabSessionLive">Session live</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2101,6 +2103,42 @@
           <div class="thread-list" id="alertesCodesList">
             <p class="forum-empty" id="alertesCodesListEmpty">Aucun partage de code détecté pour le moment.</p>
           </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelCodesInactifs" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Codes actifs générés il y a un moment mais jamais utilisés — l'occasion de relancer le client avant qu'il n'oublie son achat.</p>
+          <label style="display:flex; align-items:center; gap:8px; margin:0 0 16px; font-size:.9rem;">
+            Alerter après
+            <input type="number" id="seuilJoursInactifs" min="1" value="7" style="width:64px; padding:6px 8px; border:1px solid var(--line); border-radius:4px;">
+            jour(s) sans utilisation
+          </label>
+          <div class="thread-list" id="codesInactifsList">
+            <p class="forum-empty" id="codesInactifsListEmpty">Aucun code à relancer pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelSessionLive" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 10px;">Programmez une session live ou Q&amp;A. Tant qu'elle est à venir, une bannière l'annonce automatiquement dans l'espace formation de chaque apprenant. Elle disparaît toute seule une fois la date passée.</p>
+          <form class="modal-form" id="sessionLiveForm" novalidate style="max-width:520px; margin:0 0 20px;">
+            <label for="sessionLiveSujet" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Sujet de la session</label>
+            <input type="text" id="sessionLiveSujet" placeholder="Ex. Q&amp;A formations Bureautique" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); margin-bottom:14px;">
+
+            <label for="sessionLiveDate" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Date et heure</label>
+            <input type="datetime-local" id="sessionLiveDate" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); margin-bottom:14px;">
+
+            <label for="sessionLiveLien" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Lien de connexion (Meet, WhatsApp…)</label>
+            <input type="url" id="sessionLiveLien" placeholder="https://meet.google.com/…" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); margin-bottom:14px;">
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="submit" class="admin-toggle-btn is-admin">Programmer / mettre à jour</button>
+              <button type="button" id="sessionLiveSupprimerBtn" class="admin-toggle-btn">Supprimer la session</button>
+            </div>
+          </form>
+          <p class="section-lede" id="sessionLiveStatut" style="margin:0;">Aucune session programmée pour le moment.</p>
         </div>
       </div>
     </div>
@@ -3035,6 +3073,19 @@
   const alertesCodesList = document.getElementById('alertesCodesList');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
+  const spaceTabCodesInactifs = document.getElementById('spaceTabCodesInactifs');
+  const spacePanelCodesInactifs = document.getElementById('spacePanelCodesInactifs');
+  const codesInactifsList = document.getElementById('codesInactifsList');
+  const codesInactifsTabBadge = document.getElementById('codesInactifsTabBadge');
+  const seuilJoursInactifs = document.getElementById('seuilJoursInactifs');
+  const spaceTabSessionLive = document.getElementById('spaceTabSessionLive');
+  const spacePanelSessionLive = document.getElementById('spacePanelSessionLive');
+  const sessionLiveForm = document.getElementById('sessionLiveForm');
+  const sessionLiveSujet = document.getElementById('sessionLiveSujet');
+  const sessionLiveDate = document.getElementById('sessionLiveDate');
+  const sessionLiveLien = document.getElementById('sessionLiveLien');
+  const sessionLiveSupprimerBtn = document.getElementById('sessionLiveSupprimerBtn');
+  const sessionLiveStatut = document.getElementById('sessionLiveStatut');
   const newsletterList = document.getElementById('newsletterList');
   const newsletterListEmpty = document.getElementById('newsletterListEmpty');
   let unsubNewsletterList = null;
@@ -3344,6 +3395,7 @@
         demarrerEcouteCollabChats();
         demarrerEcouteBroadcastsAdmin();
         demarrerEcouteCodes();
+        demarrerEcouteSessionLive();
         demarrerEcouteDemandes();
         demarrerEcouteDemandesFormulaires();
         demarrerEcouteDemandesDevisOffres();
@@ -3416,6 +3468,8 @@
     if (spaceTabDemandesDevisOffres) spaceTabDemandesDevisOffres.classList.toggle('active', nom === 'demandesDevisOffres');
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
+    if (spaceTabCodesInactifs) spaceTabCodesInactifs.classList.toggle('active', nom === 'codesInactifs');
+    if (spaceTabSessionLive) spaceTabSessionLive.classList.toggle('active', nom === 'sessionLive');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3425,6 +3479,8 @@
     if (spacePanelDemandesDevisOffres) spacePanelDemandesDevisOffres.hidden = nom !== 'demandesDevisOffres';
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
+    if (spacePanelCodesInactifs) spacePanelCodesInactifs.hidden = nom !== 'codesInactifs';
+    if (spacePanelSessionLive) spacePanelSessionLive.hidden = nom !== 'sessionLive';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3436,6 +3492,15 @@
   }
   if (spaceTabAlertesCodes) {
     spaceTabAlertesCodes.addEventListener('click', () => activerOngletEspaceAdmin('alertesCodes'));
+  }
+  if (spaceTabCodesInactifs) {
+    spaceTabCodesInactifs.addEventListener('click', () => activerOngletEspaceAdmin('codesInactifs'));
+  }
+  if (seuilJoursInactifs) {
+    seuilJoursInactifs.addEventListener('input', () => renderCodesInactifsList());
+  }
+  if (spaceTabSessionLive) {
+    spaceTabSessionLive.addEventListener('click', () => activerOngletEspaceAdmin('sessionLive'));
   }
   if (spaceTabDemandes) {
     spaceTabDemandes.addEventListener('click', () => activerOngletEspaceAdmin('demandes'));
@@ -3927,6 +3992,13 @@
       });
       btnGroup.appendChild(copyBtn);
 
+      const exportBtn = document.createElement('button');
+      exportBtn.type = 'button';
+      exportBtn.className = 'admin-toggle-btn';
+      exportBtn.textContent = '⬇ Historique';
+      exportBtn.addEventListener('click', () => exporterHistoriqueCode(code, c));
+      btnGroup.appendChild(exportBtn);
+
       const toggleBtn = document.createElement('button');
       toggleBtn.type = 'button';
       toggleBtn.className = 'admin-toggle-btn' + (estActif ? ' is-admin' : '');
@@ -4043,6 +4115,58 @@
     }
   }
 
+  // Exporte l'historique complet des connexions d'un code en CSV (utile en cas de litige).
+  async function exporterHistoriqueCode(code, c) {
+    try {
+      const snap = await get(ref(rtdb, 'formationCodes/' + code + '/historique'));
+      const entrees = snap.exists() ? Object.values(snap.val()) : [];
+
+      let lignes = [['Date', 'Heure', 'Nom renseigné', 'Identifiant appareil']];
+      if (entrees.length > 0) {
+        entrees.sort((a, b) => (a.date || 0) - (b.date || 0));
+        entrees.forEach((e) => {
+          const d = e.date ? new Date(e.date) : null;
+          lignes.push([
+            d ? d.toLocaleDateString('fr-FR') : '',
+            d ? d.toLocaleTimeString('fr-FR') : '',
+            e.nom || 'Non renseigné',
+            e.deviceId || ''
+          ]);
+        });
+      } else {
+        // Repli pour les codes créés avant la mise en place du journal détaillé : on exporte au moins les appareils connus.
+        const appareils = (c && c.appareils) || {};
+        Object.entries(appareils).forEach(([deviceId, a]) => {
+          const d = a.premiereFois ? new Date(a.premiereFois) : null;
+          lignes.push([
+            d ? d.toLocaleDateString('fr-FR') : '',
+            d ? d.toLocaleTimeString('fr-FR') : '',
+            a.nom || 'Non renseigné',
+            deviceId
+          ]);
+        });
+      }
+
+      if (lignes.length === 1) {
+        notifier('Aucun historique', "Ce code n'a encore jamais été utilisé.");
+        return;
+      }
+
+      const csv = lignes.map(l => l.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'historique-' + code + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      notifier('Erreur', "Impossible d'exporter l'historique de ce code.");
+    }
+  }
+
   function renderAlertesCodesList() {
     if (!alertesCodesList) return;
     alertesCodesList.innerHTML = '';
@@ -4130,6 +4254,13 @@
       toggleBtn.addEventListener('click', () => basculerCodeActif(code, estActif));
       btnGroup.appendChild(toggleBtn);
 
+      const exportBtn = document.createElement('button');
+      exportBtn.type = 'button';
+      exportBtn.className = 'admin-toggle-btn';
+      exportBtn.textContent = '⬇ Historique';
+      exportBtn.addEventListener('click', () => exporterHistoriqueCode(code, c));
+      btnGroup.appendChild(exportBtn);
+
       if (!estTraitee) {
         const traiteeBtn = document.createElement('button');
         traiteeBtn.type = 'button';
@@ -4149,6 +4280,142 @@
     }
   }
 
+  // ==================== ESPACE ADMINISTRATEUR : CODES JAMAIS UTILISÉS (relance client) ====================
+  function renderCodesInactifsList() {
+    if (!codesInactifsList) return;
+    const seuilJours = Math.max(1, parseInt((seuilJoursInactifs && seuilJoursInactifs.value) || '7', 10) || 7);
+    const seuilMs = seuilJours * 24 * 60 * 60 * 1000;
+    const maintenant = Date.now();
+
+    const codes = Object.keys(codesCache).filter((code) => {
+      const c = codesCache[code] || {};
+      if (c.actif === false) return false;
+      if (c.connexions) return false;
+      if (!c.creeLe) return false;
+      return (maintenant - c.creeLe) >= seuilMs;
+    });
+
+    codesInactifsList.innerHTML = '';
+
+    if (codes.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.textContent = 'Aucun code à relancer pour le moment.';
+      codesInactifsList.appendChild(p);
+      if (codesInactifsTabBadge) codesInactifsTabBadge.hidden = true;
+      return;
+    }
+
+    codes.sort((a, b) => (codesCache[a].creeLe || 0) - (codesCache[b].creeLe || 0));
+
+    codes.forEach((code) => {
+      const c = codesCache[code] || {};
+      const joursEcoules = Math.floor((maintenant - c.creeLe) / (24 * 60 * 60 * 1000));
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = code;
+      const badge = document.createElement('span');
+      badge.className = 'admin-badge';
+      badge.style.background = '#b3402a';
+      badge.textContent = 'JAMAIS UTILISÉ · ' + joursEcoules + ' j';
+      nameLine.appendChild(badge);
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      detailLine.textContent = (c.formation || '—') + (c.client ? ' · ' + c.client : ' · Client non renseigné') + ' · créé le ' + formaterDateAlerte(c.creeLe);
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '8px';
+      btnGroup.style.flexWrap = 'wrap';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'admin-toggle-btn';
+      copyBtn.textContent = 'Copier le code';
+      copyBtn.addEventListener('click', () => {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(code).then(() => notifier('Copié', 'Le code ' + code + ' a été copié.')).catch(() => {});
+        }
+      });
+      btnGroup.appendChild(copyBtn);
+
+      row.appendChild(btnGroup);
+      codesInactifsList.appendChild(row);
+    });
+
+    if (codesInactifsTabBadge) {
+      codesInactifsTabBadge.hidden = codes.length === 0;
+      codesInactifsTabBadge.textContent = String(codes.length);
+    }
+  }
+
+  // ==================== ESPACE ADMINISTRATEUR : SESSION LIVE / Q&A ====================
+  function demarrerEcouteSessionLive() {
+    onValue(ref(rtdb, 'liveSession'), (snap) => {
+      if (!snap.exists()) {
+        if (sessionLiveStatut) sessionLiveStatut.textContent = 'Aucune session programmée pour le moment.';
+        return;
+      }
+      const s = snap.val();
+      if (sessionLiveSujet && document.activeElement !== sessionLiveSujet) sessionLiveSujet.value = s.sujet || '';
+      if (sessionLiveLien && document.activeElement !== sessionLiveLien) sessionLiveLien.value = s.lien || '';
+      if (sessionLiveDate && document.activeElement !== sessionLiveDate && s.date) {
+        const d = new Date(s.date);
+        const pad = (n) => String(n).padStart(2, '0');
+        sessionLiveDate.value = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+      }
+      if (sessionLiveStatut) {
+        const estPassee = s.date && s.date < Date.now();
+        sessionLiveStatut.textContent = (estPassee ? '⚠️ Session passée, plus affichée sur le site : ' : '✅ Actuellement annoncée sur le site : ')
+          + (s.sujet || '') + ' — ' + (s.date ? formaterDateAlerte(s.date) : '');
+      }
+    });
+  }
+
+  if (sessionLiveForm) {
+    sessionLiveForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const sujet = sessionLiveSujet.value.trim();
+      const lien = sessionLiveLien.value.trim();
+      const dateVal = sessionLiveDate.value;
+      if (!sujet || !lien || !dateVal) return;
+      try {
+        await set(ref(rtdb, 'liveSession'), {
+          sujet: sujet,
+          lien: lien,
+          date: new Date(dateVal).getTime()
+        });
+        notifier('Session programmée', 'La bannière apparaîtra dans l\'espace formation jusqu\'à la date indiquée.');
+      } catch (err) {
+        notifier('Erreur', "Impossible d'enregistrer la session. Réessayez.");
+      }
+    });
+  }
+
+  if (sessionLiveSupprimerBtn) {
+    sessionLiveSupprimerBtn.addEventListener('click', async () => {
+      try {
+        await remove(ref(rtdb, 'liveSession'));
+        sessionLiveForm.reset();
+        notifier('Session supprimée', "La bannière n'apparaît plus sur le site.");
+      } catch (err) {
+        notifier('Erreur', 'Impossible de supprimer la session.');
+      }
+    });
+  }
+
   function demarrerEcouteCodes() {
     if (unsubCodes) unsubCodes();
     unsubCodes = onValue(ref(rtdb, 'formationCodes'), (snap) => {
@@ -4156,6 +4423,7 @@
       renderCodesList();
       renderUtilisateursList();
       renderAlertesCodesList();
+      renderCodesInactifsList();
 
       // Notification en temps réel dès qu'un code partagé (non encore traité) apparaît
       Object.keys(codesCache).forEach((code) => {

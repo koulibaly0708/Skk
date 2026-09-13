@@ -97,7 +97,7 @@
 
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  import { getDatabase, ref, get, update, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
@@ -184,6 +184,12 @@
       // Un seul appareil actif à la fois : celui-ci devient l'appareil actif, l'ancien sera déconnecté.
       maj['formationCodes/' + code + '/appareilActif'] = deviceId;
       update(ref(rtdb), maj).catch(() => {});
+      // Historique complet : une entrée par connexion, conservée pour export en cas de litige.
+      push(ref(rtdb, 'formationCodes/' + code + '/historique'), {
+        deviceId: deviceId,
+        nom: nomVal || null,
+        date: Date.now()
+      }).catch(() => {});
       window.location.href = 'espace-formation.html';
     } catch (err) {
       errorMsg.textContent = "Une erreur est survenue. Vérifiez votre connexion et réessayez.";
