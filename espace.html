@@ -2164,6 +2164,7 @@
     <div class="forum-layout" id="adminPanelProfils" hidden>
       <div class="forum-panel" style="width:100%;">
         <p class="section-lede" style="margin:0 0 10px;">Toutes les informations saisies par chaque collaborateur lors de son inscription.</p>
+        <button type="button" class="admin-toggle-btn" id="syncPublicCountBtn" style="margin-bottom:14px;">🔄 Synchroniser le compteur public affiché sur le site</button>
         <div class="thread-list" id="profilsCollabList">
           <p class="forum-empty" id="profilsCollabListEmpty">Aucun collaborateur inscrit pour le moment.</p>
         </div>
@@ -2907,7 +2908,7 @@
     signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
-    getDatabase, ref, push, set, update, remove, onValue, get,
+    getDatabase, ref, push, set, update, remove, onValue, get, increment,
     query as rtdbQuery, orderByChild, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
@@ -3196,6 +3197,8 @@
             projet: projetVal,
             createdAt: rtdbServerTimestamp()
           }).catch(() => {});
+          // Compteur public affiché sur la page d'accueil : jamais les données personnelles, juste le total.
+          update(ref(rtdb), { 'publicStats/collaborateurs': increment(1) }).catch(() => {});
         } else {
           const cred = await signInWithEmailAndPassword(auth, emailVal, passVal);
 
@@ -4683,6 +4686,19 @@
       });
 
       profilsCollabList.appendChild(card);
+    });
+  }
+
+  const syncPublicCountBtn = document.getElementById('syncPublicCountBtn');
+  if (syncPublicCountBtn) {
+    syncPublicCountBtn.addEventListener('click', async () => {
+      const total = Object.keys(collabUsersCache).filter(uid => !collabUsersCache[uid].supprime).length;
+      try {
+        await set(ref(rtdb, 'publicStats/collaborateurs'), total);
+        notifier('Compteur synchronisé', 'Le site affiche maintenant ' + total + ' collaborateur(s) inscrit(s).');
+      } catch (err) {
+        notifier('Erreur', "Impossible de synchroniser le compteur. Vérifiez les règles Firebase pour le chemin publicStats.");
+      }
     });
   }
 

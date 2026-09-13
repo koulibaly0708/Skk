@@ -67,6 +67,12 @@
   }
   .loading{padding:80px 28px; text-align:center; color:#8a8378;}
 
+  /* Protection dissuasive du contenu : pas de sélection de texte ni de glisser-déposer d'image */
+  #content.is-formation{
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  }
+  #content.is-formation img{ -webkit-user-drag:none; user-drag:none; pointer-events:none; }
+
   .download-bar{
     display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
     background:var(--white); border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin-bottom:28px;
@@ -76,6 +82,7 @@
     display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:6px; background:var(--clay);
     color:var(--white); text-decoration:none; font-weight:600; white-space:nowrap;
   }
+  .download-bar a.btn-download.is-loading{opacity:.65; cursor:wait; pointer-events:none;}
   .lede-cours{font-size:1.05rem; color:#5a5349; margin-bottom:32px;}
   .module-block{
     background:var(--white); border:1px solid var(--line); border-radius:10px; padding:30px 32px; margin-bottom:24px;
@@ -120,9 +127,10 @@
 <div id="gate" class="loading">Vérification de votre accès…</div>
 <div id="content" hidden></div>
 
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import { FORMATIONS } from "./formations-data.js";
 
   const firebaseConfig = {
@@ -143,15 +151,97 @@
   const content = document.getElementById('content');
   const logoutBtn = document.getElementById('logoutBtn');
 
+  // Protection dissuasive du contenu de formation : bloque le clic droit, la copie/coupe,
+  // le glisser-déposer d'images et quelques raccourcis clavier courants. Ceci décourage la
+  // copie occasionnelle mais n'empêche pas une personne déterminée (capture d'écran, etc.).
+  content.addEventListener('contextmenu', (e) => { if (content.classList.contains('is-formation')) e.preventDefault(); });
+  content.addEventListener('copy', (e) => { if (content.classList.contains('is-formation')) e.preventDefault(); });
+  content.addEventListener('cut', (e) => { if (content.classList.contains('is-formation')) e.preventDefault(); });
+  content.addEventListener('dragstart', (e) => { if (content.classList.contains('is-formation')) e.preventDefault(); });
+  document.addEventListener('keydown', (e) => {
+    if (!content || !content.classList.contains('is-formation')) return;
+    const touche = (e.key || '').toLowerCase();
+    const combinaisonBloquee = (e.ctrlKey || e.metaKey) && ['c', 'x', 'u', 's', 'p'].includes(touche);
+    if (combinaisonBloquee) e.preventDefault();
+  });
+
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem('skk_formation_session');
     window.location.href = 'login-formation.html';
   });
 
+  // Même identifiant d'appareil persistant que sur la page de connexion.
+  function obtenirIdAppareil() {
+    let id = localStorage.getItem('skk_device_id');
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('dev-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+      localStorage.setItem('skk_device_id', id);
+    }
+    return id;
+  }
+
+  // Génère une copie du PDF avec le nom de l'acheteur en filigrane sur chaque page.
+  // Retourne null en cas d'échec (PDF non accessible en CORS, etc.) pour permettre un repli sur le lien d'origine.
+  async function creerPdfAvecFiligrane(pdfUrl, texteFiligrane) {
+    if (!window.PDFLib) return null;
+    try {
+      const { PDFDocument, rgb, degrees, StandardFonts } = window.PDFLib;
+      const octets = await fetch(pdfUrl).then((r) => {
+        if (!r.ok) throw new Error('pdf inaccessible');
+        return r.arrayBuffer();
+      });
+      const pdfDoc = await PDFDocument.load(octets);
+      const police = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const texte = texteFiligrane || 'Copie personnelle';
+      pdfDoc.getPages().forEach((page) => {
+        const { width, height } = page.getSize();
+        page.drawText(texte, {
+          x: width / 2 - (texte.length * 4.2),
+          y: height / 2,
+          size: 22,
+          font: police,
+          color: rgb(0.82, 0.82, 0.82),
+          rotate: degrees(35),
+          opacity: 0.45
+        });
+        page.drawText(texte, {
+          x: 24,
+          y: 18,
+          size: 8,
+          font: police,
+          color: rgb(0.6, 0.6, 0.6),
+          opacity: 0.7
+        });
+      });
+      const octetsFinaux = await pdfDoc.save();
+      const blob = new Blob([octetsFinaux], { type: 'application/pdf' });
+      return URL.createObjectURL(blob);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async function preparerBoutonTelechargement(pdfUrl, texteFiligrane) {
+    const btn = document.getElementById('btnTelechargerPdf');
+    if (!btn) return;
+    const urlFiligranee = await creerPdfAvecFiligrane(pdfUrl, texteFiligrane);
+    if (urlFiligranee) {
+      btn.href = urlFiligranee;
+      btn.setAttribute('download', 'formation.pdf');
+    } else {
+      // Repli : lien d'origine si la génération du filigrane échoue (ex. PDF hébergé sans CORS).
+      btn.href = pdfUrl;
+      btn.setAttribute('download', '');
+    }
+    btn.textContent = '⬇ Télécharger le PDF';
+    btn.classList.remove('is-loading');
+  }
+
   function afficherVerrou(message) {
     gate.innerHTML = '';
     gate.hidden = true;
     content.hidden = false;
+    content.classList.remove('is-formation');
     content.innerHTML = ''
       + '<div class="locked">'
       + '<span class="eyebrow">Accès restreint</span>'
@@ -161,10 +251,11 @@
       + '</div>';
   }
 
-  function afficherFormation(nomFormation) {
+  function afficherFormation(nomFormation, codeData) {
     const data = FORMATIONS[nomFormation];
     gate.hidden = true;
     content.hidden = false;
+    content.classList.add('is-formation');
 
     if (!data) {
       content.innerHTML = ''
@@ -184,7 +275,7 @@
 
     const telechargementHtml = '<div class="download-bar">'
       + '<p>' + texteSupport + '</p>'
-      + (data.pdfUrl ? '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>' : '')
+      + (data.pdfUrl ? '<a class="btn-download is-loading" id="btnTelechargerPdf" href="#">⬇ Préparation de votre PDF…</a>' : '')
       + '</div>';
 
     const corpsHtml = data.contenuComplet
@@ -207,7 +298,14 @@
       + '</div>'
       + corpsHtml
       + '</div>';
+
+    if (data.pdfUrl) {
+      const nomAcheteur = (codeData && codeData.client && codeData.client.trim()) ? codeData.client.trim() : 'Copie personnelle';
+      preparerBoutonTelechargement(data.pdfUrl, nomAcheteur);
+    }
   }
+
+  let dejaAffiche = false;
 
   async function verifierAcces() {
     const sessionBrute = localStorage.getItem('skk_formation_session');
@@ -227,17 +325,28 @@
       afficherVerrou("Votre session n'est plus valide");
       return;
     }
-    try {
-      const snap = await get(ref(rtdb, 'formationCodes/' + session.code));
+    const deviceId = obtenirIdAppareil();
+
+    onValue(ref(rtdb, 'formationCodes/' + session.code), (snap) => {
       if (!snap.exists() || snap.val().actif === false) {
         localStorage.removeItem('skk_formation_session');
         afficherVerrou("Ce code n'est plus actif");
         return;
       }
-      afficherFormation(snap.val().formation || session.formation);
-    } catch (err) {
+      const data = snap.val();
+      // Un seul appareil actif à la fois : si un autre appareil a utilisé ce code depuis, cette session est fermée.
+      if (data.appareilActif && data.appareilActif !== deviceId) {
+        localStorage.removeItem('skk_formation_session');
+        afficherVerrou("Votre session a été fermée car ce code a été utilisé depuis un autre appareil");
+        return;
+      }
+      if (!dejaAffiche) {
+        dejaAffiche = true;
+        afficherFormation(data.formation || session.formation, data);
+      }
+    }, () => {
       afficherVerrou("Impossible de vérifier votre accès pour le moment");
-    }
+    });
   }
 
   verifierAcces();

@@ -181,6 +181,8 @@
         maj['formationCodes/' + code + '/partage'] = true;
         maj['formationCodes/' + code + '/alerteTraitee'] = false;
       }
+      // Un seul appareil actif à la fois : celui-ci devient l'appareil actif, l'ancien sera déconnecté.
+      maj['formationCodes/' + code + '/appareilActif'] = deviceId;
       update(ref(rtdb), maj).catch(() => {});
       window.location.href = 'espace-formation.html';
     } catch (err) {
