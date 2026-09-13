@@ -272,17 +272,20 @@
     const totalModules = data.modules.length;
     const pourcentage = totalModules > 0 ? Math.round((nbTermines / totalModules) * 100) : 0;
     const formationTerminee = totalModules > 0 && nbTermines === totalModules;
+    const estLivre = !!(data && data.livre);
 
-    const certificatHtml = formationTerminee
-      ? '<div class="certificate-banner" id="certificateBanner">'
-        + '<span class="cert-icon">🎓</span>'
-        + '<p><strong>Formation terminée !</strong> Votre certificat de réussite est prêt.</p>'
-        + '<button type="button" id="btnTelechargerCertificat">⬇ Télécharger mon certificat</button>'
-        + '</div>'
-      : '<div class="certificate-banner is-locked">'
-        + '<span class="cert-icon">🔒</span>'
-        + '<p>Terminez les ' + totalModules + ' modules pour débloquer votre certificat de réussite.</p>'
-        + '</div>';
+    const certificatHtml = estLivre
+      ? ''
+      : (formationTerminee
+        ? '<div class="certificate-banner" id="certificateBanner">'
+          + '<span class="cert-icon">🎓</span>'
+          + '<p><strong>Formation terminée !</strong> Votre certificat de réussite est prêt.</p>'
+          + '<button type="button" id="btnTelechargerCertificat">⬇ Télécharger mon certificat</button>'
+          + '</div>'
+        : '<div class="certificate-banner is-locked">'
+          + '<span class="cert-icon">🔒</span>'
+          + '<p>Terminez les ' + totalModules + ' modules pour débloquer votre certificat de réussite.</p>'
+          + '</div>');
 
     const texteSupport = data.livre
       ? 'Le livre ' + data.livre
@@ -312,8 +315,8 @@
       + '</dl>'
       + '<div class="modules">'
       + '<h3>Programme</h3>'
-      + '<p class="progress-label" id="progressLabel">' + nbTermines + ' / ' + totalModules + ' modules terminés (' + pourcentage + '%)</p>'
-      + '<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:' + pourcentage + '%;"></div></div>'
+      + (estLivre ? '' : '<p class="progress-label" id="progressLabel">' + nbTermines + ' / ' + totalModules + ' modules terminés (' + pourcentage + '%)</p>'
+      + '<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:' + pourcentage + '%;"></div></div>')
       + '<ol>' + modulesHtml + '</ol>'
       + '</div>'
       + certificatHtml
@@ -453,7 +456,7 @@
 
       const codeTexte = 'Code de vérification : ' + certificat.codeVerification;
       page.drawText(codeTexte, { x: width - 70 - policeNormale.widthOfTextAtSize(codeTexte, 10), y: 78, size: 10, font: policeNormale, color: couleurGris });
-      const texteVerif = 'À vérifier sur verifier-certificat.html';
+      const texteVerif = 'Vérifiable via l\'Espace Collaborateur / Administrateur';
       page.drawText(texteVerif, { x: width - 70 - policeNormale.widthOfTextAtSize(texteVerif, 9), y: 64, size: 9, font: policeNormale, color: couleurGris });
 
       const octets = await pdfDoc.save();

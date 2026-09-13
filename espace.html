@@ -511,6 +511,22 @@
     font-family:'Work Sans',sans-serif; font-size:.95rem; color:var(--charcoal);
   }
   .forum-empty{color:#8a8378; font-size:.92rem; padding:18px 0;}
+  .cert-verif-form{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px;}
+  .cert-verif-form input[type="text"]{
+    flex:1; min-width:220px; padding:13px 16px; border-radius:6px; border:1.5px solid var(--line); font-size:1.05rem;
+    font-family:'JetBrains Mono',monospace; letter-spacing:.06em; text-transform:uppercase; text-align:center;
+    background:var(--paper); color:var(--ink);
+  }
+  .cert-verif-form input[type="text"]:focus{outline:2.5px solid var(--clay); outline-offset:1px; border-color:var(--clay);}
+  .cert-verif-result{margin-top:20px; display:none;}
+  .cert-verif-result.show{display:block;}
+  .cert-verif-ok{background:rgba(76,107,84,0.1); border:1px solid rgba(76,107,84,0.35); border-radius:8px; padding:18px 20px;}
+  .cert-verif-ok .tag{display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--sage); font-size:.9rem; margin-bottom:10px;}
+  .cert-verif-ok dl{margin:0;}
+  .cert-verif-ok dt{font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color:#8a8378; margin-top:10px;}
+  .cert-verif-ok dt:first-child{margin-top:0;}
+  .cert-verif-ok dd{margin:2px 0 0; font-weight:600; color:var(--ink); font-size:1.02rem;}
+  .cert-verif-ko{background:rgba(179,64,42,0.08); border:1px solid rgba(179,64,42,0.25); border-radius:8px; padding:16px 18px; color:#b3402a; font-size:.92rem;}
   .thread-list{margin-top:18px; display:flex; flex-direction:column; gap:2px;}
   .thread-item{
     display:flex; justify-content:space-between; align-items:center; gap:14px;
@@ -1956,6 +1972,16 @@
         </form>
         <span class="modal-error" id="errMemberChat">Merci d'écrire un message.</span>
       </div>
+
+      <div class="forum-panel" style="margin-top:24px;">
+        <h3 style="margin-top:0;">Vérifier un certificat</h3>
+        <p class="section-lede" style="margin:0 0 16px;">Entrez le code de vérification inscrit en bas d'un certificat de réussite pour confirmer son authenticité.</p>
+        <form class="cert-verif-form" id="memberVerifCertForm" novalidate>
+          <input type="text" id="memberVerifCertInput" placeholder="EX. SKK-7K3P9QRT" maxlength="20" autocomplete="off" required>
+          <button type="submit" class="btn btn-primary" id="memberVerifCertBtn">Vérifier</button>
+        </form>
+        <div class="cert-verif-result" id="memberVerifCertResult"></div>
+      </div>
     </div>
 
     <div id="collabAdminZone" hidden>
@@ -1969,6 +1995,7 @@
         <button type="button" class="collab-tab" id="spaceTabDemandesDevisOffres">Demandes de devis (offres) <span class="chat-badge" id="demandesDevisOffresTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
+        <button type="button" class="collab-tab" id="spaceTabVerifCert">Vérifier un certificat</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2101,6 +2128,17 @@
           <div class="thread-list" id="alertesCodesList">
             <p class="forum-empty" id="alertesCodesListEmpty">Aucun partage de code détecté pour le moment.</p>
           </div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelVerifCert" hidden>
+        <div class="forum-panel" style="width:100%; max-width:520px;">
+          <p class="section-lede" style="margin:0 0 16px;">Entrez le code de vérification inscrit en bas d'un certificat de réussite pour confirmer son authenticité.</p>
+          <form class="cert-verif-form" id="adminVerifCertForm" novalidate>
+            <input type="text" id="adminVerifCertInput" placeholder="EX. SKK-7K3P9QRT" maxlength="20" autocomplete="off" required>
+            <button type="submit" class="btn btn-primary" id="adminVerifCertBtn">Vérifier</button>
+          </form>
+          <div class="cert-verif-result" id="adminVerifCertResult"></div>
         </div>
       </div>
     </div>
@@ -3032,6 +3070,8 @@
   const spaceTabAlertesCodes = document.getElementById('spaceTabAlertesCodes');
   const spacePanelAlertesCodes = document.getElementById('spacePanelAlertesCodes');
   const alertesCodesList = document.getElementById('alertesCodesList');
+  const spaceTabVerifCert = document.getElementById('spaceTabVerifCert');
+  const spacePanelVerifCert = document.getElementById('spacePanelVerifCert');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
@@ -3413,6 +3453,7 @@
     if (spaceTabDemandesDevisOffres) spaceTabDemandesDevisOffres.classList.toggle('active', nom === 'demandesDevisOffres');
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
+    if (spaceTabVerifCert) spaceTabVerifCert.classList.toggle('active', nom === 'verifcert');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3422,6 +3463,7 @@
     if (spacePanelDemandesDevisOffres) spacePanelDemandesDevisOffres.hidden = nom !== 'demandesDevisOffres';
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
+    if (spacePanelVerifCert) spacePanelVerifCert.hidden = nom !== 'verifcert';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3446,6 +3488,63 @@
   if (spaceTabUtilisateurs) {
     spaceTabUtilisateurs.addEventListener('click', () => activerOngletEspaceAdmin('utilisateurs'));
   }
+  if (spaceTabVerifCert) {
+    spaceTabVerifCert.addEventListener('click', () => activerOngletEspaceAdmin('verifcert'));
+  }
+
+  // ---- Vérification d'un certificat (dans l'espace collaborateur et dans l'espace administrateur) ----
+  function attacherVerifCertificat(form, input, btn, resultZone) {
+    if (!form || !input || !btn || !resultZone) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = input.value.trim().toUpperCase();
+      if (!code) return;
+
+      btn.disabled = true;
+      const texteOriginal = btn.textContent;
+      btn.textContent = 'Vérification…';
+      resultZone.classList.remove('show');
+
+      try {
+        const snap = await get(ref(rtdb, 'certificats/' + code));
+        if (!snap.exists()) {
+          resultZone.innerHTML = '<div class="cert-verif-ko">Aucun certificat ne correspond à ce code. Vérifiez la saisie ou contactez-nous si vous pensez qu\'il s\'agit d\'une erreur.</div>';
+        } else {
+          const c = snap.val();
+          const dateTexte = c.dateCompletion
+            ? new Date(c.dateCompletion).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+            : '—';
+          resultZone.innerHTML = '<div class="cert-verif-ok">'
+            + '<span class="tag">✓ Certificat authentique</span>'
+            + '<dl>'
+            + '<dt>Titulaire</dt><dd>' + (c.nom || '—') + '</dd>'
+            + '<dt>Formation</dt><dd>' + (c.formation || '—') + '</dd>'
+            + '<dt>Date de réussite</dt><dd>' + dateTexte + '</dd>'
+            + '</dl>'
+            + '</div>';
+        }
+        resultZone.classList.add('show');
+      } catch (err) {
+        resultZone.innerHTML = '<div class="cert-verif-ko">Une erreur est survenue lors de la vérification. Réessayez dans un instant.</div>';
+        resultZone.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = texteOriginal;
+      }
+    });
+  }
+  attacherVerifCertificat(
+    document.getElementById('memberVerifCertForm'),
+    document.getElementById('memberVerifCertInput'),
+    document.getElementById('memberVerifCertBtn'),
+    document.getElementById('memberVerifCertResult')
+  );
+  attacherVerifCertificat(
+    document.getElementById('adminVerifCertForm'),
+    document.getElementById('adminVerifCertInput'),
+    document.getElementById('adminVerifCertBtn'),
+    document.getElementById('adminVerifCertResult')
+  );
 
   // ---- Onglets Espace Administrateur (communication collaborateurs) ----
   if (adminTabCollabMsgs && adminTabBroadcast) {
