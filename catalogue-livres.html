@@ -192,7 +192,7 @@
 
       <div class="service-card" style="max-width:520px;">
         <h3 style="font-size:1.1rem; background:var(--clay); color:var(--white); display:inline-block; padding:6px 14px; border-radius:6px;">J'achète mon livre</h3>
-        <div class="price">50 000 GNF <span>Version électronique (PDF) + accès à la formation sur le site</span></div>
+        <div class="price">45 000 GNF <span>Version électronique (PDF) + accès à la formation sur le site</span></div>
         <p class="card-note" style="background:var(--clay); color:var(--white); padding:10px 14px; border-radius:6px; font-size:.85rem; line-height:1.5;">Un code d'accès personnel vous permet de télécharger le livre très rapidement et aussi retrouver la formation sur le site à tout moment. NB : le livre reste téléchargeable à tout moment avec votre code d'accès unique.</p>
         <button type="button" class="btn btn-clay" id="btnDemandeCodeFormationLivre">Demander un code d'accès</button>
         <p style="margin:10px 0 0;"><a href="login-formation.html" class="taglink">J'ai déjà un code d'accès →</a></p>
@@ -297,7 +297,7 @@
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="demandeCodeLivreTitle">
     <button type="button" class="modal-close" id="demandeCodeLivreClose" aria-label="Fermer">&times;</button>
     <h3 id="demandeCodeLivreTitle">Demander un code d'accès</h3>
-    <p class="modal-sub">Formation : Habitudes & Productivité — Masterclass. Laissez vos coordonnées : après réception de votre paiement, votre code vous sera envoyé.</p>
+    <p class="modal-sub">Formation : Habitudes & Productivité. Laissez vos coordonnées : après réception de votre paiement, votre code vous sera envoyé.</p>
 
     <form class="modal-form" id="demandeCodeLivreForm" novalidate>
       <div id="demandeCodeLivreFields" style="display:flex; flex-direction:column; gap:12px;">
@@ -539,7 +539,7 @@
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig, "catalogueLivresApp");
   const rtdb = getDatabase(app);
 
-  const NOM_FORMATION_LIVRE = "Habitudes & Productivité — Masterclass";
+  const NOM_FORMATION_LIVRE = "Habitudes & Productivité";
 
   // ---- Modale « Demander un code d'accès » (formation associée au livre) ----
   const modalLivre = document.getElementById('demandeCodeLivreModal');
@@ -611,7 +611,7 @@
         document.getElementById('demandeCodeLivreFields').style.display = 'none';
         successLivre.classList.add('show');
 
-        const texteWhatsapp = "Bonjour, je viens d'effectuer le paiement pour la formation \"" + NOM_FORMATION_LIVRE + "\" (50 000 GNF, version électronique + accès sur le site). Voici ma preuve de paiement, mon nom et mon numéro pour la réception de mon code d'accès :";
+        const texteWhatsapp = "Bonjour, je viens d'effectuer le paiement pour la formation \"" + NOM_FORMATION_LIVRE + "\" (45 000 GNF, version électronique + accès sur le site). Voici ma preuve de paiement, mon nom et mon numéro pour la réception de mon code d'accès :";
         document.getElementById('btnEnvoyerPreuvePaiementLivre').href = "https://wa.me/224621109847?text=" + encodeURIComponent(texteWhatsapp);
         document.getElementById('demandeCodeLivrePaiement').classList.add('show');
       } catch (err) {
