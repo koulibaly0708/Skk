@@ -82,7 +82,6 @@
     display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:6px; background:var(--clay);
     color:var(--white); text-decoration:none; font-weight:600; white-space:nowrap;
   }
-  .download-bar a.btn-download.is-loading{opacity:.65; cursor:wait; pointer-events:none;}
   .lede-cours{font-size:1.05rem; color:#5a5349; margin-bottom:32px;}
   .module-block{
     background:var(--white); border:1px solid var(--line); border-radius:10px; padding:30px 32px; margin-bottom:24px;
@@ -127,7 +126,6 @@
 <div id="gate" class="loading">Vérification de votre accès…</div>
 <div id="content" hidden></div>
 
-<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
@@ -180,63 +178,6 @@
     return id;
   }
 
-  // Génère une copie du PDF avec le nom de l'acheteur en filigrane sur chaque page.
-  // Retourne null en cas d'échec (PDF non accessible en CORS, etc.) pour permettre un repli sur le lien d'origine.
-  async function creerPdfAvecFiligrane(pdfUrl, texteFiligrane) {
-    if (!window.PDFLib) return null;
-    try {
-      const { PDFDocument, rgb, degrees, StandardFonts } = window.PDFLib;
-      const octets = await fetch(pdfUrl).then((r) => {
-        if (!r.ok) throw new Error('pdf inaccessible');
-        return r.arrayBuffer();
-      });
-      const pdfDoc = await PDFDocument.load(octets);
-      const police = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-      const texte = texteFiligrane || 'Copie personnelle';
-      pdfDoc.getPages().forEach((page) => {
-        const { width, height } = page.getSize();
-        page.drawText(texte, {
-          x: width / 2 - (texte.length * 4.2),
-          y: height / 2,
-          size: 22,
-          font: police,
-          color: rgb(0.82, 0.82, 0.82),
-          rotate: degrees(35),
-          opacity: 0.45
-        });
-        page.drawText(texte, {
-          x: 24,
-          y: 18,
-          size: 8,
-          font: police,
-          color: rgb(0.6, 0.6, 0.6),
-          opacity: 0.7
-        });
-      });
-      const octetsFinaux = await pdfDoc.save();
-      const blob = new Blob([octetsFinaux], { type: 'application/pdf' });
-      return URL.createObjectURL(blob);
-    } catch (err) {
-      return null;
-    }
-  }
-
-  async function preparerBoutonTelechargement(pdfUrl, texteFiligrane) {
-    const btn = document.getElementById('btnTelechargerPdf');
-    if (!btn) return;
-    const urlFiligranee = await creerPdfAvecFiligrane(pdfUrl, texteFiligrane);
-    if (urlFiligranee) {
-      btn.href = urlFiligranee;
-      btn.setAttribute('download', 'formation.pdf');
-    } else {
-      // Repli : lien d'origine si la génération du filigrane échoue (ex. PDF hébergé sans CORS).
-      btn.href = pdfUrl;
-      btn.setAttribute('download', '');
-    }
-    btn.textContent = '⬇ Télécharger le PDF';
-    btn.classList.remove('is-loading');
-  }
-
   function afficherVerrou(message) {
     gate.innerHTML = '';
     gate.hidden = true;
@@ -275,7 +216,7 @@
 
     const telechargementHtml = '<div class="download-bar">'
       + '<p>' + texteSupport + '</p>'
-      + (data.pdfUrl ? '<a class="btn-download is-loading" id="btnTelechargerPdf" href="#">⬇ Préparation de votre PDF…</a>' : '')
+      + (data.pdfUrl ? '<a class="btn-download" href="' + data.pdfUrl + '" download>⬇ Télécharger le PDF</a>' : '')
       + '</div>';
 
     const corpsHtml = data.contenuComplet
@@ -298,11 +239,6 @@
       + '</div>'
       + corpsHtml
       + '</div>';
-
-    if (data.pdfUrl) {
-      const nomAcheteur = (codeData && codeData.client && codeData.client.trim()) ? codeData.client.trim() : 'Copie personnelle';
-      preparerBoutonTelechargement(data.pdfUrl, nomAcheteur);
-    }
   }
 
   let dejaAffiche = false;
