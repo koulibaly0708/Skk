@@ -1996,6 +1996,7 @@
         <button type="button" class="collab-tab" id="spaceTabUtilisateurs">Utilisateurs</button>
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabVerifCert">Vérifier un certificat</button>
+        <button type="button" class="collab-tab" id="spaceTabSessionLive">Session live</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2139,6 +2140,36 @@
             <button type="submit" class="btn btn-primary" id="adminVerifCertBtn">Vérifier</button>
           </form>
           <div class="cert-verif-result" id="adminVerifCertResult"></div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelSessionLive" hidden>
+        <div class="forum-panel" style="width:100%; max-width:560px;">
+          <p class="section-lede" style="margin:0 0 16px;">Programmez une session live (questions-réponses, correction d'exercices…). Elle apparaît en bannière dans l'espace formation de vos apprenants jusqu'à la date choisie, puis disparaît automatiquement.</p>
+
+          <form class="modal-form" id="sessionLiveForm" novalidate style="margin:0 0 24px;">
+            <label for="sessionLiveDate" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Date et heure de la session</label>
+            <input type="datetime-local" id="sessionLiveDate" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.92rem; background:var(--white); color:var(--charcoal);">
+
+            <label for="sessionLiveSujet" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Sujet de la session</label>
+            <input type="text" id="sessionLiveSujet" placeholder="Ex. Questions-réponses" maxlength="120">
+
+            <label for="sessionLiveLien" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Lien pour rejoindre (Meet, Zoom…)</label>
+            <input type="url" id="sessionLiveLien" placeholder="https://meet.google.com/xxx-xxxx-xxx" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.92rem; background:var(--white); color:var(--charcoal);">
+
+            <button type="submit" class="btn btn-primary" id="sessionLiveSubmitBtn">Enregistrer la session live</button>
+            <span class="modal-error" id="errSessionLive">Merci de renseigner une date future et un lien valide.</span>
+          </form>
+
+          <div class="admin-row" id="sessionLiveCurrentRow" hidden>
+            <div class="a-infos">
+              <div>
+                <div class="a-name" id="sessionLiveCurrentText"></div>
+              </div>
+            </div>
+            <button type="button" class="admin-toggle-btn" id="sessionLiveDeleteBtn">Supprimer la session</button>
+          </div>
+          <p class="forum-empty" id="sessionLiveEmpty">Aucune session live programmée pour le moment.</p>
         </div>
       </div>
     </div>
@@ -3072,6 +3103,9 @@
   const alertesCodesList = document.getElementById('alertesCodesList');
   const spaceTabVerifCert = document.getElementById('spaceTabVerifCert');
   const spacePanelVerifCert = document.getElementById('spacePanelVerifCert');
+
+  const spaceTabSessionLive = document.getElementById('spaceTabSessionLive');
+  const spacePanelSessionLive = document.getElementById('spacePanelSessionLive');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
@@ -3094,6 +3128,7 @@
   let demandesCache = {};
   let unsubDemandesFormulaires = null;
   let unsubDemandesDevisOffres = null;
+  let unsubSessionLive = null;
   let demandesFormulairesCache = {};
   let demandesDevisOffresCache = {};
 
@@ -3384,6 +3419,7 @@
         demarrerEcouteDemandes();
         demarrerEcouteDemandesFormulaires();
         demarrerEcouteDemandesDevisOffres();
+        demarrerEcouteSessionLive();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3454,6 +3490,7 @@
     if (spaceTabUtilisateurs) spaceTabUtilisateurs.classList.toggle('active', nom === 'utilisateurs');
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
     if (spaceTabVerifCert) spaceTabVerifCert.classList.toggle('active', nom === 'verifcert');
+    if (spaceTabSessionLive) spaceTabSessionLive.classList.toggle('active', nom === 'sessionlive');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3464,6 +3501,7 @@
     if (spacePanelUtilisateurs) spacePanelUtilisateurs.hidden = nom !== 'utilisateurs';
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
     if (spacePanelVerifCert) spacePanelVerifCert.hidden = nom !== 'verifcert';
+    if (spacePanelSessionLive) spacePanelSessionLive.hidden = nom !== 'sessionlive';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3490,6 +3528,9 @@
   }
   if (spaceTabVerifCert) {
     spaceTabVerifCert.addEventListener('click', () => activerOngletEspaceAdmin('verifcert'));
+  }
+  if (spaceTabSessionLive) {
+    spaceTabSessionLive.addEventListener('click', () => activerOngletEspaceAdmin('sessionlive'));
   }
 
   // ---- Vérification d'un certificat (dans l'espace collaborateur et dans l'espace administrateur) ----
@@ -4579,6 +4620,85 @@
     unsubDemandesDevisOffres = onValue(ref(rtdb, 'demandesDevisOffres'), (snap) => {
       demandesDevisOffresCache = snap.val() || {};
       renderDemandesDevisOffresList();
+    });
+  }
+
+  // ==================== SESSION LIVE (bannière dans l'espace formation) ====================
+  const sessionLiveForm = document.getElementById('sessionLiveForm');
+  const sessionLiveDateInput = document.getElementById('sessionLiveDate');
+  const sessionLiveSujetInput = document.getElementById('sessionLiveSujet');
+  const sessionLiveLienInput = document.getElementById('sessionLiveLien');
+  const sessionLiveSubmitBtn = document.getElementById('sessionLiveSubmitBtn');
+  const errSessionLive = document.getElementById('errSessionLive');
+  const sessionLiveCurrentRow = document.getElementById('sessionLiveCurrentRow');
+  const sessionLiveCurrentText = document.getElementById('sessionLiveCurrentText');
+  const sessionLiveEmpty = document.getElementById('sessionLiveEmpty');
+  const sessionLiveDeleteBtn = document.getElementById('sessionLiveDeleteBtn');
+
+  function renderSessionLiveEtat(session) {
+    if (!sessionLiveCurrentRow || !sessionLiveEmpty) return;
+    const estAVenir = session && session.date && session.date > Date.now();
+    if (!session || !session.date || !session.lien) {
+      sessionLiveCurrentRow.hidden = true;
+      sessionLiveEmpty.style.display = 'block';
+      return;
+    }
+    sessionLiveEmpty.style.display = 'none';
+    sessionLiveCurrentRow.hidden = false;
+    const dateTexte = new Date(session.date).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    const statutTexte = estAVenir ? '' : ' (passée — plus affichée aux apprenants)';
+    sessionLiveCurrentText.textContent = (session.sujet || 'Session live') + ' — ' + dateTexte + statutTexte;
+  }
+
+  if (sessionLiveForm) {
+    sessionLiveForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const dateBrute = sessionLiveDateInput ? sessionLiveDateInput.value : '';
+      const timestamp = dateBrute ? new Date(dateBrute).getTime() : NaN;
+      const lien = sessionLiveLienInput ? sessionLiveLienInput.value.trim() : '';
+      const valide = dateBrute && !Number.isNaN(timestamp) && timestamp > Date.now() && lien;
+
+      if (errSessionLive) errSessionLive.classList.toggle('show', !valide);
+      if (!valide) return;
+
+      if (sessionLiveSubmitBtn) sessionLiveSubmitBtn.disabled = true;
+      const texteOriginal = sessionLiveSubmitBtn ? sessionLiveSubmitBtn.textContent : '';
+      if (sessionLiveSubmitBtn) sessionLiveSubmitBtn.textContent = 'Enregistrement…';
+
+      try {
+        await set(ref(rtdb, 'liveSession'), {
+          date: timestamp,
+          sujet: sessionLiveSujetInput ? sessionLiveSujetInput.value.trim() : '',
+          lien: lien
+        });
+        sessionLiveForm.reset();
+        notifier('Session live enregistrée', 'Elle sera visible dans l\'espace formation des apprenants jusqu\'à la date choisie.');
+      } catch (err) {
+        notifier('Erreur', "Impossible d'enregistrer la session live. Réessayez.");
+      } finally {
+        if (sessionLiveSubmitBtn) {
+          sessionLiveSubmitBtn.disabled = false;
+          sessionLiveSubmitBtn.textContent = texteOriginal;
+        }
+      }
+    });
+  }
+
+  if (sessionLiveDeleteBtn) {
+    sessionLiveDeleteBtn.addEventListener('click', async () => {
+      if (!confirm('Supprimer la session live programmée ?')) return;
+      try {
+        await remove(ref(rtdb, 'liveSession'));
+      } catch (err) {
+        notifier('Erreur', 'Impossible de supprimer la session live. Réessayez.');
+      }
+    });
+  }
+
+  function demarrerEcouteSessionLive() {
+    if (unsubSessionLive) unsubSessionLive();
+    unsubSessionLive = onValue(ref(rtdb, 'liveSession'), (snap) => {
+      renderSessionLiveEtat(snap.exists() ? snap.val() : null);
     });
   }
 

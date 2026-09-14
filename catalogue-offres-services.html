@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catalogue Offre & Service de prestation — Solo Koumana Koulibaly</title>
-<meta name="description" content="Les packs de prestations clés en main de Solo Koumana Koulibaly : e-commerce, site web, CV pro, infographie et community management.">
+<meta name="description" content="Les packs de prestations clés en main de Solo Koumana Koulibaly : e-commerce, site web, CV pro, infographie, community management et montage vidéo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -126,6 +126,24 @@
   .fiche dd{margin:2px 0 0; color:#5a544c;}
   .fiche ol{padding-left:18px; margin:0; font-size:.88rem; color:#5a544c;}
   .fiche ol li{margin-bottom:4px;}
+  .tarifs-title{font-family:'JetBrains Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--sage); margin:18px 0 8px; border-top:1px solid var(--line); padding-top:14px;}
+  .tarifs-group{font-family:'JetBrains Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:#9a938a; margin:14px 0 2px;}
+  .tarifs-group:first-of-type{margin-top:0;}
+  .tarifs{list-style:none; margin:0; padding:0;}
+  .tarifs li{display:flex; justify-content:space-between; align-items:baseline; gap:14px; padding:6px 0; font-size:.88rem; color:#5a544c; border-bottom:1px dashed var(--line);}
+  .tarifs li:last-child{border-bottom:none;}
+  .tarifs li .prix{font-family:'JetBrains Mono',monospace; color:var(--clay); font-weight:600; white-space:nowrap; font-size:.85rem;}
+  .tarifs-note{font-size:.8rem; color:#8a8378; margin:12px 0 0;}
+  .tarifs-note a{color:var(--clay); font-weight:600;}
+  .tarifs-note a:hover{text-decoration:underline;}
+  .calc-cta-banner{
+    max-width:820px; margin:0 auto 44px; background:var(--ink); border-radius:10px; padding:22px 26px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  }
+  .calc-cta-banner p{margin:0; color:var(--paper); font-size:.95rem; max-width:440px;}
+  .calc-cta-banner p strong{display:block; font-family:'Roboto',sans-serif; font-size:1.05rem; margin-bottom:2px; color:var(--paper);}
+  .calc-cta-banner .btn-primary{background:var(--clay); border-color:var(--clay); color:var(--ink); flex-shrink:0;}
+  .calc-cta-banner .btn-primary:hover{background:#c47c2f;}
   .cta-row-formations{margin-top:40px; display:flex; gap:16px; flex-wrap:wrap;}
   .cta-row-formations button, .cta-row-formations a{cursor:pointer;}
   @media (max-width:900px){ .fiche-grid{grid-template-columns:1fr;} }
@@ -146,18 +164,130 @@
     <div class="section-head">
       <span class="eyebrow">Offre & Service de prestation</span>
       <h2>Cinq packs de prestations pour répondre vite à un besoin précis</h2>
-      <p>Une offre clé en main pensée pour les demandes ponctuelles, en dehors du format formation. Le détail de chaque pack sera publié très prochainement.</p>
+      <p>Une offre clé en main pensée pour les demandes ponctuelles, en dehors du format formation.</p>
+    </div>
+
+    <div class="calc-cta-banner">
+      <p><strong>Pas sûr du budget ?</strong>Estimez le coût de votre projet en quelques clics avant de faire votre demande de devis.</p>
+      <a href="calculateur-devis.html" class="btn btn-primary">Estimer mon budget →</a>
     </div>
 
     <div class="tabs" role="tablist">
-      <button class="tab-btn active" data-tab="pack-ecommerce" role="tab" aria-selected="true">Pack E-commerce</button>
+      <button class="tab-btn active" data-tab="pack-infographie" role="tab" aria-selected="true">Pack Infographie</button>
+      <button class="tab-btn" data-tab="pack-montage" role="tab" aria-selected="false">Pack Montage Vidéo</button>
+      <button class="tab-btn" data-tab="pack-ecommerce" role="tab" aria-selected="false">Pack E-commerce</button>
       <button class="tab-btn" data-tab="pack-siteweb" role="tab" aria-selected="false">Pack Site Web</button>
       <button class="tab-btn" data-tab="pack-cv" role="tab" aria-selected="false">Pack CV Pro</button>
-      <button class="tab-btn" data-tab="pack-infographie" role="tab" aria-selected="false">Pack Infographie</button>
       <button class="tab-btn" data-tab="pack-cm" role="tab" aria-selected="false">Pack Community Manager</button>
     </div>
 
-    <div class="tab-panel active" id="pack-ecommerce">
+    <div class="tab-panel active" id="pack-infographie">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack Infographie</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Entrepreneurs, commerçants et entreprises qui veulent une identité visuelle cohérente et professionnelle</dd>
+            <dt>Logo</dt><dd>Création d'un logo original et personnalisé reflétant votre activité, décliné en plusieurs formats (couleur, noir & blanc, fond transparent)</dd>
+            <dt>Carte de visite</dt><dd>Design recto-verso aux couleurs de votre marque, prêt à imprimer, avec vos coordonnées et réseaux sociaux</dd>
+            <dt>Carte professionnelle</dt><dd>Support d'identification pour votre activité ou votre entreprise (agent, employé, membre), design soigné et prêt à imprimer</dd>
+            <dt>Charte graphique</dt><dd>Document de référence regroupant logo, couleurs, typographies et règles d'usage pour une image de marque cohérente sur tous vos supports</dd>
+            <dt>Cartes d'invitation</dt><dd>Carte de mariage (modèles chics, recto/verso ou dépliants), carte d'anniversaire (invitations enfants ou adultes) et carte de décès / remerciements (prestation rapide, généralement demandée en urgence)</dd>
+            <dt>Supports événementiels & PLV</dt><dd>Affiche événementielle (concerts, festivals, conférences, soirées), banderole (grand format publicitaire ou de rue), kakémono / roll-up (salons, banques, boutiques), flyers (recto ou recto-verso standard), étiquette (emballages de produits locaux, cosmétiques, bouteilles de jus) et autocollant (sticker de marque simple)</dd>
+            <dt>Documents & supports administratifs</dt><dd>Calendrier (mural, sous-main ou livret 12 pages d'entreprise), facture-gabarit (Word ou PDF modifiable, logo et infos fiscales intégrés) et reçu-gabarit (version simplifiée et harmonisée)</dd>
+            <dt>Bannières web & réseaux</dt><dd>Bannière statique (couverture Facebook, LinkedIn, posts sponsorisés) et bannière dynamique (GIF / animation courte de 5 à 10 secondes pour Instagram/TikTok)</dd>
+            <dt>Délai</dt><dd>Sur devis, selon le nombre d'éléments choisis</dd>
+          </dl>
+          <ol>
+            <li>Choix à la carte parmi les éléments selon vos besoins</li>
+            <li>Échanges pour cerner votre univers de marque avant création</li>
+            <li>Fichiers livrés dans les formats prêts à l'impression et au web</li>
+            <li>Retouches incluses pour affiner le rendu final</li>
+          </ol>
+          <p class="tarifs-title">Repères tarifaires</p>
+          <p class="tarifs-group">Identité de marque</p>
+          <ul class="tarifs">
+            <li>Logo <span class="prix">300 000 GNF</span></li>
+            <li>Carte de visite <span class="prix">150 000 GNF</span></li>
+            <li>Carte professionnelle <span class="prix">150 000 GNF</span></li>
+            <li>Charte graphique <span class="prix">500 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-group">Cartes & invitations</p>
+          <ul class="tarifs">
+            <li>Carte de mariage (recto/verso ou dépliant) <span class="prix">50 000 GNF</span></li>
+            <li>Carte d'anniversaire (enfants ou adultes) <span class="prix">45 000 GNF</span></li>
+            <li>Carte de décès / remerciements (urgence) <span class="prix">30 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-group">Supports événementiels & PLV</p>
+          <ul class="tarifs">
+            <li>Affiche événementielle (concerts, festivals, conférences, soirées) <span class="prix">150 000 GNF</span></li>
+            <li>Banderole (grand format publicitaire ou de rue) <span class="prix">100 000 GNF</span></li>
+            <li>Kakémono / Roll-up (salons, banques, boutiques) <span class="prix">150 000 GNF</span></li>
+            <li>Flyers (recto ou recto-verso standard) <span class="prix">80 000 GNF</span></li>
+            <li>Étiquette (emballages produits locaux, cosmétiques, bouteilles) <span class="prix">150 000 GNF</span></li>
+            <li>Autocollant (sticker de marque simple) <span class="prix">80 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-group">Documents & supports administratifs</p>
+          <ul class="tarifs">
+            <li>Calendrier (mural, sous-main ou livret 12 pages) <span class="prix">300 000 GNF</span></li>
+            <li>Facture (gabarit Word/PDF modifiable, logo + infos fiscales) <span class="prix">150 000 GNF</span></li>
+            <li>Reçu (gabarit simplifié et harmonisé) <span class="prix">100 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-group">Bannières web & réseaux</p>
+          <ul class="tarifs">
+            <li>Bannière statique (couverture Facebook, LinkedIn, post sponsorisé) <span class="prix">100 000 GNF</span></li>
+            <li>Bannière dynamique (GIF / animation 5-10 s) <span class="prix">200 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-note">Tarifs indicatifs, cumulables selon les éléments choisis. <a href="calculateur-devis.html#calc-infographie">Affiner cette estimation dans le calculateur →</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-montage">
+      <div class="fiche-grid single">
+        <div class="fiche">
+          <h4>Pack Montage Vidéo</h4>
+          <dl>
+            <dt>Idéal pour</dt><dd>Familles, mariés, entreprises, ONG et institutions qui ont des rushs vidéo bruts (téléphone ou cameraman indépendant) à transformer en film fini</dd>
+            <dt>Ma prestation</dt><dd>Tri des rushs, découpage, synchronisation musicale et étalonnage (correction des couleurs), jusqu'à l'habillage graphique et au sound design selon le format</dd>
+            <dt>Délai</dt><dd>Sur devis, selon le volume de rushs et la complexité du montage</dd>
+          </dl>
+          <ol>
+            <li>Tri et sélection des meilleures prises parmi les rushs fournis</li>
+            <li>Montage, transitions et synchronisation de la musique</li>
+            <li>Étalonnage (correction des couleurs) pour une image homogène</li>
+            <li>Habillage graphique, titres et logos animés selon le format demandé</li>
+          </ol>
+
+          <p class="tarifs-title">Repères tarifaires</p>
+
+          <p class="tarifs-group">Événementiel privé & familial</p>
+          <ul class="tarifs">
+            <li>Baptême — film résumé 15 à 30 min + teaser 1 min (statuts WhatsApp/TikTok) <span class="prix">300 000 – 600 000 GNF</span></li>
+            <li>Mariage — film long 45 min à 1h30 + teaser rythmé 2 à 3 min <span class="prix">600 000 – 1 500 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-note" style="margin:6px 0 0;">Le prix du mariage varie selon le volume de rushs (civil, religieux, réception).</p>
+
+          <p class="tarifs-group">Publicité & communication commerciale</p>
+          <ul class="tarifs">
+            <li>Spot publicitaire — 30 s à 1 min, effets et motion design pour TV ou réseaux <span class="prix">500 000 – 1 200 000 GNF</span></li>
+          </ul>
+
+          <p class="tarifs-group">Corporate & professionnel</p>
+          <ul class="tarifs">
+            <li>Film institutionnel / présentation d'entreprise — 3 à 7 min <span class="prix">1 500 000 – 3 500 000 GNF</span></li>
+          </ul>
+
+          <p class="tarifs-group">Contenu long & narratif</p>
+          <ul class="tarifs">
+            <li>Documentaire — 13, 26 ou 52 min, voix off et interviews <span class="prix">2 000 000 – 5 000 000 GNF et plus</span></li>
+          </ul>
+
+          <p class="tarifs-note">Tarifs indicatifs — le montant définitif dépend du volume et de la qualité des rushs fournis. <a href="calculateur-devis.html#calc-montage">Affiner cette estimation dans le calculateur →</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="pack-ecommerce">
       <div class="fiche-grid single">
         <div class="fiche">
           <h4>Pack E-commerce</h4>
@@ -174,6 +304,14 @@
             <li>Design responsive adapté au mobile et à l'ordinateur</li>
             <li>Intégration WhatsApp Business pour le suivi des commandes</li>
           </ol>
+          <p class="tarifs-title">Repères tarifaires</p>
+          <ul class="tarifs">
+            <li>Boutique en ligne — forfait de base <span class="prix">3 500 000 GNF</span></li>
+            <li>Catalogue étendu (plus de 100 produits) <span class="prix">+500 000 GNF</span></li>
+            <li>Formation à la prise en main <span class="prix">+200 000 GNF</span></li>
+            <li>Maintenance mensuelle <span class="prix">150 000 GNF/mois</span></li>
+          </ul>
+          <p class="tarifs-note">Tarifs indicatifs. <a href="calculateur-devis.html#calc-ecommerce">Affiner cette estimation dans le calculateur →</a></p>
         </div>
       </div>
     </div>
@@ -195,6 +333,17 @@
             <li>Formation à la prise en main de votre site</li>
             <li>Un mois de support technique après livraison</li>
           </ol>
+          <p class="tarifs-title">Repères tarifaires</p>
+          <ul class="tarifs">
+            <li>Site vitrine (plusieurs pages statiques) <span class="prix">1 500 000 GNF</span></li>
+            <li>Landing page (une page orientée conversion) <span class="prix">800 000 GNF</span></li>
+            <li>Blog (articles, catégories, recherche) <span class="prix">1 200 000 GNF</span></li>
+            <li>Plate-forme sur mesure pour entreprise <span class="prix">à partir de 5 000 000 GNF</span></li>
+            <li>Page supplémentaire <span class="prix">+150 000 GNF</span></li>
+            <li>Référencement (SEO) avancé <span class="prix">+300 000 GNF</span></li>
+            <li>Maintenance mensuelle <span class="prix">100 000 GNF/mois</span></li>
+          </ul>
+          <p class="tarifs-note">Tarifs indicatifs. <a href="calculateur-devis.html#calc-siteweb">Affiner cette estimation dans le calculateur →</a></p>
         </div>
       </div>
     </div>
@@ -217,28 +366,13 @@
             <li>Livraison au format PDF (et Word selon la formule)</li>
             <li>Possibilité de générer et télécharger un premier jet gratuitement via l'outil « Confier mon CV » du site avant de passer à la formule payante</li>
           </ol>
-        </div>
-      </div>
-    </div>
-
-    <div class="tab-panel" id="pack-infographie">
-      <div class="fiche-grid single">
-        <div class="fiche">
-          <h4>Pack Infographie</h4>
-          <dl>
-            <dt>Idéal pour</dt><dd>Entrepreneurs, commerçants et entreprises qui veulent une identité visuelle cohérente et professionnelle</dd>
-            <dt>Logo</dt><dd>Création d'un logo original et personnalisé reflétant votre activité, décliné en plusieurs formats (couleur, noir & blanc, fond transparent)</dd>
-            <dt>Carte de visite</dt><dd>Design recto-verso aux couleurs de votre marque, prêt à imprimer, avec vos coordonnées et réseaux sociaux</dd>
-            <dt>Carte professionnelle</dt><dd>Support d'identification pour votre activité ou votre entreprise (agent, employé, membre), design soigné et prêt à imprimer</dd>
-            <dt>Charte graphique</dt><dd>Document de référence regroupant logo, couleurs, typographies et règles d'usage pour une image de marque cohérente sur tous vos supports</dd>
-            <dt>Délai</dt><dd>Sur devis, selon le nombre d'éléments choisis</dd>
-          </dl>
-          <ol>
-            <li>Choix à la carte parmi les quatre éléments selon vos besoins</li>
-            <li>Échanges pour cerner votre univers de marque avant création</li>
-            <li>Fichiers livrés dans les formats prêts à l'impression et au web</li>
-            <li>Retouches incluses pour affiner le rendu final</li>
-          </ol>
+          <p class="tarifs-title">Repères tarifaires</p>
+          <ul class="tarifs">
+            <li>CV basique (mise en forme d'un CV existant) <span class="prix">100 000 GNF</span></li>
+            <li>CV standard (création complète) <span class="prix">200 000 GNF</span></li>
+            <li>CV pro + accompagnement (CV + lettre + conseil) <span class="prix">350 000 GNF</span></li>
+          </ul>
+          <p class="tarifs-note">Tarifs indicatifs. <a href="calculateur-devis.html#calc-cv">Affiner cette estimation dans le calculateur →</a></p>
         </div>
       </div>
     </div>
@@ -258,11 +392,19 @@
             <li>Réponse aux messages et commentaires de votre communauté</li>
             <li>Suivi des performances et rapport régulier</li>
           </ol>
+          <p class="tarifs-title">Repères tarifaires</p>
+          <ul class="tarifs">
+            <li>1 réseau social géré <span class="prix">500 000 GNF/mois</span></li>
+            <li>2 à 3 réseaux sociaux gérés <span class="prix">900 000 GNF/mois</span></li>
+            <li>4 réseaux sociaux ou plus <span class="prix">1 400 000 GNF/mois</span></li>
+          </ul>
+          <p class="tarifs-note">Tarifs indicatifs. <a href="calculateur-devis.html#calc-cm">Affiner cette estimation dans le calculateur →</a></p>
         </div>
       </div>
     </div>
 
     <div class="cta-row-formations">
+      <a href="calculateur-devis.html" class="btn btn-ghost">Estimer mon budget</a>
       <button type="button" class="btn btn-primary" id="btnDemanderDevisOffres">Demander un devis</button>
     </div>
   </div>
@@ -285,10 +427,11 @@
           <label for="demandeDevisPack">Pack qui vous intéresse</label>
           <select id="demandeDevisPack" required>
             <option value="" disabled selected>Choisir un pack…</option>
+            <option value="Pack Infographie">Pack Infographie</option>
+            <option value="Pack Montage Vidéo">Pack Montage Vidéo</option>
             <option value="Pack E-commerce">Pack E-commerce</option>
             <option value="Pack Site Web">Pack Site Web</option>
             <option value="Pack CV Pro">Pack CV Pro</option>
-            <option value="Pack Infographie">Pack Infographie</option>
             <option value="Pack Community Manager">Pack Community Manager</option>
           </select>
           <span class="modal-error" id="errDemandeDevisPack">Merci de choisir un pack.</span>
