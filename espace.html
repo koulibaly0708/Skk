@@ -4520,6 +4520,14 @@
   }
 
   // ==================== DEMANDES DE DEVIS OFFRES (depuis le catalogue-offres-services public) ====================
+  // Le catalogue (calculateur de devis) envoie désormais :
+  //  - pack : liste des packs concernés, ex. "Pack Infographie, Pack Montage Vidéo"
+  //  - detailPrestations : tableau de chaînes "Nom du pack : élément 1, élément 2", déjà groupées par pack
+  //  - montantEstime : total calculé côté catalogue (en GNF)
+  // On affiche detailPrestations quand il est présent ; sinon on retombe sur le champ pack brut
+  // (compatibilité avec d'anciennes demandes envoyées avant ce changement).
+  const fmtGNF = (n) => Math.round(n).toLocaleString('fr-FR') + ' GNF';
+
   function renderDemandesDevisOffresList() {
     if (!demandesDevisOffresList) return;
     demandesDevisOffresList.innerHTML = '';
@@ -4553,13 +4561,52 @@
       const nameLine = document.createElement('span');
       nameLine.className = 'a-name';
       nameLine.textContent = d.nom || 'Nom non renseigné';
-      const detailLine = document.createElement('span');
-      detailLine.className = 'a-email';
-      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
-      detailLine.textContent = (d.pack || '—') + (d.telephone ? ' · ' + d.telephone : '') + (dateTxt ? ' · ' + dateTxt : '');
       texte.appendChild(nameLine);
       texte.appendChild(document.createElement('br'));
-      texte.appendChild(detailLine);
+
+      const groupesPack = Array.isArray(d.detailPrestations) ? d.detailPrestations : null;
+      if (groupesPack && groupesPack.length > 0) {
+        groupesPack.forEach((ligne) => {
+          const sepIdx = ligne.indexOf(' : ');
+          const packLine = document.createElement('span');
+          packLine.className = 'a-email';
+          packLine.style.display = 'block';
+          if (sepIdx === -1) {
+            packLine.textContent = ligne;
+          } else {
+            const packNom = document.createElement('strong');
+            packNom.textContent = ligne.slice(0, sepIdx);
+            packLine.appendChild(packNom);
+            packLine.appendChild(document.createTextNode(' : ' + ligne.slice(sepIdx + 3)));
+          }
+          texte.appendChild(packLine);
+        });
+      } else {
+        // Compatibilité avec les demandes envoyées avant l'ajout du calculateur de devis
+        const packLine = document.createElement('span');
+        packLine.className = 'a-email';
+        packLine.style.display = 'block';
+        packLine.textContent = d.pack || '—';
+        texte.appendChild(packLine);
+      }
+
+      if (typeof d.montantEstime === 'number') {
+        const montantLine = document.createElement('span');
+        montantLine.className = 'a-email';
+        montantLine.style.display = 'block';
+        const montantFort = document.createElement('strong');
+        montantFort.textContent = 'Montant estimé : ' + fmtGNF(d.montantEstime);
+        montantLine.appendChild(montantFort);
+        texte.appendChild(montantLine);
+      }
+
+      const dateTxt = d.dateCreation ? new Date(d.dateCreation).toLocaleString('fr-FR') : '';
+      const metaLine = document.createElement('span');
+      metaLine.className = 'a-email';
+      metaLine.style.display = 'block';
+      metaLine.textContent = [d.telephone, dateTxt].filter(Boolean).join(' · ');
+      texte.appendChild(metaLine);
+
       infos.appendChild(texte);
       row.appendChild(infos);
 
