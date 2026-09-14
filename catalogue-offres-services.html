@@ -89,6 +89,29 @@
   .modal-success{display:none; background:rgba(76,107,84,0.1); border:1px solid rgba(76,107,84,0.3); border-radius:8px; padding:14px 16px; color:var(--sage); font-size:.9rem;}
   .modal-success.show{display:block;}
 
+  /* ---- Sélecteur détaillé multi-choix dans la modale (repris du calculateur) ---- */
+  .modal-box.modal-box-wide{max-width:640px;}
+  .devis-packs{display:flex; flex-direction:column; gap:10px; max-height:38vh; overflow-y:auto; padding:2px; border:1px solid var(--line); border-radius:8px;}
+  .calc-pack{background:var(--white); border:1px solid var(--line); border-radius:8px; overflow:hidden;}
+  .calc-pack > summary{list-style:none; cursor:pointer; padding:12px 14px; font-weight:600; color:var(--ink); font-size:.92rem; display:flex; justify-content:space-between; align-items:center;}
+  .calc-pack > summary::-webkit-details-marker{display:none;}
+  .calc-pack > summary::after{content:'+'; font-family:'JetBrains Mono',monospace; font-size:1.1rem; color:var(--clay);}
+  .calc-pack[open] > summary::after{content:'–';}
+  .calc-body{padding:0 14px 14px; border-top:1px solid var(--line); padding-top:10px;}
+  .calc-body .opt{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line); font-size:.86rem;}
+  .calc-body .opt:last-child{border-bottom:none;}
+  .calc-body .opt label{display:flex; align-items:center; gap:8px; flex:1; cursor:pointer;}
+  .calc-body .opt input[type=checkbox], .calc-body .opt input[type=radio]{width:16px; height:16px; accent-color:var(--clay); flex-shrink:0;}
+  .calc-body .opt .price{font-family:'JetBrains Mono',monospace; color:var(--clay); font-weight:600; white-space:nowrap; font-size:.82rem;}
+  .calc-body .opt .qty{width:44px; margin-left:6px; border:1px solid var(--line); border-radius:4px; padding:2px 4px; font-family:'JetBrains Mono',monospace; font-size:.8rem; text-align:center;}
+  .calc-note{font-size:.76rem; color:#8a8378; margin-top:6px;}
+  .group-label{font-family:'JetBrains Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--sage); margin:12px 0 2px;}
+  .group-label:first-child{margin-top:0;}
+  .devis-summary{background:var(--ink); color:var(--paper); border-radius:8px; padding:14px 16px; margin-top:4px;}
+  .devis-summary .row{display:flex; justify-content:space-between; font-size:.82rem; padding:2px 0; color:rgba(246,241,231,.75);}
+  .devis-summary .row.total{color:var(--paper); font-size:1.08rem; font-weight:700; border-top:1px solid rgba(246,241,231,.2); margin-top:8px; padding-top:10px;}
+  .devis-summary .row.total .amount{font-family:'JetBrains Mono',monospace; color:var(--clay);}
+
   .payment-invite{display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--line);}
   .payment-invite.show{display:block;}
   .payment-invite h4{font-size:1rem; margin:0 0 6px;}
@@ -163,7 +186,7 @@
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Offre & Service de prestation</span>
-      <h2>Cinq packs de prestations pour répondre vite à un besoin précis</h2>
+      <h2>Six packs de prestations pour répondre vite à un besoin précis</h2>
       <p>Une offre clé en main pensée pour les demandes ponctuelles, en dehors du format formation.</p>
     </div>
 
@@ -416,25 +439,22 @@
 
 <!-- ============ MODALE DEMANDE DE DEVIS (OFFRES & PRESTATIONS) ============ -->
 <div class="modal-overlay" id="demandeDevisModal" aria-hidden="true">
-  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="demandeDevisTitle">
+  <div class="modal-box modal-box-wide" role="dialog" aria-modal="true" aria-labelledby="demandeDevisTitle">
     <button type="button" class="modal-close" id="demandeDevisClose" aria-label="Fermer">&times;</button>
     <h3 id="demandeDevisTitle">Demander un devis</h3>
-    <p class="modal-sub" id="demandeDevisSub">Laissez vos coordonnées, je reviens vers vous rapidement avec un devis adapté.</p>
+    <p class="modal-sub" id="demandeDevisSub">Cochez les prestations qui vous intéressent, puis laissez vos coordonnées : je reviens vers vous rapidement avec un devis adapté.</p>
 
     <form class="modal-form" id="demandeDevisForm" novalidate>
       <div id="demandeDevisFields" style="display:flex; flex-direction:column; gap:12px;">
         <div>
-          <label for="demandeDevisPack">Pack qui vous intéresse</label>
-          <select id="demandeDevisPack" required>
-            <option value="" disabled selected>Choisir un pack…</option>
-            <option value="Pack Infographie">Pack Infographie</option>
-            <option value="Pack Montage Vidéo">Pack Montage Vidéo</option>
-            <option value="Pack E-commerce">Pack E-commerce</option>
-            <option value="Pack Site Web">Pack Site Web</option>
-            <option value="Pack CV Pro">Pack CV Pro</option>
-            <option value="Pack Community Manager">Pack Community Manager</option>
-          </select>
-          <span class="modal-error" id="errDemandeDevisPack">Merci de choisir un pack.</span>
+          <label>Prestations qui vous intéressent</label>
+          <div class="devis-packs" id="demandeDevisPacks"></div>
+          <span class="modal-error" id="errDemandeDevisPack">Merci de sélectionner au moins une prestation.</span>
+        </div>
+
+        <div class="devis-summary">
+          <div id="demandeDevisDetail"></div>
+          <div class="row total"><span>Total estimé</span><span class="amount" id="demandeDevisTotal">0 GNF</span></div>
         </div>
 
         <input type="text" id="demandeDevisNom" placeholder="Votre nom et prénom" required autocomplete="name" maxlength="120">
@@ -484,11 +504,300 @@
     });
   });
 
+  // ---- Données des offres — identiques à calculateur-devis.html ----
+  // (dupliquées ici pour permettre le sélecteur détaillé directement dans la modale)
+  const OFFRES = [
+    {
+      id: 'infographie',
+      nom: 'Pack Infographie',
+      calc: {
+        type: 'multi-grouped',
+        groups: [
+          { label: 'Identité de marque', options: [
+            { label: 'Logo', prix: 300000, qty:false },
+            { label: 'Carte de visite', prix: 150000, qty:false },
+            { label: 'Carte professionnelle', prix: 150000, qty:false },
+            { label: 'Charte graphique', prix: 500000, qty:false }
+          ]},
+          { label: 'Cartes & invitations', options: [
+            { label: 'Carte de mariage (recto/verso ou dépliant)', prix: 50000, qty:true },
+            { label: 'Carte d\'anniversaire (enfants ou adultes)', prix: 45000, qty:true },
+            { label: 'Carte de décès / remerciements (urgence)', prix: 30000, qty:true }
+          ]},
+          { label: 'Supports événementiels & PLV', options: [
+            { label: 'Affiche événementielle (concerts, festivals, conférences, soirées)', prix: 150000, qty:true },
+            { label: 'Banderole (grand format publicitaire ou de rue)', prix: 100000, qty:true },
+            { label: 'Kakémono / Roll-up (salons, banques, boutiques)', prix: 150000, qty:true },
+            { label: 'Flyers (recto ou recto-verso standard)', prix: 80000, qty:true },
+            { label: 'Étiquette (emballages produits locaux, cosmétiques, bouteilles)', prix: 150000, qty:true },
+            { label: 'Autocollant (sticker de marque simple)', prix: 80000, qty:true }
+          ]},
+          { label: 'Documents & supports administratifs', options: [
+            { label: 'Calendrier (mural, sous-main ou livret 12 pages)', prix: 300000, qty:true },
+            { label: 'Facture (gabarit Word/PDF modifiable)', prix: 150000, qty:false },
+            { label: 'Reçu (gabarit simplifié et harmonisé)', prix: 100000, qty:false }
+          ]},
+          { label: 'Bannières web & réseaux', options: [
+            { label: 'Bannière statique (Facebook, LinkedIn, post sponsorisé)', prix: 100000, qty:false },
+            { label: 'Bannière dynamique (GIF / animation 5-10 s)', prix: 200000, qty:false }
+          ]}
+        ]
+      }
+    },
+    {
+      id: 'montage',
+      nom: 'Pack Montage Vidéo',
+      calc: {
+        type: 'choix-grouped',
+        groups: [
+          { label: 'Événementiel privé & familial', choix: [
+            { label: 'Baptême (film résumé 15-30 min + teaser 1 min)', prix: 300000, range: '300 000 – 600 000 GNF' },
+            { label: 'Mariage (film long 45min-1h30 + teaser 2-3 min)', prix: 600000, range: '600 000 – 1 500 000 GNF' }
+          ]},
+          { label: 'Publicité & communication commerciale', choix: [
+            { label: 'Spot publicitaire (30 s à 1 min, TV ou réseaux)', prix: 500000, range: '500 000 – 1 200 000 GNF' }
+          ]},
+          { label: 'Corporate & professionnel', choix: [
+            { label: 'Film institutionnel / présentation d\'entreprise (3-7 min)', prix: 1500000, range: '1 500 000 – 3 500 000 GNF' }
+          ]},
+          { label: 'Contenu long & narratif', choix: [
+            { label: 'Documentaire (13, 26 ou 52 min)', prix: 2000000, range: '2 000 000 – 5 000 000 GNF et plus' }
+          ]}
+        ]
+      }
+    },
+    {
+      id: 'ecommerce',
+      nom: 'Pack E-commerce — Boutique en ligne',
+      calc: {
+        type: 'base+options',
+        base: { label: 'Boutique en ligne — forfait de base', prix: 3500000 },
+        options: [
+          { label: 'Catalogue étendu (plus de 100 produits)', prix: 500000, qty:false },
+          { label: 'Formation à la prise en main', prix: 200000, qty:false },
+          { label: 'Maintenance mensuelle', prix: 150000, qty:false, suffix:'/mois' }
+        ]
+      }
+    },
+    {
+      id: 'siteweb',
+      nom: 'Pack Site Web',
+      calc: {
+        type: 'choix+options',
+        choix: [
+          { label: 'Site vitrine (plusieurs pages statiques)', prix: 1500000 },
+          { label: 'Landing page (une page orientée conversion)', prix: 800000 },
+          { label: 'Blog (articles, catégories, recherche)', prix: 1200000 },
+          { label: 'Plateforme sur mesure pour entreprise', prix: 5000000 }
+        ],
+        options: [
+          { label: 'Page supplémentaire', prix: 150000, qty:true },
+          { label: 'Référencement (SEO) avancé', prix: 300000, qty:false },
+          { label: 'Maintenance mensuelle', prix: 100000, qty:false, suffix:'/mois' }
+        ]
+      }
+    },
+    {
+      id: 'cv',
+      nom: 'Pack CV Pro',
+      calc: {
+        type: 'choix',
+        choix: [
+          { label: 'CV basique (mise en forme d\'un CV existant)', prix: 100000 },
+          { label: 'CV standard (création complète)', prix: 200000 },
+          { label: 'CV pro + accompagnement (CV + lettre + conseil)', prix: 350000 }
+        ]
+      }
+    },
+    {
+      id: 'cm',
+      nom: 'Pack Community Manager',
+      calc: {
+        type: 'choix',
+        suffix: '/mois',
+        choix: [
+          { label: '1 réseau social géré', prix: 500000 },
+          { label: '2 à 3 réseaux sociaux gérés', prix: 900000 },
+          { label: '4 réseaux sociaux ou plus', prix: 1400000 }
+        ]
+      }
+    }
+  ];
+
+  const fmt = (n) => Math.round(n).toLocaleString('fr-FR') + ' GNF';
+  const demandeDevisPacksEl = document.getElementById('demandeDevisPacks');
+
+  OFFRES.forEach((offre) => {
+    const details = document.createElement('details');
+    details.className = 'calc-pack';
+    details.id = 'devis-' + offre.id;
+    let bodyHtml = '';
+    const c = offre.calc;
+
+    if (c.type === 'base+options') {
+      bodyHtml += `<div class="opt"><label><input type="checkbox" data-offre="${offre.id}" data-kind="base"> ${c.base.label}</label><span class="price">${fmt(c.base.prix)}</span></div>`;
+      c.options.forEach((o, i) => {
+        bodyHtml += `<div class="opt"><label><input type="checkbox" data-offre="${offre.id}" data-kind="opt" data-idx="${i}"> ${o.label}${o.qty ? ` <input type="number" min="1" value="1" class="qty" data-offre="${offre.id}" data-kind="qty" data-idx="${i}">` : ''}</label><span class="price">${fmt(o.prix)}${o.suffix||''}</span></div>`;
+      });
+    }
+
+    if (c.type === 'choix' || c.type === 'choix+options') {
+      c.choix.forEach((ch, i) => {
+        bodyHtml += `<div class="opt"><label><input type="radio" name="devis-choix-${offre.id}" data-offre="${offre.id}" data-kind="choix" data-idx="${i}"> ${ch.label}</label><span class="price">${fmt(ch.prix)}${c.suffix||''}</span></div>`;
+      });
+      if (c.options) {
+        c.options.forEach((o, i) => {
+          bodyHtml += `<div class="opt"><label><input type="checkbox" data-offre="${offre.id}" data-kind="opt" data-idx="${i}"> ${o.label}${o.qty ? ` <input type="number" min="1" value="1" class="qty" data-offre="${offre.id}" data-kind="qty" data-idx="${i}">` : ''}</label><span class="price">${fmt(o.prix)}${o.suffix||''}</span></div>`;
+        });
+      }
+    }
+
+    if (c.type === 'multi') {
+      c.options.forEach((o, i) => {
+        bodyHtml += `<div class="opt"><label><input type="checkbox" data-offre="${offre.id}" data-kind="opt" data-idx="${i}"> ${o.label}${o.qty ? ` <input type="number" min="1" value="1" class="qty" data-offre="${offre.id}" data-kind="qty" data-idx="${i}">` : ''}</label><span class="price">${fmt(o.prix)}${o.suffix||''}</span></div>`;
+      });
+    }
+
+    if (c.type === 'multi-grouped') {
+      let flatIdx = 0;
+      c.groups.forEach((groupe) => {
+        bodyHtml += `<p class="group-label">${groupe.label}</p>`;
+        groupe.options.forEach((o) => {
+          const i = flatIdx;
+          bodyHtml += `<div class="opt"><label><input type="checkbox" data-offre="${offre.id}" data-kind="opt" data-idx="${i}"> ${o.label}${o.qty ? ` <input type="number" min="1" value="1" class="qty" data-offre="${offre.id}" data-kind="qty" data-idx="${i}">` : ''}</label><span class="price">${fmt(o.prix)}${o.suffix||''}</span></div>`;
+          flatIdx++;
+        });
+      });
+    }
+
+    if (c.type === 'choix-grouped') {
+      let flatIdx = 0;
+      c.groups.forEach((groupe) => {
+        bodyHtml += `<p class="group-label">${groupe.label}</p>`;
+        groupe.choix.forEach((ch) => {
+          const i = flatIdx;
+          bodyHtml += `<div class="opt"><label><input type="radio" name="devis-choix-${offre.id}" data-offre="${offre.id}" data-kind="choix" data-idx="${i}"> ${ch.label}</label><span class="price">${ch.range || fmt(ch.prix)}</span></div>`;
+          flatIdx++;
+        });
+      });
+      bodyHtml += `<p class="calc-note">Le total ci-dessous retient le bas de la fourchette : le tarif final dépend du volume et de la complexité réels des rushs.</p>`;
+    }
+
+    details.innerHTML = `<summary>${offre.nom}</summary><div class="calc-body">${bodyHtml}</div>`;
+    demandeDevisPacksEl.appendChild(details);
+  });
+
+  // Calcule le détail et le total à partir des cases cochées dans la modale,
+  // et renvoie aussi la liste lisible des prestations sélectionnées (pour l'enregistrement).
+  function calculerSelectionDevis() {
+    let total = 0;
+    const lignes = [];
+    const detailParPack = [];
+
+    OFFRES.forEach((offre) => {
+      let sousTotal = 0;
+      const c = offre.calc;
+      const itemsChoisis = [];
+
+      if (c.type === 'base+options') {
+        const baseChk = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="base"]`);
+        if (baseChk.checked) { sousTotal += c.base.prix; itemsChoisis.push(c.base.label); }
+        c.options.forEach((o, i) => {
+          const chk = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="opt"][data-idx="${i}"]`);
+          if (chk && chk.checked) {
+            const qtyEl = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="qty"][data-idx="${i}"]`);
+            const qty = qtyEl ? (parseFloat(qtyEl.value) || 1) : 1;
+            sousTotal += o.prix * qty;
+            itemsChoisis.push(qty > 1 ? `${o.label} (x${qty})` : o.label);
+          }
+        });
+      }
+
+      if (c.type === 'choix' || c.type === 'choix+options') {
+        c.choix.forEach((ch, i) => {
+          const radio = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="choix"][data-idx="${i}"]`);
+          if (radio && radio.checked) { sousTotal += ch.prix; itemsChoisis.push(ch.label); }
+        });
+        if (c.options) {
+          c.options.forEach((o, i) => {
+            const chk = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="opt"][data-idx="${i}"]`);
+            if (chk && chk.checked) {
+              const qtyEl = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="qty"][data-idx="${i}"]`);
+              const qty = qtyEl ? (parseFloat(qtyEl.value) || 1) : 1;
+              sousTotal += o.prix * qty;
+              itemsChoisis.push(qty > 1 ? `${o.label} (x${qty})` : o.label);
+            }
+          });
+        }
+      }
+
+      if (c.type === 'multi') {
+        c.options.forEach((o, i) => {
+          const chk = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="opt"][data-idx="${i}"]`);
+          if (chk && chk.checked) {
+            const qtyEl = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="qty"][data-idx="${i}"]`);
+            const qty = qtyEl ? (parseFloat(qtyEl.value) || 1) : 1;
+            sousTotal += o.prix * qty;
+            itemsChoisis.push(qty > 1 ? `${o.label} (x${qty})` : o.label);
+          }
+        });
+      }
+
+      if (c.type === 'multi-grouped') {
+        let flatIdx = 0;
+        c.groups.forEach((groupe) => {
+          groupe.options.forEach((o) => {
+            const i = flatIdx;
+            const chk = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="opt"][data-idx="${i}"]`);
+            if (chk && chk.checked) {
+              const qtyEl = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="qty"][data-idx="${i}"]`);
+              const qty = qtyEl ? (parseFloat(qtyEl.value) || 1) : 1;
+              sousTotal += o.prix * qty;
+              itemsChoisis.push(qty > 1 ? `${o.label} (x${qty})` : o.label);
+            }
+            flatIdx++;
+          });
+        });
+      }
+
+      if (c.type === 'choix-grouped') {
+        let flatIdx = 0;
+        c.groups.forEach((groupe) => {
+          groupe.choix.forEach((ch) => {
+            const i = flatIdx;
+            const radio = demandeDevisPacksEl.querySelector(`[data-offre="${offre.id}"][data-kind="choix"][data-idx="${i}"]`);
+            if (radio && radio.checked) { sousTotal += ch.prix; itemsChoisis.push(ch.label); }
+            flatIdx++;
+          });
+        });
+      }
+
+      if (itemsChoisis.length > 0) {
+        lignes.push({ nom: offre.nom, montant: sousTotal });
+        detailParPack.push(`${offre.nom} : ${itemsChoisis.join(', ')}`);
+        total += sousTotal;
+      }
+    });
+
+    return { total, lignes, detailParPack };
+  }
+
+  function recalcDevis() {
+    const { total, lignes } = calculerSelectionDevis();
+    document.getElementById('demandeDevisDetail').innerHTML = lignes.map(l =>
+      `<div class="row"><span>${l.nom}</span><span>${fmt(l.montant)}</span></div>`
+    ).join('') || '<div class="row"><span>Aucune prestation sélectionnée pour le moment</span><span>—</span></div>';
+    document.getElementById('demandeDevisTotal').textContent = fmt(total);
+  }
+
+  demandeDevisPacksEl.addEventListener('input', recalcDevis);
+  demandeDevisPacksEl.addEventListener('change', recalcDevis);
+  recalcDevis();
+
   // ---- Modale « Demander un devis » ----
   const modal = document.getElementById('demandeDevisModal');
   const modalClose = document.getElementById('demandeDevisClose');
   const form = document.getElementById('demandeDevisForm');
-  const packSelect = document.getElementById('demandeDevisPack');
   const nomInput = document.getElementById('demandeDevisNom');
   const telInput = document.getElementById('demandeDevisTelephone');
   const submitBtn = document.getElementById('demandeDevisSubmitBtn');
@@ -501,6 +810,7 @@
     success.classList.remove('show');
     sendError.classList.remove('show');
     document.querySelectorAll('#demandeDevisForm .modal-error').forEach((el) => el.classList.remove('show'));
+    recalcDevis();
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
   }
@@ -525,14 +835,15 @@
     const honeypot = form.querySelector('[name="_gotcha"]').value;
     if (honeypot) return;
 
-    const pack = packSelect.value;
+    const { total, detailParPack } = calculerSelectionDevis();
+    const packsChoisis = detailParPack.map(d => d.split(' : ')[0]);
     const nom = nomInput.value.trim();
     const telephone = telInput.value.trim();
     const telRegex = /^[0-9+ ]{6,20}$/;
 
     let valide = true;
-    document.getElementById('errDemandeDevisPack').classList.toggle('show', !pack);
-    if (!pack) valide = false;
+    document.getElementById('errDemandeDevisPack').classList.toggle('show', detailParPack.length === 0);
+    if (detailParPack.length === 0) valide = false;
     document.getElementById('errDemandeDevisNom').classList.toggle('show', !nom);
     if (!nom) valide = false;
     document.getElementById('errDemandeDevisTelephone').classList.toggle('show', !telRegex.test(telephone));
@@ -545,7 +856,9 @@
     try {
       const nouvelleRef = push(ref(rtdb, 'demandesDevisOffres'));
       await set(nouvelleRef, {
-        pack: pack,
+        pack: packsChoisis.join(', '),
+        detailPrestations: detailParPack,
+        montantEstime: total,
         nom: nom,
         telephone: telephone,
         dateCreation: Date.now(),
@@ -573,7 +886,8 @@
     }
     if (ongletDepuisAncre === 'pack-cv') {
       ouvrirModaleDevis();
-      packSelect.value = 'Pack CV Pro';
+      const detailsCv = document.getElementById('devis-cv');
+      if (detailsCv) { detailsCv.open = true; detailsCv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     }
   }
 </script>
