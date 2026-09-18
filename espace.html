@@ -660,18 +660,6 @@
   .admin-toggle-btn:hover{border-color:var(--clay); color:var(--clay);}
   .admin-toggle-btn.is-admin{border-color:var(--ink); background:var(--ink); color:var(--paper);}
   .admin-toggle-btn.is-admin:hover{background:#b3402a; border-color:#b3402a; color:var(--white);}
-  /* ---------- Statistiques de visite ---------- */
-  .stats-grid{display:flex; flex-wrap:wrap; gap:14px; margin:0 0 8px;}
-  .stats-card{flex:1 1 160px; background:var(--white); border:1px solid var(--line); border-radius:10px; padding:16px 18px; text-align:center;}
-  .stats-card .stats-num{display:block; font-family:'JetBrains Mono',monospace; font-size:1.6rem; color:var(--ink); font-weight:600; line-height:1.2;}
-  .stats-card .stats-label{display:block; font-size:.78rem; color:#8a8378; margin-top:4px; font-family:'Work Sans',sans-serif;}
-  .stats-page-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 4px; border-top:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.9rem; color:var(--ink);}
-  .stats-page-row:first-child{border-top:none;}
-  .stats-bars{display:flex; align-items:flex-end; gap:6px; height:150px; padding:14px 4px 4px; border-top:1px solid var(--line);}
-  .stats-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:4px;}
-  .stats-bar{width:100%; background:var(--clay); border-radius:3px 3px 0 0; min-height:2px;}
-  .stats-bar-val{font-family:'JetBrains Mono',monospace; font-size:.6rem; color:#8a8378;}
-  .stats-bar-day{font-size:.6rem; color:#8a8378; font-family:'Work Sans',sans-serif;}
   .forum-reply-form{display:flex; flex-direction:column; gap:10px;}
   .forum-reply-form textarea{
     padding:13px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
@@ -2009,7 +1997,6 @@
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabVerifCert">Vérifier un certificat</button>
         <button type="button" class="collab-tab" id="spaceTabSessionLive">Session live</button>
-        <button type="button" class="collab-tab" id="spaceTabStats">Statistique de visite</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2185,27 +2172,6 @@
           <p class="forum-empty" id="sessionLiveEmpty">Aucune session live programmée pour le moment.</p>
         </div>
       </div>
-
-      <div class="forum-layout" id="spacePanelStats" hidden>
-        <div class="forum-panel" style="width:100%;">
-          <p class="section-lede" style="margin:0 0 16px;">Vues enregistrées sur l'ensemble des pages du site (accueil, catalogues, espace formation…). <button type="button" class="link-btn" id="statsRefreshBtn">Actualiser</button></p>
-
-          <div class="stats-grid" id="statsCards">
-            <div class="stats-card"><span class="stats-num" id="statTotalVues">—</span><span class="stats-label">Vues totales</span></div>
-            <div class="stats-card"><span class="stats-num" id="statVisiteursUniques">—</span><span class="stats-label">Visiteurs uniques</span></div>
-            <div class="stats-card"><span class="stats-num" id="statVuesAujourdhui">—</span><span class="stats-label">Vues aujourd'hui</span></div>
-            <div class="stats-card"><span class="stats-num" id="statVues7j">—</span><span class="stats-label">Vues (7 derniers jours)</span></div>
-          </div>
-
-          <h3 style="margin:28px 0 4px;">Vues par page</h3>
-          <div id="statsParPage">
-            <p class="forum-empty" id="statsParPageEmpty">Aucune donnée pour le moment.</p>
-          </div>
-
-          <h3 style="margin:28px 0 4px;">Vues par jour (14 derniers jours)</h3>
-          <div id="statsParJour" class="stats-bars"></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -2222,6 +2188,7 @@
       <button type="button" class="collab-tab" id="adminTabBroadcast">Diffuser une annonce</button>
       <button type="button" class="collab-tab" id="adminTabGestion">Gestion des collaborateurs</button>
       <button type="button" class="collab-tab" id="adminTabProfils">Profil des collaborateurs</button>
+      <button type="button" class="collab-tab" id="adminTabPortfolio">Portfolio Studio Design</button>
     </div>
 
     <div class="forum-layout" id="adminPanelCollabMsgs">
@@ -2269,6 +2236,41 @@
         <p class="section-lede" style="margin:0 0 10px;">Toutes les informations saisies par chaque collaborateur lors de son inscription.</p>
         <div class="thread-list" id="profilsCollabList">
           <p class="forum-empty" id="profilsCollabListEmpty">Aucun collaborateur inscrit pour le moment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="forum-layout" id="adminPanelPortfolio" hidden>
+      <div class="forum-panel" style="width:100%;">
+        <p class="section-lede" style="margin:0 0 10px;">Publiez directement une réalisation dans la section « Studio Design & Infographie » du site public. Elle apparaîtra immédiatement en tête du portfolio.</p>
+
+        <form class="modal-form" id="portfolioForm" novalidate style="margin:0 0 24px;">
+          <label for="portfolioTitre" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Titre / légende de la réalisation</label>
+          <input type="text" id="portfolioTitre" placeholder="Ex. Logo — Café Tenue" maxlength="80" required style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.92rem; background:var(--white); color:var(--charcoal);">
+
+          <label for="portfolioCategorie" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Catégorie</label>
+          <select id="portfolioCategorie" style="width:100%; padding:12px 14px; border-radius:6px; border:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.92rem; background:var(--white); color:var(--charcoal);">
+            <option value="Logo">Logo</option>
+            <option value="Affiche">Affiche</option>
+            <option value="Carte de visite">Carte de visite</option>
+            <option value="Identité visuelle">Identité visuelle</option>
+            <option value="Maquette de site">Maquette de site</option>
+            <option value="Infographie">Infographie</option>
+            <option value="Autre">Autre</option>
+          </select>
+
+          <label for="portfolioImage" style="font-family:'Work Sans',sans-serif; font-size:.86rem; font-weight:500; color:var(--ink);">Image de la réalisation</label>
+          <input type="file" id="portfolioImage" accept="image/png, image/jpeg, image/webp" required style="width:100%; padding:10px 0; font-family:'Work Sans',sans-serif; font-size:.86rem;">
+          <span style="font-size:.78rem; color:var(--stone);">Format conseillé : image carrée, moins de 1,5 Mo, pour un chargement rapide sur le site.</span>
+
+          <img id="portfolioImagePreview" alt="Aperçu" hidden style="max-width:160px; margin:6px 0; border-radius:6px; border:1px solid var(--line);">
+
+          <button type="submit" class="btn btn-primary" id="portfolioSubmitBtn">Publier dans le portfolio</button>
+          <span class="modal-error" id="errPortfolio">Merci de renseigner un titre et de choisir une image (moins de 3 Mo).</span>
+        </form>
+
+        <div class="thread-list" id="portfolioAdminList">
+          <p class="forum-empty" id="portfolioAdminListEmpty">Aucune réalisation publiée pour le moment.</p>
         </div>
       </div>
     </div>
@@ -3032,23 +3034,6 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const rtdb = getDatabase(app);      // Realtime Database : chat visiteurs + rôles admin
-
-  // ---- Statistique de visite (suivi anonyme pour l'espace admin) ----
-  (function enregistrerVisite() {
-    try {
-      let visitorId = localStorage.getItem('skkVisitorId');
-      if (!visitorId) {
-        visitorId = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
-        localStorage.setItem('skkVisitorId', visitorId);
-      }
-      const d = new Date();
-      const jour = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-      push(ref(rtdb, 'visites/log'), {
-        page: 'espace', path: location.pathname, day: jour, ts: Date.now(),
-        visitorId, ref: document.referrer || null
-      }).catch(() => {});
-    } catch (e) {}
-  })();
   const db = getFirestore(app);       // Firestore : miroir des rôles admin, utilisé par les règles du forum
 
   // Pont vers le script classique plus haut dans la page (modale Inscription / Devis) :
@@ -3097,6 +3082,17 @@
   const adminPanelBroadcast = document.getElementById('adminPanelBroadcast');
   const adminPanelGestion = document.getElementById('adminPanelGestion');
   const adminPanelProfils = document.getElementById('adminPanelProfils');
+  const adminTabPortfolio = document.getElementById('adminTabPortfolio');
+  const adminPanelPortfolio = document.getElementById('adminPanelPortfolio');
+  const portfolioForm = document.getElementById('portfolioForm');
+  const portfolioTitreInput = document.getElementById('portfolioTitre');
+  const portfolioCategorieSelect = document.getElementById('portfolioCategorie');
+  const portfolioImageInput = document.getElementById('portfolioImage');
+  const portfolioImagePreview = document.getElementById('portfolioImagePreview');
+  const portfolioSubmitBtn = document.getElementById('portfolioSubmitBtn');
+  const errPortfolio = document.getElementById('errPortfolio');
+  const portfolioAdminList = document.getElementById('portfolioAdminList');
+  const portfolioAdminListEmpty = document.getElementById('portfolioAdminListEmpty');
   const profilsCollabList = document.getElementById('profilsCollabList');
   const profilsCollabListEmpty = document.getElementById('profilsCollabListEmpty');
   const gestionCollabList = document.getElementById('gestionCollabList');
@@ -3157,15 +3153,6 @@
 
   const spaceTabSessionLive = document.getElementById('spaceTabSessionLive');
   const spacePanelSessionLive = document.getElementById('spacePanelSessionLive');
-  const spaceTabStats = document.getElementById('spaceTabStats');
-  const spacePanelStats = document.getElementById('spacePanelStats');
-  const statsRefreshBtn = document.getElementById('statsRefreshBtn');
-  const statTotalVues = document.getElementById('statTotalVues');
-  const statVisiteursUniques = document.getElementById('statVisiteursUniques');
-  const statVuesAujourdhui = document.getElementById('statVuesAujourdhui');
-  const statVues7j = document.getElementById('statVues7j');
-  const statsParPage = document.getElementById('statsParPage');
-  const statsParJour = document.getElementById('statsParJour');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
@@ -3480,6 +3467,7 @@
         demarrerEcouteDemandesFormulaires();
         demarrerEcouteDemandesDevisOffres();
         demarrerEcouteSessionLive();
+        demarrerEcoutePortfolio();
         if (unsubMemberChat) { unsubMemberChat(); unsubMemberChat = null; }
         if (unsubMemberBroadcasts) { unsubMemberBroadcasts(); unsubMemberBroadcasts = null; }
       } else {
@@ -3551,7 +3539,6 @@
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
     if (spaceTabVerifCert) spaceTabVerifCert.classList.toggle('active', nom === 'verifcert');
     if (spaceTabSessionLive) spaceTabSessionLive.classList.toggle('active', nom === 'sessionlive');
-    if (spaceTabStats) spaceTabStats.classList.toggle('active', nom === 'stats');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3563,7 +3550,6 @@
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
     if (spacePanelVerifCert) spacePanelVerifCert.hidden = nom !== 'verifcert';
     if (spacePanelSessionLive) spacePanelSessionLive.hidden = nom !== 'sessionlive';
-    if (spacePanelStats) spacePanelStats.hidden = nom !== 'stats';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3593,91 +3579,6 @@
   }
   if (spaceTabSessionLive) {
     spaceTabSessionLive.addEventListener('click', () => activerOngletEspaceAdmin('sessionlive'));
-  }
-  if (spaceTabStats) {
-    spaceTabStats.addEventListener('click', () => { activerOngletEspaceAdmin('stats'); chargerStatistiquesVisites(); });
-  }
-  if (statsRefreshBtn) {
-    statsRefreshBtn.addEventListener('click', chargerStatistiquesVisites);
-  }
-
-  // ---- Statistiques de visite (agrégation depuis visites/log) ----
-  const NOMS_PAGES_STATS = {
-    accueil: "Accueil",
-    'catalogue-formations': "Catalogue — Formations",
-    'catalogue-formulaires': "Catalogue — Outils digitaux",
-    'catalogue-livres': "Catalogue — Livres",
-    'catalogue-offres-services': "Catalogue — Offres & services",
-    'espace-formation': "Espace formation (apprenants)",
-    'login-formation': "Connexion formation",
-    espace: "Espace collaborateur / admin"
-  };
-  function jourLocalStats(ts) {
-    const d = new Date(ts);
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  }
-  async function chargerStatistiquesVisites() {
-    if (!window.isAdminStaff || !statsParPage) return;
-    statsParPage.innerHTML = '<p class="forum-empty">Chargement…</p>';
-    statsParJour.innerHTML = '';
-    try {
-      const snap = await get(ref(rtdb, 'visites/log'));
-      const donnees = snap.exists() ? snap.val() : {};
-      const entrees = Object.values(donnees);
-
-      const total = entrees.length;
-      const visiteurs = new Set(entrees.map(e => e.visitorId).filter(Boolean));
-      const aujourdHui = jourLocalStats(Date.now());
-      let vuesAujourdhui = 0;
-      const parJour = {};
-      const parPage = {};
-
-      const joursListe = [];
-      for (let i = 13; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const key = jourLocalStats(d.getTime());
-        joursListe.push(key);
-        parJour[key] = 0;
-      }
-
-      entrees.forEach(e => {
-        const jour = e.day || jourLocalStats(e.ts || Date.now());
-        if (jour === aujourdHui) vuesAujourdhui++;
-        if (jour in parJour) parJour[jour]++;
-        const page = e.page || 'autre';
-        parPage[page] = (parPage[page] || 0) + 1;
-      });
-
-      const vues7j = joursListe.reduce((s, j) => s + (parJour[j] || 0), 0);
-
-      statTotalVues.textContent = total;
-      statVisiteursUniques.textContent = visiteurs.size;
-      statVuesAujourdhui.textContent = vuesAujourdhui;
-      statVues7j.textContent = vues7j;
-
-      const pagesTriees = Object.entries(parPage).sort((a, b) => b[1] - a[1]);
-      if (!pagesTriees.length) {
-        statsParPage.innerHTML = '<p class="forum-empty">Aucune donnée pour le moment.</p>';
-      } else {
-        statsParPage.innerHTML = pagesTriees.map(([page, n]) => {
-          const label = NOMS_PAGES_STATS[page] || page;
-          const pct = total ? Math.round((n / total) * 100) : 0;
-          return '<div class="stats-page-row"><span>' + label + '</span><span>' + n + ' vues (' + pct + '%)</span></div>';
-        }).join('');
-      }
-
-      const maxJour = Math.max(1, ...joursListe.map(j => parJour[j]));
-      statsParJour.innerHTML = joursListe.map(j => {
-        const n = parJour[j];
-        const h = Math.max(2, Math.round((n / maxJour) * 100));
-        const label = j.slice(5).replace('-', '/');
-        return '<div class="stats-bar-col"><span class="stats-bar-val">' + n + '</span><div class="stats-bar" style="height:' + h + '%;"></div><span class="stats-bar-day">' + label + '</span></div>';
-      }).join('');
-    } catch (err) {
-      console.error("Erreur chargement statistiques de visite :", err);
-      statsParPage.innerHTML = '<p class="forum-empty">Impossible de charger les statistiques (vérifiez les règles Realtime Database sur "visites").</p>';
-    }
   }
 
   // ---- Vérification d'un certificat (dans l'espace collaborateur et dans l'espace administrateur) ----
@@ -3742,10 +3643,12 @@
       adminTabBroadcast.classList.remove('active');
       if (adminTabGestion) adminTabGestion.classList.remove('active');
       if (adminTabProfils) adminTabProfils.classList.remove('active');
+      if (adminTabPortfolio) adminTabPortfolio.classList.remove('active');
       adminPanelCollabMsgs.hidden = false;
       adminPanelBroadcast.hidden = true;
       if (adminPanelGestion) adminPanelGestion.hidden = true;
       if (adminPanelProfils) adminPanelProfils.hidden = true;
+      if (adminPanelPortfolio) adminPanelPortfolio.hidden = true;
     });
     adminTabBroadcast.addEventListener('click', () => {
       if (!window.isAdminStaff) return;
@@ -3753,10 +3656,12 @@
       adminTabCollabMsgs.classList.remove('active');
       if (adminTabGestion) adminTabGestion.classList.remove('active');
       if (adminTabProfils) adminTabProfils.classList.remove('active');
+      if (adminTabPortfolio) adminTabPortfolio.classList.remove('active');
       adminPanelBroadcast.hidden = false;
       adminPanelCollabMsgs.hidden = true;
       if (adminPanelGestion) adminPanelGestion.hidden = true;
       if (adminPanelProfils) adminPanelProfils.hidden = true;
+      if (adminPanelPortfolio) adminPanelPortfolio.hidden = true;
     });
     if (adminTabGestion) {
       adminTabGestion.addEventListener('click', () => {
@@ -3765,10 +3670,12 @@
         adminTabCollabMsgs.classList.remove('active');
         adminTabBroadcast.classList.remove('active');
         if (adminTabProfils) adminTabProfils.classList.remove('active');
+        if (adminTabPortfolio) adminTabPortfolio.classList.remove('active');
         adminPanelGestion.hidden = false;
         adminPanelCollabMsgs.hidden = true;
         adminPanelBroadcast.hidden = true;
         if (adminPanelProfils) adminPanelProfils.hidden = true;
+        if (adminPanelPortfolio) adminPanelPortfolio.hidden = true;
         renderGestionCollabList();
       });
     }
@@ -3779,11 +3686,29 @@
         adminTabCollabMsgs.classList.remove('active');
         adminTabBroadcast.classList.remove('active');
         if (adminTabGestion) adminTabGestion.classList.remove('active');
+        if (adminTabPortfolio) adminTabPortfolio.classList.remove('active');
         adminPanelProfils.hidden = false;
         adminPanelCollabMsgs.hidden = true;
         adminPanelBroadcast.hidden = true;
         if (adminPanelGestion) adminPanelGestion.hidden = true;
+        if (adminPanelPortfolio) adminPanelPortfolio.hidden = true;
         renderProfilsCollabList();
+      });
+    }
+    if (adminTabPortfolio) {
+      adminTabPortfolio.addEventListener('click', () => {
+        if (!window.isAdminStaff) return;
+        adminTabPortfolio.classList.add('active');
+        adminTabCollabMsgs.classList.remove('active');
+        adminTabBroadcast.classList.remove('active');
+        if (adminTabGestion) adminTabGestion.classList.remove('active');
+        if (adminTabProfils) adminTabProfils.classList.remove('active');
+        adminPanelPortfolio.hidden = false;
+        adminPanelCollabMsgs.hidden = true;
+        adminPanelBroadcast.hidden = true;
+        if (adminPanelGestion) adminPanelGestion.hidden = true;
+        if (adminPanelProfils) adminPanelProfils.hidden = true;
+        renderPortfolioAdminList();
       });
     }
   }
@@ -4893,6 +4818,151 @@
     if (unsubSessionLive) unsubSessionLive();
     unsubSessionLive = onValue(ref(rtdb, 'liveSession'), (snap) => {
       renderSessionLiveEtat(snap.exists() ? snap.val() : null);
+    });
+  }
+
+  // ==================== ESPACE ADMINISTRATEUR : PORTFOLIO « STUDIO DESIGN & INFOGRAPHIE » ====================
+  let portfolioCache = {};
+  let unsubPortfolio = null;
+
+  function demarrerEcoutePortfolio() {
+    if (unsubPortfolio) unsubPortfolio();
+    unsubPortfolio = onValue(ref(rtdb, 'portfolio'), (snap) => {
+      portfolioCache = snap.val() || {};
+      renderPortfolioAdminList();
+    });
+  }
+
+  if (portfolioImageInput && portfolioImagePreview) {
+    portfolioImageInput.addEventListener('change', () => {
+      const fichier = portfolioImageInput.files && portfolioImageInput.files[0];
+      if (!fichier) {
+        portfolioImagePreview.hidden = true;
+        portfolioImagePreview.src = '';
+        return;
+      }
+      const lecteur = new FileReader();
+      lecteur.onload = () => {
+        portfolioImagePreview.src = lecteur.result;
+        portfolioImagePreview.hidden = false;
+      };
+      lecteur.readAsDataURL(fichier);
+    });
+  }
+
+  function fichierEnDataURL(fichier) {
+    return new Promise((resolve, reject) => {
+      const lecteur = new FileReader();
+      lecteur.onload = () => resolve(lecteur.result);
+      lecteur.onerror = () => reject(new Error('Lecture du fichier impossible.'));
+      lecteur.readAsDataURL(fichier);
+    });
+  }
+
+  if (portfolioForm) {
+    portfolioForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!window.isAdminStaff) return;
+
+      const titre = portfolioTitreInput.value.trim();
+      const categorie = portfolioCategorieSelect.value;
+      const fichier = portfolioImageInput.files && portfolioImageInput.files[0];
+      const tailleValide = fichier && fichier.size <= 3 * 1024 * 1024; // 3 Mo max
+
+      const valide = !!titre && !!fichier && tailleValide;
+      errPortfolio.classList.toggle('show', !valide);
+      if (!valide) return;
+
+      portfolioSubmitBtn.disabled = true;
+      portfolioSubmitBtn.textContent = 'Publication...';
+      try {
+        const imageDataUrl = await fichierEnDataURL(fichier);
+        const nouvelleRef = push(ref(rtdb, 'portfolio'));
+        await set(nouvelleRef, {
+          titre: titre,
+          categorie: categorie,
+          image: imageDataUrl,
+          createdAt: Date.now()
+        });
+        portfolioForm.reset();
+        portfolioImagePreview.hidden = true;
+        portfolioImagePreview.src = '';
+        notifier('Publié', 'La réalisation a été ajoutée au Studio Design & Infographie du site.');
+      } catch (err) {
+        notifier('Erreur', "Impossible de publier cette réalisation. Réessayez.");
+      } finally {
+        portfolioSubmitBtn.disabled = false;
+        portfolioSubmitBtn.textContent = 'Publier dans le portfolio';
+      }
+    });
+  }
+
+  async function supprimerPortfolioItem(id) {
+    if (!window.confirm('Retirer définitivement cette réalisation du portfolio public ?')) return;
+    try {
+      await remove(ref(rtdb, 'portfolio/' + id));
+      notifier('Supprimé', 'La réalisation a été retirée du portfolio.');
+    } catch (err) {
+      notifier('Erreur', "Impossible de supprimer cette réalisation. Réessayez.");
+    }
+  }
+
+  function renderPortfolioAdminList() {
+    if (!portfolioAdminList) return;
+    portfolioAdminList.innerHTML = '';
+    const ids = Object.keys(portfolioCache);
+
+    if (ids.length === 0) {
+      portfolioAdminList.appendChild(portfolioAdminListEmpty);
+      portfolioAdminListEmpty.style.display = 'block';
+      return;
+    }
+    portfolioAdminListEmpty.style.display = 'none';
+
+    ids.sort((a, b) => (portfolioCache[b].createdAt || 0) - (portfolioCache[a].createdAt || 0));
+
+    ids.forEach((id) => {
+      const item = portfolioCache[id] || {};
+
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+
+      const infos = document.createElement('div');
+      infos.className = 'a-infos';
+
+      if (item.image) {
+        const miniature = document.createElement('img');
+        miniature.src = item.image;
+        miniature.alt = item.titre || 'Réalisation';
+        miniature.style.width = '52px';
+        miniature.style.height = '52px';
+        miniature.style.objectFit = 'cover';
+        miniature.style.borderRadius = '6px';
+        miniature.style.marginRight = '10px';
+        infos.appendChild(miniature);
+      }
+
+      const texte = document.createElement('span');
+      const nameLine = document.createElement('span');
+      nameLine.className = 'a-name';
+      nameLine.textContent = item.titre || 'Sans titre';
+      const detailLine = document.createElement('span');
+      detailLine.className = 'a-email';
+      detailLine.textContent = item.categorie || '—';
+      texte.appendChild(nameLine);
+      texte.appendChild(document.createElement('br'));
+      texte.appendChild(detailLine);
+      infos.appendChild(texte);
+      row.appendChild(infos);
+
+      const supprimerBtn = document.createElement('button');
+      supprimerBtn.type = 'button';
+      supprimerBtn.className = 'admin-toggle-btn';
+      supprimerBtn.textContent = 'Supprimer';
+      supprimerBtn.addEventListener('click', () => supprimerPortfolioItem(id));
+      row.appendChild(supprimerBtn);
+
+      portfolioAdminList.appendChild(row);
     });
   }
 
