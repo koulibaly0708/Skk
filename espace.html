@@ -660,6 +660,18 @@
   .admin-toggle-btn:hover{border-color:var(--clay); color:var(--clay);}
   .admin-toggle-btn.is-admin{border-color:var(--ink); background:var(--ink); color:var(--paper);}
   .admin-toggle-btn.is-admin:hover{background:#b3402a; border-color:#b3402a; color:var(--white);}
+  /* ---------- Statistiques de visite ---------- */
+  .stats-grid{display:flex; flex-wrap:wrap; gap:14px; margin:0 0 8px;}
+  .stats-card{flex:1 1 160px; background:var(--white); border:1px solid var(--line); border-radius:10px; padding:16px 18px; text-align:center;}
+  .stats-card .stats-num{display:block; font-family:'JetBrains Mono',monospace; font-size:1.6rem; color:var(--ink); font-weight:600; line-height:1.2;}
+  .stats-card .stats-label{display:block; font-size:.78rem; color:#8a8378; margin-top:4px; font-family:'Work Sans',sans-serif;}
+  .stats-page-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 4px; border-top:1px solid var(--line); font-family:'Work Sans',sans-serif; font-size:.9rem; color:var(--ink);}
+  .stats-page-row:first-child{border-top:none;}
+  .stats-bars{display:flex; align-items:flex-end; gap:6px; height:150px; padding:14px 4px 4px; border-top:1px solid var(--line);}
+  .stats-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:4px;}
+  .stats-bar{width:100%; background:var(--clay); border-radius:3px 3px 0 0; min-height:2px;}
+  .stats-bar-val{font-family:'JetBrains Mono',monospace; font-size:.6rem; color:#8a8378;}
+  .stats-bar-day{font-size:.6rem; color:#8a8378; font-family:'Work Sans',sans-serif;}
   .forum-reply-form{display:flex; flex-direction:column; gap:10px;}
   .forum-reply-form textarea{
     padding:13px 16px; border:1px solid var(--line); border-radius:3px; background:var(--white);
@@ -1997,6 +2009,7 @@
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabVerifCert">Vérifier un certificat</button>
         <button type="button" class="collab-tab" id="spaceTabSessionLive">Session live</button>
+        <button type="button" class="collab-tab" id="spaceTabStats">Statistique de visite</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2170,6 +2183,27 @@
             <button type="button" class="admin-toggle-btn" id="sessionLiveDeleteBtn">Supprimer la session</button>
           </div>
           <p class="forum-empty" id="sessionLiveEmpty">Aucune session live programmée pour le moment.</p>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelStats" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <p class="section-lede" style="margin:0 0 16px;">Vues enregistrées sur l'ensemble des pages du site (accueil, catalogues, espace formation…). <button type="button" class="link-btn" id="statsRefreshBtn">Actualiser</button></p>
+
+          <div class="stats-grid" id="statsCards">
+            <div class="stats-card"><span class="stats-num" id="statTotalVues">—</span><span class="stats-label">Vues totales</span></div>
+            <div class="stats-card"><span class="stats-num" id="statVisiteursUniques">—</span><span class="stats-label">Visiteurs uniques</span></div>
+            <div class="stats-card"><span class="stats-num" id="statVuesAujourdhui">—</span><span class="stats-label">Vues aujourd'hui</span></div>
+            <div class="stats-card"><span class="stats-num" id="statVues7j">—</span><span class="stats-label">Vues (7 derniers jours)</span></div>
+          </div>
+
+          <h3 style="margin:28px 0 4px;">Vues par page</h3>
+          <div id="statsParPage">
+            <p class="forum-empty" id="statsParPageEmpty">Aucune donnée pour le moment.</p>
+          </div>
+
+          <h3 style="margin:28px 0 4px;">Vues par jour (14 derniers jours)</h3>
+          <div id="statsParJour" class="stats-bars"></div>
         </div>
       </div>
     </div>
@@ -2998,6 +3032,23 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const rtdb = getDatabase(app);      // Realtime Database : chat visiteurs + rôles admin
+
+  // ---- Statistique de visite (suivi anonyme pour l'espace admin) ----
+  (function enregistrerVisite() {
+    try {
+      let visitorId = localStorage.getItem('skkVisitorId');
+      if (!visitorId) {
+        visitorId = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('skkVisitorId', visitorId);
+      }
+      const d = new Date();
+      const jour = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      push(ref(rtdb, 'visites/log'), {
+        page: 'espace', path: location.pathname, day: jour, ts: Date.now(),
+        visitorId, ref: document.referrer || null
+      }).catch(() => {});
+    } catch (e) {}
+  })();
   const db = getFirestore(app);       // Firestore : miroir des rôles admin, utilisé par les règles du forum
 
   // Pont vers le script classique plus haut dans la page (modale Inscription / Devis) :
@@ -3106,6 +3157,15 @@
 
   const spaceTabSessionLive = document.getElementById('spaceTabSessionLive');
   const spacePanelSessionLive = document.getElementById('spacePanelSessionLive');
+  const spaceTabStats = document.getElementById('spaceTabStats');
+  const spacePanelStats = document.getElementById('spacePanelStats');
+  const statsRefreshBtn = document.getElementById('statsRefreshBtn');
+  const statTotalVues = document.getElementById('statTotalVues');
+  const statVisiteursUniques = document.getElementById('statVisiteursUniques');
+  const statVuesAujourdhui = document.getElementById('statVuesAujourdhui');
+  const statVues7j = document.getElementById('statVues7j');
+  const statsParPage = document.getElementById('statsParPage');
+  const statsParJour = document.getElementById('statsParJour');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
@@ -3491,6 +3551,7 @@
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
     if (spaceTabVerifCert) spaceTabVerifCert.classList.toggle('active', nom === 'verifcert');
     if (spaceTabSessionLive) spaceTabSessionLive.classList.toggle('active', nom === 'sessionlive');
+    if (spaceTabStats) spaceTabStats.classList.toggle('active', nom === 'stats');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3502,6 +3563,7 @@
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
     if (spacePanelVerifCert) spacePanelVerifCert.hidden = nom !== 'verifcert';
     if (spacePanelSessionLive) spacePanelSessionLive.hidden = nom !== 'sessionlive';
+    if (spacePanelStats) spacePanelStats.hidden = nom !== 'stats';
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -3531,6 +3593,91 @@
   }
   if (spaceTabSessionLive) {
     spaceTabSessionLive.addEventListener('click', () => activerOngletEspaceAdmin('sessionlive'));
+  }
+  if (spaceTabStats) {
+    spaceTabStats.addEventListener('click', () => { activerOngletEspaceAdmin('stats'); chargerStatistiquesVisites(); });
+  }
+  if (statsRefreshBtn) {
+    statsRefreshBtn.addEventListener('click', chargerStatistiquesVisites);
+  }
+
+  // ---- Statistiques de visite (agrégation depuis visites/log) ----
+  const NOMS_PAGES_STATS = {
+    accueil: "Accueil",
+    'catalogue-formations': "Catalogue — Formations",
+    'catalogue-formulaires': "Catalogue — Outils digitaux",
+    'catalogue-livres': "Catalogue — Livres",
+    'catalogue-offres-services': "Catalogue — Offres & services",
+    'espace-formation': "Espace formation (apprenants)",
+    'login-formation': "Connexion formation",
+    espace: "Espace collaborateur / admin"
+  };
+  function jourLocalStats(ts) {
+    const d = new Date(ts);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  async function chargerStatistiquesVisites() {
+    if (!window.isAdminStaff || !statsParPage) return;
+    statsParPage.innerHTML = '<p class="forum-empty">Chargement…</p>';
+    statsParJour.innerHTML = '';
+    try {
+      const snap = await get(ref(rtdb, 'visites/log'));
+      const donnees = snap.exists() ? snap.val() : {};
+      const entrees = Object.values(donnees);
+
+      const total = entrees.length;
+      const visiteurs = new Set(entrees.map(e => e.visitorId).filter(Boolean));
+      const aujourdHui = jourLocalStats(Date.now());
+      let vuesAujourdhui = 0;
+      const parJour = {};
+      const parPage = {};
+
+      const joursListe = [];
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = jourLocalStats(d.getTime());
+        joursListe.push(key);
+        parJour[key] = 0;
+      }
+
+      entrees.forEach(e => {
+        const jour = e.day || jourLocalStats(e.ts || Date.now());
+        if (jour === aujourdHui) vuesAujourdhui++;
+        if (jour in parJour) parJour[jour]++;
+        const page = e.page || 'autre';
+        parPage[page] = (parPage[page] || 0) + 1;
+      });
+
+      const vues7j = joursListe.reduce((s, j) => s + (parJour[j] || 0), 0);
+
+      statTotalVues.textContent = total;
+      statVisiteursUniques.textContent = visiteurs.size;
+      statVuesAujourdhui.textContent = vuesAujourdhui;
+      statVues7j.textContent = vues7j;
+
+      const pagesTriees = Object.entries(parPage).sort((a, b) => b[1] - a[1]);
+      if (!pagesTriees.length) {
+        statsParPage.innerHTML = '<p class="forum-empty">Aucune donnée pour le moment.</p>';
+      } else {
+        statsParPage.innerHTML = pagesTriees.map(([page, n]) => {
+          const label = NOMS_PAGES_STATS[page] || page;
+          const pct = total ? Math.round((n / total) * 100) : 0;
+          return '<div class="stats-page-row"><span>' + label + '</span><span>' + n + ' vues (' + pct + '%)</span></div>';
+        }).join('');
+      }
+
+      const maxJour = Math.max(1, ...joursListe.map(j => parJour[j]));
+      statsParJour.innerHTML = joursListe.map(j => {
+        const n = parJour[j];
+        const h = Math.max(2, Math.round((n / maxJour) * 100));
+        const label = j.slice(5).replace('-', '/');
+        return '<div class="stats-bar-col"><span class="stats-bar-val">' + n + '</span><div class="stats-bar" style="height:' + h + '%;"></div><span class="stats-bar-day">' + label + '</span></div>';
+      }).join('');
+    } catch (err) {
+      console.error("Erreur chargement statistiques de visite :", err);
+      statsParPage.innerHTML = '<p class="forum-empty">Impossible de charger les statistiques (vérifiez les règles Realtime Database sur "visites").</p>';
+    }
   }
 
   // ---- Vérification d'un certificat (dans l'espace collaborateur et dans l'espace administrateur) ----

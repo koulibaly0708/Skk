@@ -2718,6 +2718,23 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const rtdb = getDatabase(app);      // Realtime Database : chat visiteurs + rôles admin
+
+  // ---- Statistique de visite (suivi anonyme pour l'espace admin) ----
+  (function enregistrerVisite() {
+    try {
+      let visitorId = localStorage.getItem('skkVisitorId');
+      if (!visitorId) {
+        visitorId = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('skkVisitorId', visitorId);
+      }
+      const d = new Date();
+      const jour = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      push(ref(rtdb, 'visites/log'), {
+        page: 'accueil', path: location.pathname, day: jour, ts: Date.now(),
+        visitorId, ref: document.referrer || null
+      }).catch(() => {});
+    } catch (e) {}
+  })();
   const db = getFirestore(app);       // Firestore : miroir des rôles admin, utilisé par les règles du forum
 
   // Compteur "Collaborateurs déjà inscrits" (chiffre réel, jamais figé en dur) sur la page d'accueil

@@ -113,6 +113,23 @@
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig, "formationLoginApp");
   const rtdb = getDatabase(app);
 
+  // ---- Statistique de visite (suivi anonyme pour l'espace admin) ----
+  (function enregistrerVisite() {
+    try {
+      let visitorId = localStorage.getItem('skkVisitorId');
+      if (!visitorId) {
+        visitorId = 'v-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('skkVisitorId', visitorId);
+      }
+      const d = new Date();
+      const jour = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      push(ref(rtdb, 'visites/log'), {
+        page: 'login-formation', path: location.pathname, day: jour, ts: Date.now(),
+        visitorId, ref: document.referrer || null
+      }).catch(() => {});
+    } catch (e) {}
+  })();
+
   const form = document.getElementById('codeLoginForm');
   const input = document.getElementById('codeInput');
   const nameInput = document.getElementById('nameInput');
@@ -184,12 +201,6 @@
       // Un seul appareil actif à la fois : celui-ci devient l'appareil actif, l'ancien sera déconnecté.
       maj['formationCodes/' + code + '/appareilActif'] = deviceId;
       update(ref(rtdb), maj).catch(() => {});
-      // Historique complet : une entrée par connexion, conservée pour export en cas de litige.
-      push(ref(rtdb, 'formationCodes/' + code + '/historique'), {
-        deviceId: deviceId,
-        nom: nomVal || null,
-        date: Date.now()
-      }).catch(() => {});
       window.location.href = 'espace-formation.html';
     } catch (err) {
       errorMsg.textContent = "Une erreur est survenue. Vérifiez votre connexion et réessayez.";
