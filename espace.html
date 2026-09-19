@@ -4879,7 +4879,13 @@
       portfolioSubmitBtn.disabled = true;
       portfolioSubmitBtn.textContent = 'Publication...';
       try {
-        const imageDataUrl = await fichierEnDataURL(fichier);
+        // On réutilise l'image déjà chargée pour l'aperçu plutôt que de relire le fichier
+        // une seconde fois : sur certains navigateurs Android, relire le même fichier
+        // juste après peu échouer ("Lecture du fichier impossible").
+        let imageDataUrl = (portfolioImagePreview && !portfolioImagePreview.hidden) ? portfolioImagePreview.src : '';
+        if (!imageDataUrl || !imageDataUrl.startsWith('data:')) {
+          imageDataUrl = await fichierEnDataURL(fichier);
+        }
         const nouvelleRef = push(ref(rtdb, 'portfolio'));
         await set(nouvelleRef, {
           titre: titre,
