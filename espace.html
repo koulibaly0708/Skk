@@ -5128,6 +5128,37 @@
     });
   }
 
+  // Réduit l'image avant de l'enregistrer dans la base : sinon chaque visiteur du site retélécharge la photo d'origine (jusqu'à 3 Mo)
+  // et consomme le quota de téléchargement Firebase.
+  function compresserImagePortfolio(fichier, coteMax, qualite) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(fichier);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const ratio = Math.min(1, coteMax / Math.max(img.naturalWidth, img.naturalHeight));
+          const largeur = Math.max(1, Math.round(img.naturalWidth * ratio));
+          const hauteur = Math.max(1, Math.round(img.naturalHeight * ratio));
+          const canvas = document.createElement('canvas');
+          canvas.width = largeur;
+          canvas.height = hauteur;
+          canvas.getContext('2d').drawImage(img, 0, 0, largeur, hauteur);
+          let sortie = canvas.toDataURL('image/webp', qualite);
+          if (sortie.indexOf('data:image/webp') !== 0) {
+            sortie = fichier.type === 'image/png' ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', qualite);
+          }
+          resolve(sortie);
+        } catch (err) {
+          reject(err);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image illisible.')); };
+      img.src = url;
+    });
+  }
+
   function fichierEnDataURL(fichier) {
     return new Promise((resolve, reject) => {
       const lecteur = new FileReader();
@@ -5160,6 +5191,13 @@
         let imageDataUrl = (portfolioImagePreview && !portfolioImagePreview.hidden) ? portfolioImagePreview.src : '';
         if (!imageDataUrl || !imageDataUrl.startsWith('data:')) {
           imageDataUrl = await fichierEnDataURL(fichier);
+        }
+        // Image réduite (1200 px max, WebP ou JPEG) ; en cas d'échec on garde l'image d'origine
+        try {
+          const reduite = await compresserImagePortfolio(fichier, 1200, 0.8);
+          if (reduite && reduite.length < imageDataUrl.length) imageDataUrl = reduite;
+        } catch (errCompression) {
+          console.warn('Compression de l\'image impossible, image d\'origine conservée :', errCompression);
         }
         const nouvelleRef = push(ref(rtdb, 'portfolio'));
         await set(nouvelleRef, {
