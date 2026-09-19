@@ -916,5 +916,87 @@
   }
 </script>
 
+<!-- ============ STATISTIQUES DE VISITE : alimente l'onglet « Statistique de visite » de l'espace admin ============ -->
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, update, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+  (async () => {
+    const PAGE = 'offres';
+    try {
+      // Pas de comptage : ouverture du fichier en local, robots, navigateur de l'administrateur
+      if (!/^https?:$/.test(location.protocol)) return;
+      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+      if (navigator.webdriver) return;
+      if (/bot|crawl|spider|slurp|headless|lighthouse/i.test(navigator.userAgent)) return;
+      if (localStorage.getItem('skk_stats_exclure') === '1') return;
+
+      const maintenant = Date.now();
+      const jour = new Date(maintenant).toISOString().slice(0, 10); // jour en GMT (= heure de Conakry)
+
+      // Nouvelle visite = première page vue après plus de 30 minutes d'inactivité
+      const derniere = Number(localStorage.getItem('skk_stats_derniere') || 0);
+      const nouvelleVisite = !derniere || (maintenant - derniere) > 30 * 60 * 1000;
+      localStorage.setItem('skk_stats_derniere', String(maintenant));
+
+      // Visiteur du jour : compté une seule fois par jour et par navigateur (aucune donnée personnelle stockée)
+      const nouveauVisiteur = localStorage.getItem('skk_stats_jour') !== jour;
+      localStorage.setItem('skk_stats_jour', jour);
+
+      const maj = {};
+      const base = 'statsVisites/' + jour + '/';
+      maj[base + 'pv'] = increment(1);
+      maj[base + 'p_' + PAGE] = increment(1);
+      if (nouveauVisiteur) maj[base + 'uniques'] = increment(1);
+
+      if (nouvelleVisite) {
+        maj[base + 'visites'] = increment(1);
+
+        const ua = navigator.userAgent;
+        const appareil = /ipad|tablet|android(?!.*mobile)/i.test(ua) ? 'tablette'
+                       : (/mobi|iphone|ipod|android/i.test(ua) ? 'mobile' : 'ordinateur');
+        maj[base + 'a_' + appareil] = increment(1);
+
+        const nettoyer = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30);
+        const CONNUS = [
+          ['google', /(^|\.)google\./], ['bing', /(^|\.)bing\.com$/],
+          ['facebook', /(^|\.)(facebook\.com|fb\.com|fb\.me|messenger\.com)$/],
+          ['instagram', /(^|\.)instagram\.com$/], ['whatsapp', /(^|\.)(whatsapp\.com|wa\.me)$/],
+          ['tiktok', /(^|\.)tiktok\.com$/], ['youtube', /(^|\.)(youtube\.com|youtu\.be)$/],
+          ['linkedin', /(^|\.)(linkedin\.com|lnkd\.in)$/], ['x', /(^|\.)(twitter\.com|t\.co|x\.com)$/],
+          ['telegram', /(^|\.)(telegram\.org|t\.me)$/]
+        ];
+        let source = 'direct';
+        const params = new URLSearchParams(location.search);
+        const balise = params.get('utm_source') || params.get('ref'); // ex. ?utm_source=whatsapp sur un lien partagé
+        if (balise) {
+          source = nettoyer(balise) || 'direct';
+        } else if (document.referrer) {
+          let hote = '';
+          try { hote = new URL(document.referrer).hostname.replace(/^www\./, '').toLowerCase(); } catch (e) {}
+          if (hote && hote !== location.hostname.replace(/^www\./, '').toLowerCase()) {
+            const trouve = CONNUS.find(([, re]) => re.test(hote));
+            source = trouve ? trouve[0] : (nettoyer(hote) || 'direct');
+          }
+        }
+        maj[base + 's_' + source] = increment(1);
+      }
+
+      const cfg = {
+        apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
+        authDomain: "mon-site-skkoulibaly.firebaseapp.com",
+        databaseURL: "https://mon-site-skkoulibaly-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "mon-site-skkoulibaly",
+        storageBucket: "mon-site-skkoulibaly.firebasestorage.app",
+        messagingSenderId: "367698551446",
+        appId: "1:367698551446:web:15534cc2af8beda4ba58b7"
+      };
+      const app = getApps().find((a) => a.name === 'statsApp') || initializeApp(cfg, 'statsApp');
+      await update(ref(getDatabase(app)), maj);
+    } catch (e) {
+      // Le suivi ne doit jamais gêner le site : on ignore silencieusement.
+    }
+  })();
+</script>
 </body>
 </html>

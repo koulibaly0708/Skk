@@ -702,6 +702,45 @@
     .admin-row .a-infos{width:100%;}
   }
 
+  /* ---------- Statistique de visite (espace admin) ---------- */
+  #spacePanelStats [hidden]{display:none !important;}
+  .stats-head{display:flex; flex-wrap:wrap; gap:14px 20px; align-items:center; justify-content:space-between; margin-bottom:22px;}
+  .stats-periodes{display:flex; gap:6px; flex-wrap:wrap;}
+  .stats-periode{padding:7px 14px; font-size:.82rem; border-radius:20px; border:1px solid var(--line); background:var(--white); color:var(--ink); cursor:pointer; font-family:'Work Sans',sans-serif;}
+  .stats-periode:hover{border-color:var(--clay); color:var(--clay);}
+  .stats-periode.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+  .stats-erreur{background:rgba(217,142,61,.12); border:1px solid var(--clay); border-radius:6px; padding:12px 16px; margin-bottom:20px; font-family:'Work Sans',sans-serif; font-size:.88rem; color:var(--ink); line-height:1.5;}
+  .stats-kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:30px;}
+  .stats-kpi{background:var(--paper); border-radius:6px; padding:16px 18px;}
+  .stats-kpi-val{font-family:'Fraunces',serif; font-size:1.9rem; font-weight:600; color:var(--ink); line-height:1.1;}
+  .stats-kpi-lbl{font-family:'Work Sans',sans-serif; font-size:.82rem; color:#5a544c; margin-top:4px;}
+  .stats-h{font-family:'Work Sans',sans-serif; font-size:.95rem; font-weight:600; color:var(--ink); margin:0 0 12px;}
+  .stats-legende{display:flex; gap:16px; flex-wrap:wrap; font-family:'Work Sans',sans-serif; font-size:.78rem; color:#5a544c; margin-bottom:10px;}
+  .stats-legende i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px;}
+  .stats-chart{display:flex; align-items:stretch; gap:2px; height:160px; border-bottom:1px solid var(--line);}
+  .stats-col{position:relative; flex:1; min-width:0;}
+  .stats-bar-pv,.stats-bar-vi{position:absolute; left:8%; right:8%; bottom:0; border-radius:2px 2px 0 0;}
+  .stats-bar-pv{background:rgba(27,42,74,.22);}
+  .stats-bar-vi{background:var(--clay);}
+  .stats-axe{display:flex; justify-content:space-between; font-family:'Work Sans',sans-serif; font-size:.75rem; color:#8a8378; margin:6px 0 30px;}
+  .stats-cols{display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-bottom:30px;}
+  .stats-barre{margin-bottom:12px; font-family:'Work Sans',sans-serif;}
+  .stats-barre-top{display:flex; justify-content:space-between; gap:10px; font-size:.88rem; color:var(--ink); margin-bottom:5px;}
+  .stats-barre-val{color:#5a544c; white-space:nowrap;}
+  .stats-piste{height:6px; border-radius:3px; background:var(--paper);}
+  .stats-rempli{height:100%; border-radius:3px; background:var(--ink);}
+  .stats-table-wrap{max-height:340px; overflow:auto; border:1px solid var(--line); border-radius:6px;}
+  .stats-table{width:100%; border-collapse:collapse; font-family:'Work Sans',sans-serif; font-size:.88rem;}
+  .stats-table th,.stats-table td{padding:10px 14px; text-align:right; border-top:1px solid var(--line);}
+  .stats-table th:first-child,.stats-table td:first-child{text-align:left;}
+  .stats-table thead th{position:sticky; top:0; background:var(--paper); border-top:none; font-weight:600; color:var(--ink);}
+  .stats-note{font-family:'Work Sans',sans-serif; font-size:.78rem; color:#8a8378; line-height:1.55; margin:18px 0 0;}
+  @media (max-width:640px){
+    .stats-kpis{grid-template-columns:repeat(2,1fr);}
+    .stats-cols{grid-template-columns:1fr; gap:4px;}
+    .stats-kpi-val{font-size:1.6rem;}
+  }
+
   /* ---------- FOOTER ---------- */
   footer{background:var(--ink); color:rgba(246,241,231,.7); padding:48px 0 30px;}
   .footer-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-bottom:30px; border-bottom:1px solid rgba(246,241,231,.15);}
@@ -1997,6 +2036,7 @@
         <button type="button" class="collab-tab" id="spaceTabAlertesCodes">Alertes codes partagés <span class="chat-badge" id="codesPartagesTabBadge" hidden>0</span></button>
         <button type="button" class="collab-tab" id="spaceTabVerifCert">Vérifier un certificat</button>
         <button type="button" class="collab-tab" id="spaceTabSessionLive">Session live</button>
+        <button type="button" class="collab-tab" id="spaceTabStats">Statistique de visite</button>
         <a href="forum.html" target="_blank" rel="noopener" class="btn btn-ghost" id="openForumBtn" style="margin-left:auto; align-self:center;">Ouvrir le forum ↗ <span style="font-weight:400; font-size:.78rem;">(nouvel onglet)</span></a>
       </div>
 
@@ -2140,6 +2180,60 @@
             <button type="submit" class="btn btn-primary" id="adminVerifCertBtn">Vérifier</button>
           </form>
           <div class="cert-verif-result" id="adminVerifCertResult"></div>
+        </div>
+      </div>
+
+      <div class="forum-layout" id="spacePanelStats" hidden>
+        <div class="forum-panel" style="width:100%;">
+          <div class="stats-head">
+            <p class="section-lede" style="margin:0; max-width:520px;">Fréquentation du site : pages vues, visites et provenance de vos visiteurs. Les chiffres se mettent à jour en direct.</p>
+            <div class="stats-periodes" role="group" aria-label="Période affichée">
+              <button type="button" class="stats-periode" data-jours="1">Aujourd'hui</button>
+              <button type="button" class="stats-periode" data-jours="7">7 jours</button>
+              <button type="button" class="stats-periode active" data-jours="30">30 jours</button>
+              <button type="button" class="stats-periode" data-jours="90">90 jours</button>
+            </div>
+          </div>
+
+          <div class="stats-erreur" id="statsErreur" hidden></div>
+
+          <div class="stats-kpis">
+            <div class="stats-kpi"><div class="stats-kpi-val" id="statsKpiPv">–</div><div class="stats-kpi-lbl">Pages vues</div></div>
+            <div class="stats-kpi"><div class="stats-kpi-val" id="statsKpiVisites">–</div><div class="stats-kpi-lbl">Visites</div></div>
+            <div class="stats-kpi"><div class="stats-kpi-val" id="statsKpiUniques">–</div><div class="stats-kpi-lbl">Visiteurs</div></div>
+            <div class="stats-kpi"><div class="stats-kpi-val" id="statsKpiRatio">–</div><div class="stats-kpi-lbl">Pages par visite</div></div>
+          </div>
+
+          <div id="statsChartBloc">
+            <h4 class="stats-h">Évolution jour par jour</h4>
+            <div class="stats-legende"><span><i style="background:rgba(27,42,74,.22);"></i>Pages vues</span><span><i style="background:var(--clay);"></i>Visites</span></div>
+            <div class="stats-chart" id="statsChart"></div>
+            <div class="stats-axe"><span id="statsAxeDebut"></span><span id="statsAxeFin"></span></div>
+          </div>
+
+          <div class="stats-cols">
+            <div>
+              <h4 class="stats-h">Pages les plus visitées</h4>
+              <div id="statsPages"></div>
+            </div>
+            <div>
+              <h4 class="stats-h">D'où viennent vos visiteurs</h4>
+              <div id="statsSources" style="margin-bottom:24px;"></div>
+              <h4 class="stats-h">Appareils utilisés</h4>
+              <div id="statsAppareils"></div>
+            </div>
+          </div>
+
+          <h4 class="stats-h">Détail par jour</h4>
+          <div class="stats-table-wrap">
+            <table class="stats-table">
+              <thead><tr><th>Jour</th><th>Pages vues</th><th>Visites</th><th>Visiteurs</th></tr></thead>
+              <tbody id="statsTableBody"></tbody>
+            </table>
+          </div>
+          <p class="forum-empty" id="statsVide" hidden>Aucune visite enregistrée sur cette période.</p>
+
+          <p class="stats-note">Une visite correspond à une série de pages vues sans pause de plus de 30 minutes. Un visiteur est compté une fois par jour et par navigateur, donc une même personne qui revient plusieurs jours est comptée plusieurs fois sur la période. Les jours suivent l'heure de Conakry (GMT). Vos propres visites (depuis un navigateur où vous vous êtes connecté à l'espace admin), les robots et les tests en local ne sont pas comptés.</p>
         </div>
       </div>
 
@@ -3013,7 +3107,7 @@
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
     getDatabase, ref, push, set, update, remove, onValue, get,
-    query as rtdbQuery, orderByChild, serverTimestamp as rtdbServerTimestamp
+    query as rtdbQuery, orderByChild, orderByKey, startAt, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
     getFirestore, doc, setDoc, deleteDoc,
@@ -3153,6 +3247,8 @@
 
   const spaceTabSessionLive = document.getElementById('spaceTabSessionLive');
   const spacePanelSessionLive = document.getElementById('spacePanelSessionLive');
+  const spaceTabStats = document.getElementById('spaceTabStats');
+  const spacePanelStats = document.getElementById('spacePanelStats');
   const codesPartagesTabBadge = document.getElementById('codesPartagesTabBadge');
   let codesAlertesDejaNotifiees = {};
   const newsletterList = document.getElementById('newsletterList');
@@ -3175,6 +3271,8 @@
   let demandesCache = {};
   let unsubDemandesFormulaires = null;
   let unsubDemandesDevisOffres = null;
+  let unsubStats = null;
+  let statsJours = 30;
   let unsubSessionLive = null;
   let demandesFormulairesCache = {};
   let demandesDevisOffresCache = {};
@@ -3441,6 +3539,8 @@
       try {
         const adminSnap = await get(ref(rtdb, 'admins/' + user.uid));
         window.isAdminStaff = adminSnap.exists() && adminSnap.val() === true;
+        // Ce navigateur n'est plus compté dans les statistiques de visite (l'admin ne doit pas gonfler ses propres chiffres)
+        if (window.isAdminStaff) { try { localStorage.setItem('skk_stats_exclure', '1'); } catch (e) {} }
       } catch (err) {
         window.isAdminStaff = false;
       }
@@ -3514,6 +3614,7 @@
       if (unsubDemandes) { unsubDemandes(); unsubDemandes = null; }
       if (unsubDemandesFormulaires) { unsubDemandesFormulaires(); unsubDemandesFormulaires = null; }
       if (unsubDemandesDevisOffres) { unsubDemandesDevisOffres(); unsubDemandesDevisOffres = null; }
+      if (unsubStats) { unsubStats(); unsubStats = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
@@ -3539,6 +3640,7 @@
     if (spaceTabAlertesCodes) spaceTabAlertesCodes.classList.toggle('active', nom === 'alertesCodes');
     if (spaceTabVerifCert) spaceTabVerifCert.classList.toggle('active', nom === 'verifcert');
     if (spaceTabSessionLive) spaceTabSessionLive.classList.toggle('active', nom === 'sessionlive');
+    if (spaceTabStats) spaceTabStats.classList.toggle('active', nom === 'stats');
     spacePanelVisitors.hidden = nom !== 'visitors';
     spacePanelNewsletter.hidden = nom !== 'newsletter';
     spacePanelAdmin.hidden = nom !== 'admin';
@@ -3550,6 +3652,8 @@
     if (spacePanelAlertesCodes) spacePanelAlertesCodes.hidden = nom !== 'alertesCodes';
     if (spacePanelVerifCert) spacePanelVerifCert.hidden = nom !== 'verifcert';
     if (spacePanelSessionLive) spacePanelSessionLive.hidden = nom !== 'sessionlive';
+    if (spacePanelStats) spacePanelStats.hidden = nom !== 'stats';
+    if (nom === 'stats' && !unsubStats) demarrerEcouteStats();
   }
   if (spaceTabVisitors && spaceTabNewsletter && spaceTabAdmin) {
     spaceTabVisitors.addEventListener('click', () => activerOngletEspaceAdmin('visitors'));
@@ -4740,6 +4844,170 @@
       demandesDevisOffresCache = snap.val() || {};
       renderDemandesDevisOffresList();
     });
+  }
+
+  // ==================== STATISTIQUE DE VISITE ====================
+  // Données écrites par les pages publiques dans statsVisites/{AAAA-MM-JJ}/{compteur} (voir le bloc « STATISTIQUES DE VISITE » de chaque page).
+  const statsPeriodeBtns = Array.from(document.querySelectorAll('.stats-periode'));
+  const statsErreur = document.getElementById('statsErreur');
+  const statsChartBloc = document.getElementById('statsChartBloc');
+  const statsChart = document.getElementById('statsChart');
+  const statsAxeDebut = document.getElementById('statsAxeDebut');
+  const statsAxeFin = document.getElementById('statsAxeFin');
+  const statsTableBody = document.getElementById('statsTableBody');
+  const statsVide = document.getElementById('statsVide');
+
+  const STATS_PAGES = {
+    index: 'Accueil', formations: 'Catalogue des formations', formulaires: 'Catalogue des formulaires',
+    offres: 'Offres et services', livres: 'Catalogue des livres',
+    espace_formation: 'Espace formation', login_formation: 'Connexion à une formation'
+  };
+  const STATS_SOURCES = {
+    direct: 'Accès direct ou inconnu', google: 'Google', bing: 'Bing', facebook: 'Facebook', instagram: 'Instagram',
+    whatsapp: 'WhatsApp', tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn', x: 'X (Twitter)', telegram: 'Telegram'
+  };
+  const STATS_APPAREILS = { mobile: 'Téléphone', tablette: 'Tablette', ordinateur: 'Ordinateur' };
+
+  const statsFmt = (n) => Number(n || 0).toLocaleString('fr-FR');
+
+  function statsListeJours(n) {
+    const jours = [];
+    const maintenant = Date.now();
+    for (let i = n - 1; i >= 0; i--) jours.push(new Date(maintenant - i * 86400000).toISOString().slice(0, 10));
+    return jours;
+  }
+
+  function statsLibelleJour(jour, court) {
+    const opts = court ? { day: '2-digit', month: '2-digit' } : { weekday: 'short', day: '2-digit', month: '2-digit' };
+    return new Date(jour + 'T00:00:00Z').toLocaleDateString('fr-FR', Object.assign({ timeZone: 'UTC' }, opts));
+  }
+
+  function statsRemplirBarres(zone, valeurs, libelles) {
+    zone.innerHTML = '';
+    const entrees = Object.entries(valeurs).filter((e) => e[1] > 0).sort((a, b) => b[1] - a[1]);
+    if (entrees.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'forum-empty';
+      p.style.padding = '4px 0';
+      p.textContent = 'Pas encore de données.';
+      zone.appendChild(p);
+      return;
+    }
+    const total = entrees.reduce((somme, e) => somme + e[1], 0);
+    const max = entrees[0][1];
+    entrees.forEach(([cle, n]) => {
+      const ligne = document.createElement('div');
+      ligne.className = 'stats-barre';
+      const haut = document.createElement('div');
+      haut.className = 'stats-barre-top';
+      const nom = document.createElement('span');
+      nom.textContent = libelles[cle] || cle;
+      const val = document.createElement('span');
+      val.className = 'stats-barre-val';
+      val.textContent = statsFmt(n) + ' (' + Math.round(n / total * 100) + ' %)';
+      haut.appendChild(nom);
+      haut.appendChild(val);
+      const piste = document.createElement('div');
+      piste.className = 'stats-piste';
+      const rempli = document.createElement('div');
+      rempli.className = 'stats-rempli';
+      rempli.style.width = Math.max(3, n / max * 100) + '%';
+      piste.appendChild(rempli);
+      ligne.appendChild(haut);
+      ligne.appendChild(piste);
+      zone.appendChild(ligne);
+    });
+  }
+
+  function renderStats(data) {
+    const jours = statsListeJours(statsJours);
+    const pages = {}, sources = {}, appareils = {};
+    let pv = 0, visites = 0, uniques = 0;
+    const parJour = jours.map((jour) => {
+      const d = data[jour] || {};
+      const ligne = { jour, pv: Number(d.pv) || 0, visites: Number(d.visites) || 0, uniques: Number(d.uniques) || 0 };
+      Object.keys(d).forEach((cle) => {
+        const n = Number(d[cle]) || 0;
+        if (cle.indexOf('p_') === 0) pages[cle.slice(2)] = (pages[cle.slice(2)] || 0) + n;
+        else if (cle.indexOf('s_') === 0) sources[cle.slice(2)] = (sources[cle.slice(2)] || 0) + n;
+        else if (cle.indexOf('a_') === 0) appareils[cle.slice(2)] = (appareils[cle.slice(2)] || 0) + n;
+      });
+      pv += ligne.pv; visites += ligne.visites; uniques += ligne.uniques;
+      return ligne;
+    });
+
+    document.getElementById('statsKpiPv').textContent = statsFmt(pv);
+    document.getElementById('statsKpiVisites').textContent = statsFmt(visites);
+    document.getElementById('statsKpiUniques').textContent = statsFmt(uniques);
+    document.getElementById('statsKpiRatio').textContent = visites > 0 ? (pv / visites).toFixed(1).replace('.', ',') : '–';
+
+    // Graphique (masqué pour « Aujourd'hui » : une seule barre n'apprend rien)
+    statsChartBloc.hidden = statsJours === 1;
+    statsChart.innerHTML = '';
+    if (statsJours > 1) {
+      const max = Math.max(1, ...parJour.map((j) => j.pv));
+      parJour.forEach((j) => {
+        const col = document.createElement('div');
+        col.className = 'stats-col';
+        col.title = statsLibelleJour(j.jour) + ' : ' + j.pv + ' pages vues, ' + j.visites + ' visites';
+        const barPv = document.createElement('div');
+        barPv.className = 'stats-bar-pv';
+        barPv.style.height = (j.pv / max * 100) + '%';
+        if (j.pv > 0) barPv.style.minHeight = '2px';
+        const barVi = document.createElement('div');
+        barVi.className = 'stats-bar-vi';
+        barVi.style.height = (j.visites / max * 100) + '%';
+        col.appendChild(barPv);
+        col.appendChild(barVi);
+        statsChart.appendChild(col);
+      });
+      statsAxeDebut.textContent = statsLibelleJour(jours[0], true);
+      statsAxeFin.textContent = statsLibelleJour(jours[jours.length - 1], true);
+    }
+
+    statsRemplirBarres(document.getElementById('statsPages'), pages, STATS_PAGES);
+    statsRemplirBarres(document.getElementById('statsSources'), sources, STATS_SOURCES);
+    statsRemplirBarres(document.getElementById('statsAppareils'), appareils, STATS_APPAREILS);
+
+    // Détail par jour (jours sans visite masqués, du plus récent au plus ancien)
+    statsTableBody.innerHTML = '';
+    const avecDonnees = parJour.filter((j) => j.pv > 0 || j.visites > 0 || j.uniques > 0).reverse();
+    statsVide.hidden = avecDonnees.length > 0;
+    avecDonnees.forEach((j) => {
+      const tr = document.createElement('tr');
+      [statsLibelleJour(j.jour), statsFmt(j.pv), statsFmt(j.visites), statsFmt(j.uniques)].forEach((texte) => {
+        const td = document.createElement('td');
+        td.textContent = texte;
+        tr.appendChild(td);
+      });
+      statsTableBody.appendChild(tr);
+    });
+  }
+
+  function demarrerEcouteStats() {
+    if (unsubStats) { unsubStats(); unsubStats = null; }
+    statsErreur.hidden = true;
+    const debut = statsListeJours(statsJours)[0];
+    const requete = rtdbQuery(ref(rtdb, 'statsVisites'), orderByKey(), startAt(debut));
+    unsubStats = onValue(requete, (snap) => {
+      statsErreur.hidden = true;
+      renderStats(snap.val() || {});
+    }, (err) => {
+      unsubStats = null;
+      statsErreur.textContent = "Impossible de lire les statistiques. Vérifiez que les règles Firebase Realtime Database autorisent la lecture du nœud « statsVisites » aux administrateurs.";
+      statsErreur.hidden = false;
+    });
+  }
+
+  statsPeriodeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      statsJours = Number(btn.dataset.jours) || 30;
+      statsPeriodeBtns.forEach((b) => b.classList.toggle('active', b === btn));
+      demarrerEcouteStats();
+    });
+  });
+  if (spaceTabStats) {
+    spaceTabStats.addEventListener('click', () => activerOngletEspaceAdmin('stats'));
   }
 
   // ==================== SESSION LIVE (bannière dans l'espace formation) ====================
