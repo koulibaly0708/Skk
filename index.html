@@ -2696,7 +2696,7 @@
     signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
-    getDatabase, ref, push, set, update, onValue, get,
+    getDatabase, ref, push, set, update, onValue, get, increment,
     query as rtdbQuery, orderByChild, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
@@ -2995,6 +2995,8 @@
             projet: projetVal,
             createdAt: rtdbServerTimestamp()
           }).catch(() => {});
+          // Compteur public « Collaborateurs déjà inscrits » (page d'accueil) : +1 à chaque nouvelle inscription
+          await update(ref(rtdb), { 'publicStats/collaborateurs': increment(1) }).catch(() => {});
         } else {
           const cred = await signInWithEmailAndPassword(auth, emailVal, passVal);
 

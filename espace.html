@@ -3106,7 +3106,7 @@
     signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import {
-    getDatabase, ref, push, set, update, remove, onValue, get,
+    getDatabase, ref, push, set, update, remove, onValue, get, increment,
     query as rtdbQuery, orderByChild, orderByKey, startAt, serverTimestamp as rtdbServerTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
   import {
@@ -3273,6 +3273,10 @@
   let unsubDemandesDevisOffres = null;
   let unsubStats = null;
   let statsJours = 30;
+  // Compteur public « Collaborateurs déjà inscrits » : recalculé à partir de la liste réelle des collaborateurs (hors supprimés)
+  let nbCollabReel = null;
+  let compteurPublicActuel;
+  let unsubCompteurPublic = null;
   let unsubSessionLive = null;
   let demandesFormulairesCache = {};
   let demandesDevisOffresCache = {};
@@ -3416,6 +3420,8 @@
             projet: projetVal,
             createdAt: rtdbServerTimestamp()
           }).catch(() => {});
+          // Compteur public « Collaborateurs déjà inscrits » (page d'accueil) : +1 à chaque nouvelle inscription
+          await update(ref(rtdb), { 'publicStats/collaborateurs': increment(1) }).catch(() => {});
         } else {
           const cred = await signInWithEmailAndPassword(auth, emailVal, passVal);
 
@@ -3615,6 +3621,7 @@
       if (unsubDemandesFormulaires) { unsubDemandesFormulaires(); unsubDemandesFormulaires = null; }
       if (unsubDemandesDevisOffres) { unsubDemandesDevisOffres(); unsubDemandesDevisOffres = null; }
       if (unsubStats) { unsubStats(); unsubStats = null; }
+      if (unsubCompteurPublic) { unsubCompteurPublic(); unsubCompteurPublic = null; }
       if (unsubCollabUsers) { unsubCollabUsers(); unsubCollabUsers = null; }
       if (unsubCollabChatsList) { unsubCollabChatsList(); unsubCollabChatsList = null; }
       if (unsubCollabThreadMessages) { unsubCollabThreadMessages(); unsubCollabThreadMessages = null; }
@@ -5467,11 +5474,27 @@
     }
   }
 
+  // Remet le compteur affiché sur la page d'accueil (publicStats/collaborateurs) d'accord avec le nombre réel d'inscrits
+  function reconcilierCompteurPublic() {
+    if (nbCollabReel === null || compteurPublicActuel === undefined) return;
+    if (compteurPublicActuel === nbCollabReel) return;
+    set(ref(rtdb, 'publicStats/collaborateurs'), nbCollabReel).catch((err) => {
+      console.error('Mise à jour du compteur public impossible :', err);
+    });
+  }
+
   function demarrerEcouteCollabChats() {
     if (unsubCollabUsers) unsubCollabUsers();
+    if (unsubCompteurPublic) unsubCompteurPublic();
+    unsubCompteurPublic = onValue(ref(rtdb, 'publicStats/collaborateurs'), (snap) => {
+      compteurPublicActuel = snap.exists() ? Number(snap.val()) : 0;
+      reconcilierCompteurPublic();
+    }, () => {});
     if (unsubCollabChatsList) unsubCollabChatsList();
     unsubCollabUsers = onValue(ref(rtdb, 'users'), (snap) => {
       collabUsersCache = snap.val() || {};
+      nbCollabReel = Object.keys(collabUsersCache).filter((uid) => !(collabUsersCache[uid] || {}).supprime).length;
+      reconcilierCompteurPublic();
       renderCollabList();
       if (adminPanelGestion && !adminPanelGestion.hidden) renderGestionCollabList();
       if (adminPanelProfils && !adminPanelProfils.hidden) renderProfilsCollabList();
