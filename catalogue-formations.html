@@ -99,6 +99,17 @@
   .pay-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
   .pay-method strong{display:block; font-size:.9rem; color:var(--ink);}
   .pay-method span{display:block; font-family:'JetBrains Mono',monospace; font-size:.8rem; color:#5a544c;}
+
+  /* Paiement express Orange Money + copie des numéros */
+  .pay-express{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin:14px 0 18px;}
+  .pay-express-montant{font-size:.95rem; color:var(--ink); margin:0 0 12px;}
+  .pay-express-montant strong{font-family:'Fraunces',serif; font-size:1.15rem;}
+  .pay-express-btn.btn{display:block; width:100%; text-align:center; background:#FF6600; border-color:#FF6600; color:#fff;}
+  .pay-express-btn.btn:hover{background:#e55a00; border-color:#e55a00; color:#fff;}
+  .pay-express-copie{margin:10px 0 0; font-size:.86rem; font-weight:500; color:var(--sage);}
+  .pay-express-hint{margin:10px 0 0; font-size:.82rem; line-height:1.55; color:#5a544c;}
+  .pay-method{cursor:pointer;}
+  .pay-method:hover strong{color:var(--clay);}
   .pay-benefits{margin:0 0 18px; padding-left:20px; font-size:.88rem; color:#5a544c;}
   .pay-benefits li{margin-bottom:6px;}
 </style>
@@ -330,6 +341,12 @@
       <div class="payment-invite" id="demandeCodePaiement">
         <h4>Réglez votre formation pour recevoir votre code</h4>
         <p class="pi-sub">Choisissez l'un des moyens de paiement mobile ci-dessous, puis envoyez-moi votre preuve de paiement par WhatsApp.</p>
+        <div class="pay-express">
+          <p class="pay-express-montant" hidden>Montant à régler : <strong></strong></p>
+          <a href="tel:*144%23" class="btn btn-primary pay-express-btn" data-numero="621109847">Payer avec Orange Money</a>
+          <p class="pay-express-copie" hidden>✓ Numéro copié : collez-le dans le menu Orange Money.</p>
+          <p class="pay-express-hint">Le numéro 621 10 98 47 est copié, puis le menu Orange Money s'ouvre. Choisissez « Transfert d'argent », collez le numéro, saisissez le montant et validez avec votre code secret. Le menu ne s'ouvre pas ? Composez *144#. Pour un autre moyen de paiement, touchez son numéro ci-dessous pour le copier.</p>
+        </div>
         <div class="pay-methods">
           <div class="pay-method">
             <img src="assets/logos/orange-money.png" alt="" class="pay-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
@@ -515,6 +532,7 @@
 
       const texteWhatsapp = "Bonjour, je viens d'effectuer le paiement pour la formation \"" + formation + "\". Voici ma preuve de paiement, mon nom et mon numéro pour la réception de mon code d'accès :";
       document.getElementById('btnEnvoyerPreuvePaiementFormation').href = "https://wa.me/224621109847?text=" + encodeURIComponent(texteWhatsapp);
+      window.afficherMontantPaiement && window.afficherMontantPaiement(window.montantPaiementDe(formation));
       document.getElementById('demandeCodePaiement').classList.add('show');
     } catch (err) {
       sendError.classList.add('show');
@@ -525,6 +543,83 @@
   });
 </script>
 
+<script>
+  // ============ Paiement express : copie du numéro + ouverture du menu Orange Money (*144#) ============
+  (function () {
+    var estMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    function copierTexteSecours(texte) {
+      var t = document.createElement('textarea');
+      t.value = texte;
+      t.setAttribute('readonly', '');
+      t.style.position = 'fixed';
+      t.style.opacity = '0';
+      document.body.appendChild(t);
+      t.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t);
+    }
+    function copierTexte(texte) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texte).catch(function () { copierTexteSecours(texte); });
+      } else {
+        copierTexteSecours(texte);
+      }
+    }
+
+    // Montants lus sur les cartes du catalogue (nom du produit -> montant en GNF)
+    var MONTANTS = {};
+    document.querySelectorAll('[data-formation], [data-formulaire]').forEach(function (btn) {
+      var nom = btn.getAttribute('data-formation') || btn.getAttribute('data-formulaire');
+      var carte = btn.closest('.card');
+      var prix = carte && carte.querySelector('.price');
+      if (!nom || !prix || !prix.firstChild) return;
+      var m = /(\d[\d\s\u00a0\u202f]*)\s*GNF/.exec(prix.firstChild.textContent);
+      if (m) MONTANTS[nom] = parseInt(m[1].replace(/\D/g, ''), 10);
+    });
+    window.montantPaiementDe = function (nom) { return MONTANTS[nom] || 0; };
+
+    // Affiche « Montant à régler » dans le bloc de paiement (masqué si le montant est inconnu)
+    window.afficherMontantPaiement = function (montant) {
+      document.querySelectorAll('.pay-express-montant').forEach(function (el) {
+        var valeur = el.querySelector('strong');
+        if (montant > 0) {
+          valeur.textContent = montant.toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ') + ' GNF';
+          el.hidden = false;
+        } else {
+          el.hidden = true;
+        }
+      });
+      document.querySelectorAll('.pay-express-copie').forEach(function (el) { el.hidden = true; });
+    };
+
+    document.querySelectorAll('.pay-express-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        copierTexte(btn.getAttribute('data-numero'));
+        var msg = btn.parentElement.querySelector('.pay-express-copie');
+        if (msg) msg.hidden = false;
+        // Sur ordinateur, le lien tel: n'ouvre rien d'utile : on se contente de copier le numéro
+        if (!estMobile) e.preventDefault();
+      });
+    });
+
+    // Toucher un moyen de paiement copie son numéro
+    document.querySelectorAll('.pay-method').forEach(function (bloc) {
+      var numero = bloc.querySelector('span:not(.pay-dot)');
+      if (!numero) return;
+      bloc.title = 'Toucher pour copier le numéro';
+      bloc.addEventListener('click', function () {
+        var chiffres = numero.textContent.replace(/\D/g, '');
+        if (!chiffres) return;
+        var avant = numero.getAttribute('data-avant') || numero.textContent;
+        numero.setAttribute('data-avant', avant);
+        copierTexte(chiffres);
+        numero.textContent = 'Numéro copié ✓';
+        setTimeout(function () { numero.textContent = avant; }, 1600);
+      });
+    });
+  })();
+</script>
 <!-- ============ STATISTIQUES DE VISITE : alimente l'onglet « Statistique de visite » de l'espace admin ============ -->
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
