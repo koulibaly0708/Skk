@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réalisations — Studio Design & Infographie | Solo Koumana Koulibaly</title>
+<meta name="description" content="Toutes les créations de sites web du Studio Design & Infographie de Solo Koumana Koulibaly.">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2A4A; --clay:#D98E3D; --paper:#F6F1E7; --max:1180px;}
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Work Sans',sans-serif; background:var(--paper); color:var(--ink); line-height:1.6;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+  header{background:var(--ink); color:var(--paper); padding:16px 0;}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .logo{font-family:'Fraunces',serif; font-weight:700; font-size:1.4rem;}
+  .logo span{color:var(--clay);}
+  .back{font-size:.9rem; font-weight:600; border:1.5px solid rgba(246,241,231,.45); padding:8px 16px; border-radius:3px;}
+  .back:hover{background:var(--paper); color:var(--ink);}
+  .intro{padding:56px 0 28px;}
+  .eyebrow{display:inline-block; background:var(--clay); color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:2px;}
+  h1{font-family:'Fraunces',serif; font-size:clamp(1.9rem,4vw,2.8rem); line-height:1.15; margin:14px 0 10px;}
+  .intro p{max-width:640px; margin:0;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:20px 0 56px;}
+  .card{display:block; background:#fff; border:1px solid rgba(27,42,74,.16); border-radius:6px; overflow:hidden; transition:transform .22s ease, box-shadow .22s ease;}
+  .card:hover{transform:translateY(-6px); box-shadow:0 18px 40px -20px rgba(27,42,74,.5);}
+  .card .shot{aspect-ratio:1/1; position:relative; overflow:hidden; display:block;}
+  .card .shot .pf-item{display:block; width:100%; height:100%; padding:0;}
+  .card .shot .preview-frame{width:100%; height:100%;}
+  .card .shot svg{width:100%; height:100%; display:block;}
+  .card .shot .preview-label{display:none;}
+  .card .info{padding:16px 18px 20px;}
+  .card .cat{font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--clay);}
+  .card h2{font-family:'Fraunces',serif; font-size:1.2rem; margin:4px 0 6px;}
+  .card p{margin:0 0 12px; font-size:.92rem; color:#46506a;}
+  .card .visit{font-weight:600; font-size:.88rem; display:inline-flex; align-items:center; gap:6px; color:var(--ink); border-bottom:2px solid var(--clay);}
+  .sec-title{font-family:'Fraunces',serif; font-size:1.4rem; margin:28px 0 0; border-left:4px solid var(--clay); padding-left:12px;}
+  .design-card{cursor:zoom-in; background:#fff; border:1px solid rgba(27,42,74,.16); border-radius:6px; overflow:hidden; padding:0; text-align:left; font:inherit; color:inherit; transition:transform .22s ease, box-shadow .22s ease;}
+  .design-card:hover{transform:translateY(-6px); box-shadow:0 18px 40px -20px rgba(27,42,74,.5);}
+  .design-card img{display:block; width:100%; aspect-ratio:1/1; object-fit:cover; object-position:top center;}
+  .design-card .t{display:block; padding:12px 16px; font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--clay);}
+  .lightbox{position:fixed; inset:0; background:rgba(10,16,30,.88); display:none; align-items:center; justify-content:center; padding:20px; z-index:50; cursor:zoom-out;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:100%; max-height:92vh; border-radius:4px;}
+  .empty{padding:40px 0; text-align:center;}
+  .cta{background:var(--ink); color:var(--paper); text-align:center; padding:44px 20px;}
+  .cta h3{font-family:'Fraunces',serif; font-size:1.5rem; margin:0 0 14px;}
+  .btn{display:inline-flex; padding:11px 22px; border-radius:3px; font-weight:600; font-size:.9rem; background:var(--clay); border:1.5px solid var(--clay); color:#fff;}
+  .btn:hover{background:#c17c2c;}
+  footer{text-align:center; font-size:.8rem; padding:20px; color:#5b647a;}
+  @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.grid{grid-template-columns:1fr;} .wrap{padding:0 18px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a href="index.html" class="logo">SK<span>K</span>.</a>
+    <a href="index.html#studio" class="back">← Retour au Studio Design</a>
+  </div>
+</header>
+
+<main>
+  <section class="intro wrap">
+    <span class="eyebrow">Studio Design & Infographie</span>
+    <h1>Toutes les créations</h1>
+    <p>Logos, affiches, infographies et sites web : toutes mes réalisations au même endroit.</p>
+  </section>
+
+  <section class="wrap" id="secDesign" hidden>
+    <h2 class="sec-title">Logos, affiches & infographies</h2>
+    <div class="grid" id="designGrid"></div>
+    <p class="empty" id="designMsg">Chargement des créations…</p>
+  </section>
+
+  <section class="wrap" id="secWeb">
+    <h2 class="sec-title">Sites web</h2>
+    <div class="grid" id="realisationsGrid"></div>
+  </section>
+
+  <section class="cta">
+    <h3>Votre site pourrait être le prochain.</h3>
+    <a href="index.html#contact" class="btn">Briefez-moi sur votre projet</a>
+  </section>
+</main>
+
+<footer>© Solo Koumana Koulibaly — Studio Design & Infographie</footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>
+
+<script src="realisations-data.js"></script>
+<script>
+(function(){
+  var grid = document.getElementById('realisationsGrid');
+  var items = window.SKK_REALISATIONS || [];
+  if (!items.length) {
+    document.getElementById('secWeb').hidden = true;
+    return;
+  }
+  items.forEach(function(item){
+    var card = document.createElement('div');
+    card.className = 'card';
+    var shot = document.createElement('div');
+    shot.className = 'shot';
+    shot.appendChild(window.skkCarteRealisation(item));
+    var info = document.createElement('div');
+    info.className = 'info';
+    var cat = document.createElement('div'); cat.className = 'cat'; cat.textContent = item.categorie || 'Site web';
+    var h = document.createElement('h2'); h.textContent = item.titre;
+    var p = document.createElement('p'); p.textContent = item.description || '';
+    var v = document.createElement('a'); v.className = 'visit'; v.href = item.url; v.target = '_blank'; v.rel = 'noopener'; v.textContent = 'Visiter le site ↗';
+    info.append(cat, h, p, v);
+    card.append(shot, info);
+    grid.appendChild(card);
+  });
+})();
+</script>
+<script type="module">
+  // Créations publiées depuis l'espace admin (même base que la section Studio de l'accueil)
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+  const cfg = {
+    apiKey: "AIzaSyDhdBcF37w7ZZBdTWVVVNaZE-MhZMtAdsU",
+    authDomain: "mon-site-skkoulibaly.firebaseapp.com",
+    databaseURL: "https://mon-site-skkoulibaly-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mon-site-skkoulibaly",
+    storageBucket: "mon-site-skkoulibaly.firebasestorage.app",
+    messagingSenderId: "367698551446",
+    appId: "1:367698551446:web:15534cc2af8beda4ba58b7"
+  };
+  const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+  const rtdb = getDatabase(app);
+
+  const sec = document.getElementById('secDesign');
+  const grid = document.getElementById('designGrid');
+  const msg = document.getElementById('designMsg');
+  const box = document.getElementById('lightbox');
+  const boxImg = box.querySelector('img');
+  sec.hidden = false;
+
+  box.addEventListener('click', () => { box.classList.remove('open'); boxImg.removeAttribute('src'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') box.click(); });
+
+  onValue(ref(rtdb, 'portfolio'), (snap) => {
+    const items = [];
+    snap.forEach((c) => { items.push({ id: c.key, ...c.val() }); });
+    items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    grid.innerHTML = '';
+    if (!items.length) { msg.hidden = false; msg.textContent = 'Aucune création publiée pour le moment.'; return; }
+    msg.hidden = true;
+    items.forEach((item) => {
+      if (!item.image) return;
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'design-card';
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.alt = item.titre || 'Réalisation Studio Design & Infographie';
+      img.loading = 'lazy';
+      b.appendChild(img);
+      if (item.titre) {
+        const t = document.createElement('span');
+        t.className = 't';
+        t.textContent = item.titre;
+        b.appendChild(t);
+      }
+      b.addEventListener('click', () => { boxImg.src = item.image; boxImg.alt = img.alt; box.classList.add('open'); });
+      grid.appendChild(b);
+    });
+  }, () => {
+    msg.hidden = false;
+    msg.textContent = 'Impossible de charger les créations pour le moment.';
+  });
+</script>
+</body>
+</html>
