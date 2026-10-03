@@ -2683,8 +2683,19 @@
     });
   }
 
-  // Portfolio "Studio Design & Infographie" : publié en direct depuis l'espace admin
+  // Portfolio "Studio Design & Infographie" : publié en direct depuis l'espace admin.
+  // 6 cartes maximum : les réalisations cochées « Afficher sur l'accueil » dans l'admin,
+  // ou à défaut les 6 plus récentes. La liste complète est sur realisations.html.
+  const MAX_CARTES_ACCUEIL = 6;
   const portfolioGridEl = document.getElementById('portfolioGrid');
+  function ajouterSitesStatiques() {
+    // Repli quand l'admin n'a encore rien publié : sites listés dans realisations-data.js
+    if (!portfolioGridEl || !window.SKK_REALISATIONS || !window.skkCarteRealisation) return;
+    portfolioGridEl.querySelectorAll('.pf-web').forEach((el) => el.remove());
+    window.SKK_REALISATIONS.slice(0, 3).forEach((item) => {
+      portfolioGridEl.appendChild(window.skkCarteRealisation(item));
+    });
+  }
   if (portfolioGridEl) {
     onValue(ref(rtdb, 'portfolio'), (snap) => {
       const items = [];
@@ -2695,24 +2706,47 @@
 
       portfolioGridEl.querySelectorAll('.pf-dynamic').forEach((el) => el.remove());
 
-      if (items.length > 0) {
-        portfolioGridEl.querySelectorAll('.pf-demo').forEach((el) => { el.style.display = 'none'; });
-        items.forEach((item) => {
-          const div = document.createElement('div');
-          div.className = 'pf-item pf-photo pf-dynamic';
-          const img = document.createElement('img');
-          img.src = item.image;
-          img.alt = item.titre || 'Réalisation Studio Design & Infographie';
-          img.loading = 'lazy';
-          const span = document.createElement('span');
-          span.textContent = item.titre || '';
-          div.appendChild(img);
-          div.appendChild(span);
-          portfolioGridEl.insertBefore(div, portfolioGridEl.firstChild);
+      const choisis = items.filter((i) => i.accueil === true);
+      const aAfficher = (choisis.length ? choisis : items).slice(0, MAX_CARTES_ACCUEIL);
+
+      if (aAfficher.length > 0) {
+        portfolioGridEl.querySelectorAll('.pf-demo, .pf-web').forEach((el) => { el.style.display = 'none'; });
+        const frag = document.createDocumentFragment();
+        aAfficher.forEach((item) => {
+          let el;
+          if (item.lien && !item.image && window.skkCarteRealisation) {
+            // Site web sans image : aperçu de navigateur généré automatiquement
+            el = window.skkCarteRealisation({ titre: item.titre || item.lien, url: item.lien, couleur: '#3E6BE0' });
+            el.classList.add('pf-dynamic');
+          } else {
+            el = document.createElement(item.lien ? 'a' : 'div');
+            el.className = 'pf-item pf-photo pf-dynamic' + (item.lien ? ' pf-link' : '');
+            if (item.lien) {
+              el.href = item.lien;
+              el.target = '_blank';
+              el.rel = 'noopener';
+              el.setAttribute('aria-label', 'Voir le site ' + (item.titre || '') + ' en ligne (nouvel onglet)');
+            }
+            if (item.image) {
+              const img = document.createElement('img');
+              img.src = item.image;
+              img.alt = item.titre || 'Réalisation Studio Design & Infographie';
+              img.loading = 'lazy';
+              el.appendChild(img);
+            }
+            const span = document.createElement('span');
+            span.textContent = (item.titre || '') + (item.lien ? ' ↗' : '');
+            el.appendChild(span);
+          }
+          frag.appendChild(el);
         });
+        portfolioGridEl.insertBefore(frag, portfolioGridEl.firstChild);
       } else {
         portfolioGridEl.querySelectorAll('.pf-demo').forEach((el) => { el.style.display = ''; });
+        ajouterSitesStatiques();
       }
+    }, () => {
+      ajouterSitesStatiques();
     });
   }
 
@@ -4365,15 +4399,5 @@
   })();
 </script>
 
-<script>
-// Studio Design : 3 dernières créations web (liste dans realisations-data.js)
-(function(){
-  var grid = document.getElementById('portfolioGrid');
-  if (!grid || !window.SKK_REALISATIONS || !window.skkCarteRealisation) return;
-  window.SKK_REALISATIONS.slice(0, 3).forEach(function(item){
-    grid.appendChild(window.skkCarteRealisation(item));
-  });
-})();
-</script>
 </body>
 </html>

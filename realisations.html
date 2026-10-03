@@ -33,6 +33,8 @@
   .card .shot .preview-frame{width:100%; height:100%;}
   .card .shot svg{width:100%; height:100%; display:block;}
   .card .shot .preview-label{display:none;}
+  .card .shot > a{display:block; width:100%; height:100%;}
+  .card .shot > a img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block;}
   .card .info{padding:16px 18px 20px;}
   .card .cat{font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--clay);}
   .card h2{font-family:'Fraunces',serif; font-size:1.2rem; margin:4px 0 6px;}
@@ -94,30 +96,44 @@
 
 <script src="realisations-data.js"></script>
 <script>
-(function(){
+// Affiche les sites web : liste statique (realisations-data.js) + sites publiés depuis l'admin
+window.renderSites = function (sitesAdmin) {
   var grid = document.getElementById('realisationsGrid');
-  var items = window.SKK_REALISATIONS || [];
-  if (!items.length) {
-    document.getElementById('secWeb').hidden = true;
-    return;
-  }
-  items.forEach(function(item){
+  var norm = function (u) { return String(u || '').replace(/\/$/, ''); };
+  var liensAdmin = sitesAdmin.map(function (i) { return norm(i.lien); });
+  var statiques = (window.SKK_REALISATIONS || []).filter(function (i) { return liensAdmin.indexOf(norm(i.url)) === -1; });
+  var items = sitesAdmin.map(function (i) {
+    return { titre: i.titre || i.lien, url: i.lien, categorie: i.categorie || 'Site web', description: '', couleur: '#3E6BE0', image: i.image || '' };
+  }).concat(statiques);
+  grid.innerHTML = '';
+  document.getElementById('secWeb').hidden = !items.length;
+  items.forEach(function (item) {
     var card = document.createElement('div');
     card.className = 'card';
     var shot = document.createElement('div');
     shot.className = 'shot';
-    shot.appendChild(window.skkCarteRealisation(item));
+    if (item.image) {
+      var lienImg = document.createElement('a');
+      lienImg.href = item.url; lienImg.target = '_blank'; lienImg.rel = 'noopener';
+      lienImg.setAttribute('aria-label', 'Voir le site ' + item.titre + ' en ligne (nouvel onglet)');
+      var im = document.createElement('img'); im.src = item.image; im.alt = item.titre; im.loading = 'lazy';
+      lienImg.appendChild(im); shot.appendChild(lienImg);
+    } else {
+      shot.appendChild(window.skkCarteRealisation(item));
+    }
     var info = document.createElement('div');
     info.className = 'info';
     var cat = document.createElement('div'); cat.className = 'cat'; cat.textContent = item.categorie || 'Site web';
     var h = document.createElement('h2'); h.textContent = item.titre;
-    var p = document.createElement('p'); p.textContent = item.description || '';
+    info.append(cat, h);
+    if (item.description) { var p = document.createElement('p'); p.textContent = item.description; info.appendChild(p); }
     var v = document.createElement('a'); v.className = 'visit'; v.href = item.url; v.target = '_blank'; v.rel = 'noopener'; v.textContent = 'Visiter le site ↗';
-    info.append(cat, h, p, v);
+    info.appendChild(v);
     card.append(shot, info);
     grid.appendChild(card);
   });
-})();
+};
+window.renderSites([]);
 </script>
 <script type="module">
   // Créations publiées depuis l'espace admin (même base que la section Studio de l'accueil)
@@ -147,9 +163,12 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') box.click(); });
 
   onValue(ref(rtdb, 'portfolio'), (snap) => {
-    const items = [];
-    snap.forEach((c) => { items.push({ id: c.key, ...c.val() }); });
-    items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const tous = [];
+    snap.forEach((c) => { tous.push({ id: c.key, ...c.val() }); });
+    tous.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    // Les réalisations avec un lien sont des sites web ; les autres sont des visuels (logos, affiches...)
+    window.renderSites(tous.filter((i) => i.lien));
+    const items = tous.filter((i) => !i.lien);
     grid.innerHTML = '';
     if (!items.length) { msg.hidden = false; msg.textContent = 'Aucune création publiée pour le moment.'; return; }
     msg.hidden = true;

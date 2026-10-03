@@ -1,35 +1,11 @@
 /* ============================================================
-   RÉALISATIONS — liste des sites web créés
-   Pour ajouter une création : copiez un bloc { ... } ci-dessous,
-   collez-le en haut de la liste et changez titre / url / couleur.
-   La page d'accueil (3 dernières) et realisations.html (toutes)
-   se mettent à jour toutes seules.
+   Les sites réalisés se gèrent désormais depuis l'espace admin
+   (onglet « Portfolio Studio Design » : ajouter, modifier,
+   supprimer, choisir ceux affichés sur l'accueil).
+   Cette liste reste vide ; ce fichier ne sert plus qu'à dessiner
+   les cartes d'aperçu des sites sans image.
    ============================================================ */
-window.SKK_REALISATIONS = [
-  {
-    titre: "Association Nantamba",
-    url: "https://associationnantamba.org",
-    categorie: "Site d'association",
-    description: "Site vitrine avec espace bénévole et donateur.",
-    couleur: "#4C6B54"
-  },
-  {
-    titre: "SKK Multiservice",
-    url: "https://skkmultiservice-site-web.netlify.app/",
-    categorie: "Site de services",
-    description: "Site de présentation des services de SKK Multiservice.",
-    couleur: "#E8631C"
-  }
-  /* Modèle à copier :
-  ,{
-    titre: "Nom du site",
-    url: "https://exemple.com",
-    categorie: "Site vitrine",
-    description: "Courte description.",
-    couleur: "#3E6BE0"
-  }
-  */
-];
+window.SKK_REALISATIONS = [];
 
 /* Construit une carte cliquable (aperçu de navigateur + lien) */
 window.skkCarteRealisation = function (item, avecDescription) {
